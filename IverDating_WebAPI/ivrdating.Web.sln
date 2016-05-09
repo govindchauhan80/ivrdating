@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivrdating.Web", "ivrdating.Web\ivrdating.Web.csproj", "{D332A580-1B44-4F82-B6C5-627ACD3CA44D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivrdating.Domain", "ivrdating.Domain\ivrdating.Domain.csproj", "{98EE1D5B-86D6-4FCF-9BD6-6CDCB4BBF362}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivrdating.Logic", "ivrdating.Logic\ivrdating.Logic.csproj", "{20B67A35-7014-44F1-A5C5-E77203D565FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivrdating.Persistent", "ivrdating.Persistent\ivrdating.Persistent.csproj", "{AABD8F44-3A95-4CF5-B2F8-6352419EB909}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ivrdating.Log", "ivrdating.Log\ivrdating.Log.csproj", "{24999F30-1B91-4C3E-87B6-4A1D7BE6739B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D332A580-1B44-4F82-B6C5-627ACD3CA44D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D332A580-1B44-4F82-B6C5-627ACD3CA44D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D332A580-1B44-4F82-B6C5-627ACD3CA44D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D332A580-1B44-4F82-B6C5-627ACD3CA44D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EE1D5B-86D6-4FCF-9BD6-6CDCB4BBF362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EE1D5B-86D6-4FCF-9BD6-6CDCB4BBF362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EE1D5B-86D6-4FCF-9BD6-6CDCB4BBF362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EE1D5B-86D6-4FCF-9BD6-6CDCB4BBF362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B67A35-7014-44F1-A5C5-E77203D565FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B67A35-7014-44F1-A5C5-E77203D565FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B67A35-7014-44F1-A5C5-E77203D565FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B67A35-7014-44F1-A5C5-E77203D565FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AABD8F44-3A95-4CF5-B2F8-6352419EB909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AABD8F44-3A95-4CF5-B2F8-6352419EB909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AABD8F44-3A95-4CF5-B2F8-6352419EB909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AABD8F44-3A95-4CF5-B2F8-6352419EB909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24999F30-1B91-4C3E-87B6-4A1D7BE6739B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24999F30-1B91-4C3E-87B6-4A1D7BE6739B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24999F30-1B91-4C3E-87B6-4A1D7BE6739B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24999F30-1B91-4C3E-87B6-4A1D7BE6739B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45
+	EndGlobalSection
+EndGlobal
