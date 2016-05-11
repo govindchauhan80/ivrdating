@@ -1,4 +1,5 @@
-﻿using ivrdating.Models;
+﻿using ivrdating.Domain.VM;
+using ivrdating.Models;
 using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,40 @@ namespace ivrdating.Logic.Helpers
         public static string SerializeToCsv(GetMemberDetailsResponse _getMemberDetailsResponse)
         {
             return CsvSerializer.SerializeToCsv(new List<GetMemberDetailsResponse> {_getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Get_New_Acc_Number_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Get_New_Acc_Number_Return> { _getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Get_N_Activate_New_Acc_Number_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Get_N_Activate_New_Acc_Number_Return> { _getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Activate_Acc_Number_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Activate_Acc_Number_Return> { _getMemberDetailsResponse });
+        }
+        public static string SerializeToCsv(Deactivate_Acc_Number_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Deactivate_Acc_Number_Return> { _getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Add_New_Account_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Add_New_Account_Return> { _getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Add_To_Customer_Master_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Add_To_Customer_Master_Return> { _getMemberDetailsResponse });
+        }
+
+        public static string SerializeToCsv(Add_To_User_Minute_Return _getMemberDetailsResponse)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Add_To_User_Minute_Return> { _getMemberDetailsResponse });
         }
     }
 }

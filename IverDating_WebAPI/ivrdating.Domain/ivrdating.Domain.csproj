@@ -82,8 +82,22 @@
     <Compile Include="Models\sms_queue_active.cs" />
     <Compile Include="Models\user_minute.cs" />
     <Compile Include="Models\ws_agent.cs" />
+    <Compile Include="VM\Activate_Acc_Number_Request.cs" />
+    <Compile Include="VM\Activate_Acc_Number_Response.cs" />
+    <Compile Include="VM\Add_New_Account_Request.cs" />
+    <Compile Include="VM\Add_New_Account_Response.cs" />
+    <Compile Include="VM\Add_To_Customer_Master_Request.cs" />
+    <Compile Include="VM\Add_To_Customer_Master_Response.cs" />
+    <Compile Include="VM\Add_To_User_Minute_Request.cs" />
+    <Compile Include="VM\Add_To_User_Minute_Response.cs" />
+    <Compile Include="VM\Deactivate_Acc_Number_Request.cs" />
+    <Compile Include="VM\Deactivate_Acc_Number_Response.cs" />
     <Compile Include="VM\GetMemberDetailsRequest.cs" />
     <Compile Include="VM\GetMemberDetailsResponse.cs" />
+    <Compile Include="VM\Get_New_Acc_Number_Request.cs" />
+    <Compile Include="VM\Get_New_Acc_Number_Response.cs" />
+    <Compile Include="VM\Get_N_Activate_New_Acc_Number_Request.cs" />
+    <Compile Include="VM\Get_N_Activate_New_Acc_Number_Response.cs" />
     <Compile Include="VM\RequestBase.cs" />
     <Compile Include="VM\ReturnData.cs" />
   </ItemGroup>
