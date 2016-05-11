@@ -59,6 +59,7 @@ namespace ivrdating.Logic.Helpers
         {
             return CsvSerializer.SerializeToCsv(new List<Activate_Acc_Number_Return> { _response });
         }
+
         public static string SerializeToCsv(Deactivate_Acc_Number_Return _response)
         {
             return CsvSerializer.SerializeToCsv(new List<Deactivate_Acc_Number_Return> { _response });
