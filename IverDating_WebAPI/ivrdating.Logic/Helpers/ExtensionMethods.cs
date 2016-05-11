@@ -35,43 +35,53 @@ namespace ivrdating.Logic.Helpers
             return string.Join("|", val);
         }
 
-        public static string SerializeToCsv(GetMemberDetailsResponse _getMemberDetailsResponse)
+        public static string SerializeToJson(object obj)
         {
-            return CsvSerializer.SerializeToCsv(new List<GetMemberDetailsResponse> {_getMemberDetailsResponse });
+            return JsonSerializer.SerializeToString(obj);
         }
 
-        public static string SerializeToCsv(Get_New_Acc_Number_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(GetMemberDetailsResponse _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Get_New_Acc_Number_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<GetMemberDetailsResponse> {_response });
         }
 
-        public static string SerializeToCsv(Get_N_Activate_New_Acc_Number_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(Get_New_Acc_Number_Return _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Get_N_Activate_New_Acc_Number_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<Get_New_Acc_Number_Return> { _response });
         }
 
-        public static string SerializeToCsv(Activate_Acc_Number_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(Get_N_Activate_New_Acc_Number_Return _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Activate_Acc_Number_Return> { _getMemberDetailsResponse });
-        }
-        public static string SerializeToCsv(Deactivate_Acc_Number_Return _getMemberDetailsResponse)
-        {
-            return CsvSerializer.SerializeToCsv(new List<Deactivate_Acc_Number_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<Get_N_Activate_New_Acc_Number_Return> { _response });
         }
 
-        public static string SerializeToCsv(Add_New_Account_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(Activate_Acc_Number_Return _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Add_New_Account_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<Activate_Acc_Number_Return> { _response });
+        }
+        public static string SerializeToCsv(Deactivate_Acc_Number_Return _response)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Deactivate_Acc_Number_Return> { _response });
         }
 
-        public static string SerializeToCsv(Add_To_Customer_Master_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(Add_New_Account_Return _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Add_To_Customer_Master_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<Add_New_Account_Return> { _response });
         }
 
-        public static string SerializeToCsv(Add_To_User_Minute_Return _getMemberDetailsResponse)
+        public static string SerializeToCsv(Add_To_Customer_Master_Return _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<Add_To_User_Minute_Return> { _getMemberDetailsResponse });
+            return CsvSerializer.SerializeToCsv(new List<Add_To_Customer_Master_Return> { _response });
+        }
+
+        public static string SerializeToCsv(Add_To_User_Minute_Return _response)
+        {
+            return CsvSerializer.SerializeToCsv(new List<Add_To_User_Minute_Return> { _response });
+        }
+
+        public static string SerializeToCsv(object _response)
+        {
+            return CsvSerializer.SerializeToCsv(new List<object> { _response });
         }
     }
 }

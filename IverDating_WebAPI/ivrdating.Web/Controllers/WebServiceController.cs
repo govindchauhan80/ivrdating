@@ -9,18 +9,21 @@ using ivrdating.Logic.Services;
 using ivrdating.Models;
 using ivrdating.Domain.VM;
 using ivrdating.Logic.Helpers;
-using ivrdating.Web.Validation;
+using ivrdating.Web.Filter;
 
 namespace ivrdating.Web.Controllers
 {
-    //[ivrdating.Web.Validation.Validator]
+    [LogActionFilter]
+    [LogExceptionFilter]
     public class WebServiceController : ApiController
     {
+        #region Global members
         AccountService _accountService;
         MemberService _memberService;
         CustomerService _customerService;
         UserService _userService;
-        public static string validationError = string.Empty;
+        #endregion Global members
+
         public WebServiceController()
         {
             _accountService = new AccountService();
@@ -136,7 +139,6 @@ namespace ivrdating.Web.Controllers
         }
         #endregion Get_New_Acc_Number
 
-
         #region get_n_activate_new_acc_number
         [Route("api/webservices/get_n_activate_new_acc_number")]
         [HttpPost]
@@ -234,8 +236,6 @@ namespace ivrdating.Web.Controllers
         }
 
         #endregion activate_acc_number
-
-
 
         #region deactivate_acc_number 
 

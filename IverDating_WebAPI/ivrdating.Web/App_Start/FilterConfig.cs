@@ -1,4 +1,4 @@
-﻿using ivrdating.Web.Validation;
+﻿using ivrdating.Web.Filter;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,7 +9,6 @@ namespace ivrdating.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new Validator());
         }
     }
 }
