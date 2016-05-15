@@ -76,6 +76,7 @@
     <Compile Include="Models\mobile_carrier_account.cs" />
     <Compile Include="Models\paymentdetail.cs" />
     <Compile Include="Models\payment_plan_list.cs" />
+    <Compile Include="Models\RemoveUnwatedAttr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\serverdefn.cs" />
     <Compile Include="Models\servicesource.cs" />
@@ -88,6 +89,10 @@
     <Compile Include="VM\Add_New_Account_Response.cs" />
     <Compile Include="VM\Add_To_Customer_Master_Request.cs" />
     <Compile Include="VM\Add_To_Customer_Master_Response.cs" />
+    <Compile Include="VM\Add_To_Payment_Details_Request.cs" />
+    <Compile Include="VM\Add_To_Payment_Details_Response.cs" />
+    <Compile Include="VM\Add_To_Service_Source_Request.cs" />
+    <Compile Include="VM\Add_To_Service_Source_Response.cs" />
     <Compile Include="VM\Add_To_User_Minute_Request.cs" />
     <Compile Include="VM\Add_To_User_Minute_Response.cs" />
     <Compile Include="VM\Deactivate_Acc_Number_Request.cs" />
@@ -98,8 +103,16 @@
     <Compile Include="VM\Get_New_Acc_Number_Response.cs" />
     <Compile Include="VM\Get_N_Activate_New_Acc_Number_Request.cs" />
     <Compile Include="VM\Get_N_Activate_New_Acc_Number_Response.cs" />
+    <Compile Include="VM\Member_Forgot_Passcode_Request.cs" />
+    <Compile Include="VM\Member_Forgot_Passcode_Response.cs" />
     <Compile Include="VM\RequestBase.cs" />
     <Compile Include="VM\ReturnData.cs" />
+    <Compile Include="VM\Update_Account_Request.cs" />
+    <Compile Include="VM\Update_Account_Response.cs" />
+    <Compile Include="VM\Update_User_Minute_Request.cs" />
+    <Compile Include="VM\Update_User_Minute_Response.cs" />
+    <Compile Include="VM\Validate_Request.cs" />
+    <Compile Include="VM\Validate_Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

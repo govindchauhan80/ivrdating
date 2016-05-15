@@ -19,6 +19,10 @@ namespace ivrdating.Logic.Services
 
         public ReturnData GetMemberDetails(GetMemberDetailsRequest request)
         {
+            if (request.Acc_Number <= 0 && string.IsNullOrEmpty(request.CallerId) && string.IsNullOrEmpty(request.CustomerEmail_Address) && string.IsNullOrEmpty(request.PassCode))
+            {
+                return new ReturnData() { Count = 0, ErrorMessage = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA", WsResult = null };
+            }
             if (request.Acc_Number <= 0)
             {
                 return new ReturnData() { Count = 0, ErrorMessage = "No incoming Search Parameter (Function Get_Member_Details)", WsResult = null };
@@ -40,6 +44,37 @@ namespace ivrdating.Logic.Services
             else
             {
                 return new ReturnData() { Count = 0, ErrorMessage = "No matching account found (Function Get_Member_Details)", WsResult = null };
+            }
+            return _wsResponse;
+        }
+
+        public Member_Forgot_Passcode_Return member_forgot_passcode(Member_Forgot_Passcode_Request request)
+        {
+            if (request.Acc_Number <= 0 && string.IsNullOrEmpty(request.CallerId) && string.IsNullOrEmpty(request.CustomerEmail_Address) && string.IsNullOrEmpty(request.PassCode))
+            {
+                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA", WsResult = null };
+            }
+            //if (request.Acc_Number <= 0)
+            //{
+            //    return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "No incoming Search Parameter", WsResult = null };
+            //}
+            string validRequest = CommonRepositories.ValidateRequest(request);
+            if (!validRequest.Equals("OK"))
+            {
+                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
+            Member_Forgot_Passcode_Return _wsResponse = new Member_Forgot_Passcode_Return();
+            Member_Forgot_Passcode_Response data = _memberRepository.member_forgot_passcode(request);
+
+            if (data != null)
+            {
+                _wsResponse.Count = 1;
+                _wsResponse.ErrorMessage = null;
+                _wsResponse.WsResult = data;
+            }
+            else
+            {
+                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "No matching account found", WsResult = null };
             }
             return _wsResponse;
         }

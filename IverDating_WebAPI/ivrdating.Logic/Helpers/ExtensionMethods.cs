@@ -1,4 +1,5 @@
-﻿using ivrdating.Domain.VM;
+﻿using ivrdating.Domain;
+using ivrdating.Domain.VM;
 using ivrdating.Models;
 using ServiceStack.Text;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,7 +44,7 @@ namespace ivrdating.Logic.Helpers
 
         public static string SerializeToCsv(GetMemberDetailsResponse _response)
         {
-            return CsvSerializer.SerializeToCsv(new List<GetMemberDetailsResponse> {_response });
+            return CsvSerializer.SerializeToCsv(new List<GetMemberDetailsResponse> { _response });
         }
 
         public static string SerializeToCsv(Get_New_Acc_Number_Return _response)

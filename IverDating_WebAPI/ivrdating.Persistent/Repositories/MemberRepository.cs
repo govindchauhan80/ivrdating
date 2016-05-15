@@ -62,5 +62,16 @@ namespace ivrdating.Persistent.Repositories
                 }
             }
         }
+
+        public Member_Forgot_Passcode_Response member_forgot_passcode(Member_Forgot_Passcode_Request request)
+        {
+            var data = this.GetMemberDetails(request);
+            if (data != null)
+            {
+                return new Member_Forgot_Passcode_Response() {Acc_Number=data.Acc_Number,CallerId=data.CallerId,Email_Address=data.Email_Address,PassCode=data.PassCode };
+            }
+
+            return null;
+        }
     }
 }

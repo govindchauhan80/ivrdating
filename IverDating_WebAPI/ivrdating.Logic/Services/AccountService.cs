@@ -151,5 +151,133 @@ namespace ivrdating.Logic.Services
 
             return null;
         }
+
+        public Add_To_Payment_Details_Return Add_To_Payment_Details(Add_To_Payment_Details_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "0";
+            }
+            if (_request.Old_Expiry == null)
+            {
+                validRequest = "Old_Expiry Not defined ";
+            }
+            if (_request.New_Expiry == null)
+            {
+                validRequest = "New_Expiry Not defined ";
+            }
+            if (_request.Plan_Id <= 0)
+            {
+                validRequest = "Payment Plan_Id Not defined";
+            }
+            if (string.IsNullOrEmpty(_request.Plan_Amount) || !ExtensionMethods.IsNumeric(_request.Plan_Amount))
+            {
+                validRequest = "Invalid Payment Plan_Amount";
+            }
+            if (_request.Plan_Validity <= 0)
+            {
+                validRequest = "Invalid Payment Plan_Validity";
+            }
+            if (_request.Minutes_In_Package <= 0)
+            {
+                validRequest = "Invalid Payment Minutes_In_Package";
+            }
+            if (string.IsNullOrEmpty(_request.Package_Description))
+            {
+                validRequest = "Package_Description Not defined";
+            }
+
+
+
+            if (!string.IsNullOrEmpty(validRequest))
+            {
+                return new Add_To_Payment_Details_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
+            Add_To_Payment_Details_Response data = _accountRepository.Add_To_Payment_Details(_request);
+            return new Add_To_Payment_Details_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+        }
+
+        public Update_Account_Return update_account(Update_Account_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.CallerID) && validRequest == "")
+            { _request.CallerID = "0"; }
+
+            if (_request.New_Expiry == null && validRequest == "")
+            {
+                validRequest = "New_Expiry Not defined";
+            }
+            if (string.IsNullOrEmpty(_request.AccountType) && validRequest == "")
+            {
+                _request.AccountType = "0";
+            }
+            if (string.IsNullOrEmpty(_request.Active0In1) && validRequest == "")
+            {
+                _request.Active0In1 = "0";
+            }
+            if (string.IsNullOrEmpty(validRequest))
+            {
+                Update_Account_Response data = _accountRepository.update_account(_request);
+                if (data == null)
+                {
+                    return new Update_Account_Return() { Count = 0, ErrorMessage = "No recorde updated" };
+                }
+                else
+                {
+                    return new Update_Account_Return() { Count = 0, ErrorMessage = null, WsResult = data };
+                }
+            }
+            else
+            {
+                return new Update_Account_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+
+
+        }
+
+        public Validate_Return validate(Validate_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.PassCode) && validRequest == "")
+            {
+                validRequest = "PassCode not define";
+            }
+            if (_request.Acc_Number <= 0 && validRequest == "")
+            {
+                validRequest = "Invalid Acc_Number";
+            }
+            if (string.IsNullOrEmpty(validRequest))
+            {
+                Validate_Response data = _accountRepository.validate(_request);
+                if (data != null)
+                {
+                    return new Validate_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+                }
+                else
+                {
+                    return new Validate_Return() { Count = 1, ErrorMessage = "Record not found" };
+                }
+            }
+            else
+            {
+                return new Validate_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
     }
 }
