@@ -78,5 +78,38 @@ namespace ivrdating.Logic.Services
             }
             return _wsResponse;
         }
+
+        public Get_Member_Minutes_Return get_member_minutes(Get_Member_Minutes_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "" && _request.Acc_Number <= 0)
+            {
+                return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
+            }
+            if (validRequest != "")
+            {
+                return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
+            else
+            {
+                Get_Member_Minutes_Response data = _memberRepository.get_member_minutes(_request);
+                if (data != null)
+                {
+                    return new Get_Member_Minutes_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+                }
+                else if (data.Acc_GuestMinutes == -11 && data.Acc_RegisMinutes == -11)
+                {
+                    return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "No entries under User_Minute" };
+                }
+                else
+                {
+                    return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "No record found" };
+                }
+            }
+        }
     }
 }

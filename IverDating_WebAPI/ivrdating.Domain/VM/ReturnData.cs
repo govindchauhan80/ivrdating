@@ -26,7 +26,7 @@ namespace ivrdating.Domain.VM
         public GetMemberDetailsResponse WsResult { get; set; }
     }
     [DataContract(Namespace = "")]
-    public class Member_Forgot_Passcode_Return:ReturnBase
+    public class Member_Forgot_Passcode_Return : ReturnBase
     {
         [DataMember]
         public Member_Forgot_Passcode_Response WsResult { get; set; }
@@ -103,5 +103,35 @@ namespace ivrdating.Domain.VM
     public class Validate_Return : ReturnBase
     {
         public Validate_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Get_Member_Minutes_Return : ReturnBase
+    {
+        [DataMember]
+        public Get_Member_Minutes_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Process_Mobile_Charge_Return : ReturnBase
+    {
+        [DataMember]
+        public Process_Mobile_Charge_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Insert_Login_Log_Return : ReturnBase
+    {
+        [DataMember]
+        public Insert_Login_Log_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Update_Login_Log_Return : ReturnBase
+    {
+        [DataMember]
+        public Update_Login_Log_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Admin_Web_Screening_Return : ReturnBase
+    {
+        [DataMember]
+        public Admin_Web_Screening_Response WsResult { get; set; }
     }
 }

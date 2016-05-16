@@ -279,5 +279,162 @@ namespace ivrdating.Logic.Services
                 return new Validate_Return() { Count = 0, ErrorMessage = validRequest };
             }
         }
+
+        public Process_Mobile_Charge_Return process_mobile_charge(Process_Mobile_Charge_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.SubscriberNo) && validRequest == "")
+            {
+                validRequest = "SubscriberNo not define";
+            }
+            if (_request.Acc_Number <= 0 && validRequest == "")
+            {
+                validRequest = "Invalid Acc_Number";
+            }
+
+            if (_request.SMS_Id <= 0 && validRequest == "")
+            {
+                validRequest = "Invalid Acc_Number";
+            }
+            if (_request.ChargeAmount <= 0 && validRequest == "")
+            {
+                validRequest = "Invalid ChargeAmount";
+            }
+
+            if (_request.CarrierId <= 0 && validRequest == "")
+            {
+                validRequest = "CarrierId ChargeAmount";
+            }
+            if (string.IsNullOrEmpty(_request.TicketId) && validRequest == "")
+            {
+                validRequest = "TicketId not define";
+            }
+
+            if (string.IsNullOrEmpty(validRequest))
+            {
+                Process_Mobile_Charge_Response data = _accountRepository.process_mobile_charge(_request);
+                if (data == null)
+                {
+                    return new Process_Mobile_Charge_Return() { Count = 0, ErrorMessage = "No record found", WsResult = data };
+                }
+                else
+                {
+                    return new Process_Mobile_Charge_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+
+                }
+            }
+            else
+            {
+                return new Process_Mobile_Charge_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Insert_Login_Log_Return insert_login_log(Insert_Login_Log_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.TimeIn) && validRequest == "")
+            {
+            }
+            else
+            {
+                if (!ExtensionMethods.IsNumeric(_request.TimeIn))
+                {
+                    validRequest = "Invalid TimeIn";
+                }
+            }
+
+            if (validRequest == "")
+            {
+                Insert_Login_Log_Response data = _accountRepository.insert_login_log(_request);
+                return new Insert_Login_Log_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+            }
+            else
+            {
+                return new Insert_Login_Log_Return() { Count = 0, ErrorMessage = validRequest };
+
+            }
+        }
+
+        public Update_Login_Log_Return update_login_log(Update_Login_Log_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.TimeOut) && validRequest == "")
+            {
+            }
+            else
+            {
+                if (!ExtensionMethods.IsNumeric(_request.TimeOut))
+                {
+                    validRequest = "Invalid TimeOut";
+                }
+            }
+
+            if (validRequest == "")
+            {
+                Update_Login_Log_Response data = _accountRepository.update_login_log(_request);
+                if (data == null)
+                {
+                    return new Update_Login_Log_Return() { Count = 0, ErrorMessage = "No record found", WsResult = data };
+                }
+                else
+                {
+                    return new Update_Login_Log_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+                }
+            }
+            else
+            {
+                return new Update_Login_Log_Return() { Count = 0, ErrorMessage = validRequest };
+
+            }
+        }
+
+        public Admin_Web_Screening_Return admin_web_screening(Admin_Web_Screening_Request _request, string path)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "" && _request.Acc_Number <= 0)
+            {
+                validRequest = "Invalid Acc_Number";
+            }
+            if (validRequest == "" && _request.App1Del2 <= 0)
+            {
+                validRequest = "Incomplete Request 'App1Del2 not define'";
+            }
+            if (validRequest == "")
+            {
+                Admin_Web_Screening_Response data = _accountRepository.admin_web_screening(_request,path);
+
+                if (data == null)
+                {
+                    return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = "Account Not Find" };
+                }
+                else
+                {
+                    return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = null, WsResult = data };
+                }
+            }
+            else
+            {
+                return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using ivrdating.Domain.VM;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -258,6 +259,123 @@ namespace ivrdating.Persistent.Repositories
 
             return response;
 
+        }
+
+        public Process_Mobile_Charge_Response process_mobile_charge(Process_Mobile_Charge_Request _request)
+        {
+            Process_Mobile_Charge_Response response = null;
+
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+
+            int p = (from l in _context.liveusers orderby l.Port select l.Port).FirstOrDefault();
+            var l_Port = (from s in _context.serverdefns
+                          where p > s.PortStart && p < s.PortStop
+                          select s.PortStop + 1).FirstOrDefault(); ;
+            if (l_Port <= 0)
+            {
+                l_Port = 1;
+            }
+
+            _context.Configuration.ValidateOnSaveEnabled = false;
+            sms_queue_active _sms_Queue_Active = new sms_queue_active();
+
+            _sms_Queue_Active.Acc_Number = _request.Acc_Number;
+            _sms_Queue_Active.CarrierId = _request.CarrierId;
+            _sms_Queue_Active.ChargeAmount = _request.ChargeAmount;
+            _sms_Queue_Active.Grp_Id = Grp_id;
+            _sms_Queue_Active.PassCode = _request.PassCode;
+            _sms_Queue_Active.Port = l_Port;
+            _sms_Queue_Active.SubscriberNo = _request.SubscriberNo;
+            _sms_Queue_Active.Ticket_Id = _request.TicketId;
+            _sms_Queue_Active.SMS_Id = _sms_Queue_Active.SMS_Id;
+            _sms_Queue_Active.ChargeType = 1;
+            _sms_Queue_Active.Job_Time = DateTime.Now;
+            _sms_Queue_Active.Queue_Time = DateTime.Now;
+            _sms_Queue_Active.NextRetryAt = DateTime.Now;
+            _sms_Queue_Active.ProgramId = "0";
+            _sms_Queue_Active.MessageSendAt = DateTime.Now;
+            _sms_Queue_Active.OM0_M1 = 0;
+            _sms_Queue_Active.ivr1sms2 = 2;
+            _sms_Queue_Active.Q0A1S2F3 = 0;
+
+
+            _context.sms_queue_active.Add(_sms_Queue_Active);
+            _context.SaveChanges();
+            response = new Process_Mobile_Charge_Response() { Acc_Number = _request.Acc_Number };
+
+            return response;
+        }
+
+        public Update_Login_Log_Response update_login_log(Update_Login_Log_Request _request)
+        {
+            login_log lg = _context.login_log.Where(x => x.SessionNo == _request.Session).FirstOrDefault();
+
+            if (lg != null)
+            {
+                lg.DateOut = _request.DateOut == null ? "" : ((DateTime)_request.DateOut).ToString("yyyy-MM-dd");
+                lg.TimeOut = _request.TimeOut;
+                lg.LastTimeStamp = _request.LastTimeStamp;
+
+                _context.SaveChanges();
+
+                return new Update_Login_Log_Response() { OK = "OK" };
+            }
+
+            return null;
+        }
+
+        public Insert_Login_Log_Response insert_login_log(Insert_Login_Log_Request _request)
+        {
+            Insert_Login_Log_Response response = new Insert_Login_Log_Response();
+
+            login_log lg = new login_log();
+            lg.IPAddress = _request.CC_IPAddress;
+            lg.DateIn = _request.DateIn == null ? "" : ((DateTime)_request.DateIn).ToString("yyyy-MM-dd");
+            lg.LastTimeStamp = _request.LastTimeStamp;
+            lg.SessionNo = _request.Session;
+            lg.TimeIn = _request.TimeIn;
+            lg.Username = _request.CC_UserName;
+
+            _context.login_log.Add(lg);
+            _context.SaveChanges();
+
+            response = new Insert_Login_Log_Response() { OK = "OK" };
+            return response;
+        }
+
+        public Admin_Web_Screening_Response admin_web_screening(Admin_Web_Screening_Request _request, string path)
+        {
+            Admin_Web_Screening_Response response = null;
+
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+
+            account ac = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+            if (ac != null)
+            {
+                // log
+
+                string logText = "";
+                if (_request.App1Del2 == 1)
+                {
+                    logText = "26," + _request.Acc_Number + ",111," + _request.Group_Prefix;
+                }
+                else if (_request.App1Del2 == 2)
+                {
+                    logText = "26," + _request.Acc_Number + ",222," + _request.Group_Prefix;
+                }
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                File.AppendAllLines(path + "/" + "Admin_Web_Screening_" + String.Format("{0:MM-yyyy}.text", DateTime.UtcNow), new[] { logText });
+               
+
+
+                return new Admin_Web_Screening_Response() { OK = "OK" };
+            }
+            return response;
         }
 
         public Add_New_Account_Response Add_New_Account(Add_New_Account_Request _request)

@@ -15,7 +15,7 @@ namespace ivrdating.Log
         // private static readonly ILog logger =  LogManager.GetLogger(typeof(LogRequestResponse));
         public LogRequestResponse()
         {
-            log4net.GlobalContext.Properties["LogName"] = String.Format("{0:MMM-yyyy}.text", DateTime.UtcNow);
+            log4net.GlobalContext.Properties["LogName"] = String.Format("{0:MM-yyyy}.text", DateTime.UtcNow);
         }
 
         public void LogData(string data, string logType)

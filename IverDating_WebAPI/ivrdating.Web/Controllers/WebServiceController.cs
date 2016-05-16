@@ -10,6 +10,7 @@ using ivrdating.Models;
 using ivrdating.Domain.VM;
 using ivrdating.Logic.Helpers;
 using ivrdating.Web.Filter;
+using System.Configuration;
 
 namespace ivrdating.Web.Controllers
 {
@@ -410,6 +411,7 @@ namespace ivrdating.Web.Controllers
             return FN_Add_To_Customer_Master(data, output);
         }
 
+        [NonAction]
         private IHttpActionResult FN_Add_To_Customer_Master(Add_To_Customer_Master_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
@@ -511,7 +513,7 @@ namespace ivrdating.Web.Controllers
             var data = _accountService.Add_To_Payment_Details(new Add_To_Payment_Details_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Approval_Code = Approval_Code, AVS_Result_Code = AVS_Result_Code, CC_EXPDATE = CC_EXPDATE, CVC = CVC, FULL_CC_NUMBER = FULL_CC_NUMBER, Minutes_In_Package = Minutes_In_Package, New_Expiry = New_Expiry, Old_Expiry = Old_Expiry, Package_Description = Package_Description, Payment_Type_Text = Payment_Type_Text, Plan_Amount = Plan_Amount, Plan_Id = Plan_Id, Plan_Validity = Plan_Validity, Response_Code = Response_Code, Response_Reason_Code = Response_Reason_Code, Response_Reason_Text = Response_Reason_Text, Transaction_Id = Transaction_Id, Charged_Amount = Charged_Amount, CallerId = CallerId });
             return FN_Add_To_Payment_Details(data, output);
         }
-
+        [NonAction]
         private IHttpActionResult FN_Add_To_Payment_Details(Add_To_Payment_Details_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
@@ -662,7 +664,7 @@ namespace ivrdating.Web.Controllers
             return FN_Update_User_Minute(data, output);
         }
 
-        [Route("api/webservices/update_account")]
+        [Route("api/webservices/update_user_minute")]
         [HttpGet]
         public IHttpActionResult update_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minutes_In_Package, DateTime? RegisteredDate, string output = null)
         {
@@ -717,7 +719,7 @@ namespace ivrdating.Web.Controllers
         [HttpGet]
         public IHttpActionResult validate(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, string output = null)
         {
-            var data = _accountService.validate(new Validate_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, PassCode=PassCode });
+            var data = _accountService.validate(new Validate_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, PassCode = PassCode });
             return FN_Validate(data, output);
         }
 
@@ -755,5 +757,264 @@ namespace ivrdating.Web.Controllers
         }
 
         #endregion validate
+
+        #region 15 get_member_minutes 
+
+        [Route("api/webservices/get_member_minutes")]
+        [HttpPost]
+        public IHttpActionResult get_member_minutes(Get_Member_Minutes_Request _request, string output = null)
+        {
+            Get_Member_Minutes_Return data = _memberService.get_member_minutes(_request);
+            return FN_Get_Member_Minutes(data, output);
+        }
+
+        [Route("api/webservices/get_member_minutes")]
+        [HttpGet]
+        public IHttpActionResult get_member_minutes(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string output = null)
+        {
+            var data = _memberService.get_member_minutes(new Get_Member_Minutes_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number });
+            return FN_Get_Member_Minutes(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Get_Member_Minutes(Get_Member_Minutes_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Member_Minutes_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Member_Minutes_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+
+        #endregion get_member_minutes
+
+        #region 16 process_mobile_charge
+
+        [Route("api/webservices/process_mobile_charge")]
+        [HttpPost]
+        public IHttpActionResult process_mobile_charge(Process_Mobile_Charge_Request _request, string output = null)
+        {
+            Process_Mobile_Charge_Return data = _accountService.process_mobile_charge(_request);
+            return FN_Process_Mobile_Charge(data, output);
+        }
+
+        [Route("api/webservices/process_mobile_charge")]
+        [HttpGet]
+        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int PassCode, int SMS_Id, string TicketId, int CarrierId, double ChargeAmount, string output = null)
+        {
+            var data = _accountService.process_mobile_charge(new Process_Mobile_Charge_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CarrierId = CarrierId, ChargeAmount = ChargeAmount, PassCode = PassCode, SMS_Id = SMS_Id, SubscriberNo = SubscriberNo, TicketId = TicketId });
+            return FN_Process_Mobile_Charge(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Process_Mobile_Charge(Process_Mobile_Charge_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Process_Mobile_Charge_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Process_Mobile_Charge_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+
+        #endregion process_mobile_charge
+
+        #region 17 insert_login_log 
+        [Route("api/webservices/insert_login_log")]
+        [HttpPost]
+        public IHttpActionResult insert_login_log(Insert_Login_Log_Request _request, string output = null)
+        {
+            Insert_Login_Log_Return data = _accountService.insert_login_log(_request);
+            return FN_Insert_Login_Log(data, output);
+        }
+
+        [Route("api/webservices/insert_login_log")]
+        [HttpGet]
+        public IHttpActionResult insert_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string CC_UserName = null, string CC_IPAddress = null, DateTime? DateIn = null, string TimeIn = null, DateTime? LastTimeStamp = null, string output = null)
+        {
+            var data = _accountService.insert_login_log(new Insert_Login_Log_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, CC_IPAddress = CC_IPAddress, LastTimeStamp = LastTimeStamp, Session = Session, TimeIn = TimeIn, DateIn = DateIn, CC_UserName = CC_UserName });
+            return FN_Insert_Login_Log(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Insert_Login_Log(Insert_Login_Log_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Insert_Login_Log_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Insert_Login_Log_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion insert_login_log
+
+        #region 18 update_login_log 
+        [Route("api/webservices/update_login_log")]
+        [HttpPost]
+        public IHttpActionResult update_login_log(Update_Login_Log_Request _request, string output = null)
+        {
+            Update_Login_Log_Return data = _accountService.update_login_log(_request);
+            return FN_Update_Login_Log(data, output);
+        }
+
+        [Route("api/webservices/update_login_log")]
+        [HttpGet]
+        public IHttpActionResult update_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, DateTime? DateOut = null, string TimeOut = null, DateTime? LastTimeStamp = null, string output = null)
+        {
+            var data = _accountService.update_login_log(new Update_Login_Log_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, LastTimeStamp = LastTimeStamp, Session = Session, DateOut = DateOut, TimeOut = TimeOut });
+            return FN_Update_Login_Log(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Update_Login_Log(Update_Login_Log_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Login_Log_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Login_Log_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion update_login_log
+
+        #region 19 admin_web_screening
+        [Route("api/webservices/admin_web_screening")]
+        [HttpPost]
+        public IHttpActionResult admin_web_screening(Admin_Web_Screening_Request _request, string output = null)
+        {
+            Admin_Web_Screening_Return data = _accountService.admin_web_screening(_request, System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["Adminscreen"].ToString()));
+            return FN_Admin_Web_Screening(data, output);
+        }
+
+        [Route("api/webservices/admin_web_screening")]
+        [HttpGet]
+        public IHttpActionResult admin_web_screening(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int App1Del2, string output = null)
+        {
+            var data = _accountService.admin_web_screening(new Admin_Web_Screening_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, Group_Prefix = Group_Prefix, App1Del2 = App1Del2 }, System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["Adminscreen"].ToString()));
+            return FN_Admin_Web_Screening(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Admin_Web_Screening(Admin_Web_Screening_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Admin_Web_Screening_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Admin_Web_Screening_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion admin_web_screening
     }
 }
