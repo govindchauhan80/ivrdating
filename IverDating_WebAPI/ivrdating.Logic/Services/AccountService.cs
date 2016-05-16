@@ -420,7 +420,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "")
             {
-                Admin_Web_Screening_Response data = _accountRepository.admin_web_screening(_request,path);
+                Admin_Web_Screening_Response data = _accountRepository.admin_web_screening(_request, path);
 
                 if (data == null)
                 {
@@ -434,6 +434,143 @@ namespace ivrdating.Logic.Services
             else
             {
                 return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Getchargeamount_Return getchargeamount(Getchargeamount_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "" && _request.Plan_Id <= 0)
+            {
+                validRequest = "Plan_Id not define";
+            }
+            if (validRequest == "" && _request.Area_Code <= 0)
+            {
+                validRequest = "Area_Code not define";
+            }
+
+            if (validRequest == "")
+            {
+                Getchargeamount_Response data = _accountRepository.getchargeamount(_request);
+
+                if (data == null)
+                {
+                    return new Getchargeamount_Return() { Count = 0, ErrorMessage = "Payment Plan Not Found" };
+                }
+                else
+                {
+                    return new Getchargeamount_Return() { Count = 1, WsResult = data };
+
+                }
+            }
+            else
+            {
+                return new Getchargeamount_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Delete_Completeaccount_Return delete_completeaccount(Delete_Completeaccount_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "" && _request.Acc_Number <= 0)
+            {
+                validRequest = "Acc_Number not define";
+            }
+            if (validRequest == "")
+            {
+                Delete_Completeaccount_Response data = _accountRepository.delete_completeaccount(_request);
+                if (data == null)
+                {
+                    return new Delete_Completeaccount_Return() { Count = 0, ErrorMessage = "No record found" };
+                }
+                else
+                {
+                    return new Delete_Completeaccount_Return() { Count = 1, WsResult = data };
+                }
+            }
+            else
+            {
+                return new Delete_Completeaccount_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Read_Misc_Return read_misc(Read_Misc_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "")
+            {
+                Read_Misc_Response data = _accountRepository.read_misc(_request);
+
+                return new Read_Misc_Return() { Count = 1, WsResult = data };
+            }
+            else
+            {
+                return new Read_Misc_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Set_Misc_Return set_misc(Set_Misc_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "")
+            {
+                Set_Misc_Response data = _accountRepository.set_misc(_request);
+
+                if (data == null)
+                {
+                    return new Set_Misc_Return() { Count = 0, ErrorMessage = "Invalid Setting name" };
+                }
+
+                return new Set_Misc_Return() { Count = 1, WsResult = data };
+            }
+            else
+            {
+                return new Set_Misc_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Set_Primary_Apiserver_Return set_primary_apiserver(Set_Primary_Apiserver_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            if (validRequest == "")
+            {
+                validRequest = CommonRepositories.ValidateIp(_request.ActiveServerIP);
+            }
+            if (validRequest == "")
+            {
+                Set_Primary_Apiserver_Response data = _accountRepository.set_primary_apiserver(_request);
+                if (data == null)
+                {
+                    return new Set_Primary_Apiserver_Return() { Count = 0, ErrorMessage = "No record found" };
+                }
+                else
+                {
+                    return new Set_Primary_Apiserver_Return() { Count = 1, WsResult = data };
+                }
+            }
+            else
+            {
+                return new Set_Primary_Apiserver_Return() { Count = 0, ErrorMessage = validRequest };
             }
         }
     }

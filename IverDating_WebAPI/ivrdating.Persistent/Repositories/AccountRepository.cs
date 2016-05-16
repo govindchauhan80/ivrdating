@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -370,11 +371,159 @@ namespace ivrdating.Persistent.Repositories
                 }
 
                 File.AppendAllLines(path + "/" + "Admin_Web_Screening_" + String.Format("{0:MM-yyyy}.text", DateTime.UtcNow), new[] { logText });
-               
+
 
 
                 return new Admin_Web_Screening_Response() { OK = "OK" };
             }
+            return response;
+        }
+
+        public Getchargeamount_Response getchargeamount(Getchargeamount_Request _request)
+        {
+            Getchargeamount_Response response = null;
+            decimal Tax_Perc = 0;
+
+            market m = _context.markets.Where(x => x.AreaCode == _request.Area_Code).FirstOrDefault();
+            if (m != null)
+            {
+                Tax_Perc = m.Tax_Perc;
+            }
+
+            payment_plan_list p = _context.payment_plan_list.Where(x => x.Id == _request.Plan_Id).FirstOrDefault();
+            if (p != null)
+            {
+                response = new Getchargeamount_Response();
+                if (Tax_Perc > 0)
+                {
+                    response.Amount = ((decimal)p.Amount) * (1 + Tax_Perc + p.ApplicableFee_Perc) + p.ApplicableFee_Static;
+                }
+                else
+                {
+                    response.Amount = (decimal)p.Amount;
+                }
+            }
+
+            return response;
+        }
+
+        public Delete_Completeaccount_Response delete_completeaccount(Delete_Completeaccount_Request _request)
+        {
+            Delete_Completeaccount_Response response = null;
+
+            int ct = 0;
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+
+            ct = _context.action_queue.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id && x.FuncTable_Name == "DELETE_CompleteAccount").Count();
+
+
+            if (ct <= 0)
+            {
+                int p = (from l in _context.liveusers orderby l.Port select l.Port).FirstOrDefault();
+                var Port = (from s in _context.serverdefns
+                            where p > s.PortStart && p < s.PortStop
+                            select s.PortStart).FirstOrDefault(); ;
+                if (Port <= 0)
+                {
+                    Port = 1;
+                }
+                //INSERT INTO action_queue for maintenance to take care of it
+
+                action_queue aq = new action_queue();
+                aq.QDateTimeStamp = DateTime.Now;
+                aq.Function1Table2 = "1";
+                aq.FuncTable_Name = "DELETE_CompleteAccount";
+                aq.Field_Name = "";
+                aq.Acc_Number = _request.Acc_Number;
+                aq.Grp_Id = Grp_id;
+                aq.Port = Port;
+                aq.WhereClause = "";
+                aq.Action = "EXECUTE";
+                aq.Q0A1S2F3 = "0";
+
+                _context.action_queue.Add(aq);
+                _context.Configuration.ValidateOnSaveEnabled = false;
+                _context.SaveChanges();
+                response = new Delete_Completeaccount_Response() { Message = "Delete account request queued." };
+            }
+            else
+            {
+                response = new Delete_Completeaccount_Response() { Message = "Request canceled|Duplicate delete account request - canceled." };
+            }
+            return response;
+        }
+
+        public Set_Misc_Response set_misc(Set_Misc_Request _request)
+        {
+            misc _misc = null;
+
+            _misc = _context.miscs.Where(x => x.SettingName == _request.SettingName).FirstOrDefault();
+
+            if (_misc == null)
+            {
+                return null;
+            }
+            else
+            {
+
+                _misc.SettingValue = _request.SettingValue;
+
+                _context.SaveChanges();
+                return new Set_Misc_Response() { Status = "Value updated." };
+
+            }
+        }
+
+        public Set_Primary_Apiserver_Response set_primary_apiserver(Set_Primary_Apiserver_Request _request)
+        {
+            Set_Primary_Apiserver_Response response = null;
+
+            int ct = _context.api_servers.Count();
+            if (ct > 0)
+            {
+                api_servers aps = _context.api_servers.Where(x => x.ip_address == _request.ActiveServerIP).FirstOrDefault();
+
+                if (aps != null)
+                {
+                    if (aps.ip_priority == 1)
+                    {
+                        response = new Set_Primary_Apiserver_Response() { Status = "API Server already set as Primary." };
+                    }
+                    else {
+                        long curr_ip_priority = aps.ip_priority;
+                        aps.ip_priority = aps.ip_priority - (curr_ip_priority - 1);
+
+                        if (aps.ip_priority <= 0)
+                        {
+                            aps.ip_priority = aps.ip_priority + ct;
+                        }
+                        _context.SaveChanges();
+
+                        response = new Set_Primary_Apiserver_Response() {Status= "API Server set as Primary" };
+                    }
+                }
+                else
+                {
+                    response = new Set_Primary_Apiserver_Response() { Status = "Requested Server IP not found." };
+                }
+            }
+
+            return response;
+        }
+
+        public Read_Misc_Response read_misc(Read_Misc_Request _request)
+        {
+            Read_Misc_Response response = null;
+
+            List<misc> _misc = _context.miscs.OrderBy(x => x.SettingName).Where(x => x.ForWeb == 1).ToList<misc>();
+
+            List<string> str = new List<string>();
+            foreach (misc m in _misc)
+            {
+                str.Add(m.SettingName + ":" + m.SettingValue);
+            }
+
+            response = new Read_Misc_Response() { Setting = string.Join("|", str) };
             return response;
         }
 

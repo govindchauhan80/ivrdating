@@ -25,20 +25,20 @@ namespace ivrdating.Web.Controllers
         UserService _userService;
         #endregion Global members
 
-        public WebServiceController()
-        {
-            _accountService = new AccountService();
-            _memberService = new MemberService();
-            _customerService = new CustomerService();
-            _userService = new UserService();
-        }
+        //public WebServiceController()
+        //{
+        //    _accountService = new AccountService();
+        //    _memberService = new MemberService();
+        //    _customerService = new CustomerService();
+        //    _userService = new UserService();
+        //}
 
-        [Route("api/webservices/get_accounts")]
-        [HttpGet]
-        public IHttpActionResult get_accounts()
-        {
-            return Ok(_accountService.GetAll());
-        }
+        //[Route("api/webservices/get_accounts")]
+        //[HttpGet]
+        //public IHttpActionResult get_accounts()
+        //{
+        //    return Ok(_accountService.GetAll());
+        //}
         #region 1  get_member_details
         [Route("api/webservices/get_member_details")]
         [HttpPost]
@@ -1016,5 +1016,264 @@ namespace ivrdating.Web.Controllers
             }
         }
         #endregion admin_web_screening
+
+        #region 20 getchargeamount 
+        [Route("api/webservices/getchargeamount")]
+        [HttpPost]
+        public IHttpActionResult getchargeamount(Getchargeamount_Request _request, string output = null)
+        {
+            Getchargeamount_Return data = _accountService.getchargeamount(_request);
+            return FN_Getchargeamount(data, output);
+        }
+
+        [Route("api/webservices/getchargeamount")]
+        [HttpGet]
+        public IHttpActionResult getchargeamount(string AuthKey, string WS_UserName, string WS_Password, int Area_Code, int Plan_Id, string output = null)
+        {
+            var data = _accountService.getchargeamount(new Getchargeamount_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Area_Code = Area_Code, Plan_Id = Plan_Id });
+            return FN_Getchargeamount(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Getchargeamount(Getchargeamount_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Getchargeamount_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Getchargeamount_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion getchargeamount
+
+        #region 21 delete_completeaccount
+
+        [Route("api/webservices/delete_completeaccount")]
+        [HttpPost]
+        public IHttpActionResult delete_completeaccount(Delete_Completeaccount_Request _request, string output = null)
+        {
+            Delete_Completeaccount_Return data = _accountService.delete_completeaccount(_request);
+            return FN_Delete_Completeaccount(data, output);
+        }
+
+        [Route("api/webservices/delete_completeaccount")]
+        [HttpGet]
+        public IHttpActionResult delete_completeaccount(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string output = null)
+        {
+            var data = _accountService.delete_completeaccount(new Delete_Completeaccount_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, Group_Prefix = Group_Prefix });
+            return FN_Delete_Completeaccount(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Delete_Completeaccount(Delete_Completeaccount_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Delete_Completeaccount_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Delete_Completeaccount_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+
+        #endregion delete_completeaccount
+
+        #region 22 read_misc
+        [Route("api/webservices/read_misc")]
+        [HttpPost]
+        public IHttpActionResult read_misc(Read_Misc_Request _request, string output = null)
+        {
+            Read_Misc_Return data = _accountService.read_misc(_request);
+            return FN_Read_Misc(data, output);
+        }
+
+        [Route("api/webservices/read_misc")]
+        [HttpGet]
+        public IHttpActionResult read_misc(string AuthKey, string WS_UserName, string WS_Password, string output = null)
+        {
+            var data = _accountService.read_misc(new Read_Misc_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName });
+            return FN_Read_Misc(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Read_Misc(Read_Misc_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Read_Misc_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Read_Misc_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion read_misc
+
+        #region 23 set_misc 
+        [Route("api/webservices/set_misc")]
+        [HttpPost]
+        public IHttpActionResult set_misc(Set_Misc_Request _request, string output = null)
+        {
+            Set_Misc_Return data = _accountService.set_misc(_request);
+            return FN_Set_Misc(data, output);
+        }
+
+        [Route("api/webservices/set_misc")]
+        [HttpGet]
+        public IHttpActionResult set_misc(string AuthKey, string WS_UserName, string WS_Password, string SettingName, string SettingValue, string output = null)
+        {
+            var data = _accountService.set_misc(new Set_Misc_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, SettingName = SettingName, SettingValue = SettingValue });
+            return FN_Set_Misc(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Set_Misc(Set_Misc_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Misc_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Misc_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion set_misc
+
+
+        #region 24 set_primary_apiserver 
+
+        [Route("api/webservices/set_primary_apiserver")]
+        [HttpPost]
+        public IHttpActionResult set_primary_apiserver(Set_Primary_Apiserver_Request _request, string output = null)
+        {
+            Set_Primary_Apiserver_Return data = _accountService.set_primary_apiserver(_request);
+            return FN_Set_Primary_Apiserver(data, output);
+        }
+
+        [Route("api/webservices/set_primary_apiserver")]
+        [HttpGet]
+        public IHttpActionResult set_primary_apiserver(string AuthKey, string WS_UserName, string WS_Password, string ActiveServerIP, string output = null)
+        {
+            var data = _accountService.set_primary_apiserver(new Set_Primary_Apiserver_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, ActiveServerIP=ActiveServerIP});
+            return FN_Set_Primary_Apiserver(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Set_Primary_Apiserver(Set_Primary_Apiserver_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Primary_Apiserver_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Primary_Apiserver_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion set_primary_apiserver
     }
 }

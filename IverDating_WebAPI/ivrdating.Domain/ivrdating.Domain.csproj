@@ -99,6 +99,10 @@
     <Compile Include="VM\Admin_Web_Screening_Response.cs" />
     <Compile Include="VM\Deactivate_Acc_Number_Request.cs" />
     <Compile Include="VM\Deactivate_Acc_Number_Response.cs" />
+    <Compile Include="VM\Delete_Completeaccount_Request.cs" />
+    <Compile Include="VM\Delete_Completeaccount_Response.cs" />
+    <Compile Include="VM\Getchargeamount_Request.cs" />
+    <Compile Include="VM\Getchargeamount_Response.cs" />
     <Compile Include="VM\GetMemberDetailsRequest.cs" />
     <Compile Include="VM\GetMemberDetailsResponse.cs" />
     <Compile Include="VM\Get_Member_Minutes_Request.cs" />
@@ -113,8 +117,14 @@
     <Compile Include="VM\Member_Forgot_Passcode_Response.cs" />
     <Compile Include="VM\Process_Mobile_Charge_Request.cs" />
     <Compile Include="VM\Process_Mobile_Charge_Response.cs" />
+    <Compile Include="VM\Read_Misc_Request.cs" />
+    <Compile Include="VM\Read_Misc_Response.cs" />
     <Compile Include="VM\RequestBase.cs" />
     <Compile Include="VM\ReturnData.cs" />
+    <Compile Include="VM\Set_Misc_Request.cs" />
+    <Compile Include="VM\Set_Misc_Response.cs" />
+    <Compile Include="VM\Set_Primary_Apiserver_Request.cs" />
+    <Compile Include="VM\Set_Primary_Apiserver_Response.cs" />
     <Compile Include="VM\Update_Account_Request.cs" />
     <Compile Include="VM\Update_Account_Response.cs" />
     <Compile Include="VM\Update_Login_Log_Request.cs" />

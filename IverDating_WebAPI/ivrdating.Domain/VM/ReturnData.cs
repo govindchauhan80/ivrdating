@@ -134,4 +134,36 @@ namespace ivrdating.Domain.VM
         [DataMember]
         public Admin_Web_Screening_Response WsResult { get; set; }
     }
+    [DataContract(Namespace = "")]
+    public class Getchargeamount_Return : ReturnBase
+    {
+        [DataMember]
+        public Getchargeamount_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Delete_Completeaccount_Return : ReturnBase
+    {
+        [DataMember]
+        public Delete_Completeaccount_Response WsResult { get; set; }
+    }
+    [DataContract(Namespace = "")]
+    public class Read_Misc_Return : ReturnBase
+    {
+        [DataMember]
+        public Read_Misc_Response WsResult { get; set; }
+    }
+
+    [DataContract(Namespace = "")]
+    public class Set_Misc_Return : ReturnBase
+    {
+        [DataMember]
+        public Set_Misc_Response WsResult { get; set; }
+    }
+
+    [DataContract(Namespace = "")]
+    public class Set_Primary_Apiserver_Return : ReturnBase
+    {
+        [DataMember]
+        public Set_Primary_Apiserver_Response WsResult { get; set; }
+    }
 }
