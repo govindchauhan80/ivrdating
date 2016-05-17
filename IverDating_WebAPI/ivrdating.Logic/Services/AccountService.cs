@@ -192,10 +192,14 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Package_Description Not defined";
             }
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "0";
+            }
 
 
 
-            if (!string.IsNullOrEmpty(validRequest))
+                if (!string.IsNullOrEmpty(validRequest))
             {
                 return new Add_To_Payment_Details_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }

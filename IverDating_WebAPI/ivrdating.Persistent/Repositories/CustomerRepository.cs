@@ -16,6 +16,7 @@ namespace ivrdating.Persistent.Repositories
 
         public Add_To_Customer_Master_Response Add_To_Customer_Master(Add_To_Customer_Master_Request _request)
         {
+            _context.Configuration.ValidateOnSaveEnabled = false;
             Add_To_Customer_Master_Response response = null;
 
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);

@@ -97,6 +97,8 @@
     <Compile Include="VM\Add_To_User_Minute_Response.cs" />
     <Compile Include="VM\Admin_Web_Screening_Request.cs" />
     <Compile Include="VM\Admin_Web_Screening_Response.cs" />
+    <Compile Include="VM\Check_Geo_Location_Request.cs" />
+    <Compile Include="VM\Check_Geo_Location_Response.cs" />
     <Compile Include="VM\Deactivate_Acc_Number_Request.cs" />
     <Compile Include="VM\Deactivate_Acc_Number_Response.cs" />
     <Compile Include="VM\Delete_Completeaccount_Request.cs" />
@@ -109,6 +111,8 @@
     <Compile Include="VM\Get_Member_Minutes_Response.cs" />
     <Compile Include="VM\Get_New_Acc_Number_Request.cs" />
     <Compile Include="VM\Get_New_Acc_Number_Response.cs" />
+    <Compile Include="VM\Get_Node3_Accesspoint_Ip_Request.cs" />
+    <Compile Include="VM\Get_Node3_Accesspoint_Ip_Response.cs" />
     <Compile Include="VM\Get_N_Activate_New_Acc_Number_Request.cs" />
     <Compile Include="VM\Get_N_Activate_New_Acc_Number_Response.cs" />
     <Compile Include="VM\Insert_Login_Log_Request.cs" />
@@ -127,6 +131,8 @@
     <Compile Include="VM\Set_Primary_Apiserver_Response.cs" />
     <Compile Include="VM\Update_Account_Request.cs" />
     <Compile Include="VM\Update_Account_Response.cs" />
+    <Compile Include="VM\Update_Customer_Master_Request.cs" />
+    <Compile Include="VM\Update_Customer_Master_Response.cs" />
     <Compile Include="VM\Update_Login_Log_Request.cs" />
     <Compile Include="VM\Update_Login_Log_Response.cs" />
     <Compile Include="VM\Update_User_Minute_Request.cs" />

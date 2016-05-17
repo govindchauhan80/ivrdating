@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,25 @@ namespace ivrdating.Persistent.Repositories
     public class ExtensionMethods
     {
 
+        public static double inet_aton(IPAddress IPaddress)
+        {
+            if (IPaddress.IsIPv4MappedToIPv6)
+            {
+                IPaddress = IPaddress.MapToIPv4();
+            }
+            int i;
+            double num = 0;
+            if (IPaddress.ToString() == "")
+            {
+                return 0;
+            }
+            string[] arrDec = IPaddress.ToString().Split('.');
+            for (i = arrDec.Length - 1; i >= 0; i--)
+            {
+                num += ((int.Parse(arrDec[i]) % 256) * Math.Pow(256, (3 - i)));
+            }
+            return num;
+        }
         public static string GetMd5Hash(string input)
         {
             MD5 md5Hash = MD5.Create();

@@ -64,7 +64,8 @@ namespace ivrdating.Persistent.Repositories
                 um.R_Seconds = _request.Minutes_In_Package * 60;
                 um.LastDateTimeStamp = (DateTime)_request.RegisteredDate;
             }
-            else {
+            else
+            {
                 user_minute new_Um = new user_minute();
                 new_Um.Acc_Number = _request.Acc_Number;
                 new_Um.Grp_Id = Grp_id;
@@ -77,7 +78,40 @@ namespace ivrdating.Persistent.Repositories
                 _context.user_minute.Add(new_Um);
             }
             _context.SaveChanges();
-            return new Update_User_Minute_Response() {Acc_Number=_request.Acc_Number };
+            return new Update_User_Minute_Response() { Acc_Number = _request.Acc_Number };
+        }
+
+        public Check_Geo_Location_Response check_geo_location(Check_Geo_Location_Request _request, double inetAtom)
+        {
+            Check_Geo_Location_Response response = new Check_Geo_Location_Response() {geo_areacode="0",geo_city = "0",geo_country = "0",geo_stateprov = "0" };
+
+            if (!_request.Client_IP_Location.Contains(":"))
+            {
+                long ip_byte = (1 * Convert.ToInt32(_request.Client_IP_Location.Substring(0, _request.Client_IP_Location.IndexOf("."))));
+                double aton = inetAtom;
+                ip2location_db15_ipv4m iploc = _context.ip2location_db15_ipv4m.Where(x => x.ip_byte1 == ip_byte  && x.ip_start>= aton && x.ip_end<= aton).FirstOrDefault();
+
+                if (iploc != null)
+                {
+                    response = new Check_Geo_Location_Response() { geo_areacode = iploc.AreaCode, geo_city = iploc.city, geo_country = iploc.country, geo_stateprov = iploc.stateprov };
+                }
+            }
+
+            return response;
+        }
+        
+
+        public Get_Node3_Accesspoint_Ip_Response get_node3_accesspoint_ip(Get_Node3_Accesspoint_Ip_Request _request)
+        {
+            Get_Node3_Accesspoint_Ip_Response response = null;
+
+            misc _misc = _context.miscs.Where(x => x.SettingName == "Node3_AccessPoint_IP").FirstOrDefault();
+            if (_misc != null)
+            {
+                response = new Get_Node3_Accesspoint_Ip_Response() { ip_address = _misc.SettingValue };
+            }
+
+            return response;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ivrdating.Domain.VM;
+using System.Net;
 
 namespace ivrdating.Logic.Services
 {
@@ -110,6 +111,70 @@ namespace ivrdating.Logic.Services
             else
             {
                 return new Update_User_Minute_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Check_Geo_Location_Return check_geo_location(Check_Geo_Location_Request _request)
+        {
+
+            IPAddress adr = null;
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+
+            if (validRequest == "" && string.IsNullOrEmpty(_request.Client_IP_Location))
+            {
+                validRequest = "Client_IP_Location not define";
+            }
+            else
+            {
+                
+                if (IPAddress.TryParse(_request.Client_IP_Location, out adr))
+                {
+
+                }
+                else
+                {
+                    validRequest = "Invalid Client_IP_Location";
+                }
+            }
+
+
+            if (validRequest != "")
+            {
+
+                return new Check_Geo_Location_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+            else
+            {
+
+                double inetAtom = ExtensionMethods.inet_aton(adr);
+                Check_Geo_Location_Response data = _userRepository.check_geo_location(_request, inetAtom);
+
+                return new Check_Geo_Location_Return() { Count = 1, WsResult = data };
+            }
+        }
+
+        public Get_Node3_Accesspoint_Ip_Return get_node3_accesspoint_ip(Get_Node3_Accesspoint_Ip_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (validRequest != "")
+            {
+                return new Get_Node3_Accesspoint_Ip_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+            else
+            {
+                Get_Node3_Accesspoint_Ip_Response data = _userRepository.get_node3_accesspoint_ip(_request);
+
+                return new Get_Node3_Accesspoint_Ip_Return() { Count = 1, WsResult = data };
             }
         }
     }

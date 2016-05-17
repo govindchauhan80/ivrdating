@@ -25,13 +25,13 @@ namespace ivrdating.Web.Controllers
         UserService _userService;
         #endregion Global members
 
-        //public WebServiceController()
-        //{
-        //    _accountService = new AccountService();
-        //    _memberService = new MemberService();
-        //    _customerService = new CustomerService();
-        //    _userService = new UserService();
-        //}
+        public WebServiceController()
+        {
+            _accountService = new AccountService();
+            _memberService = new MemberService();
+            _customerService = new CustomerService();
+            _userService = new UserService();
+        }
 
         //[Route("api/webservices/get_accounts")]
         //[HttpGet]
@@ -405,7 +405,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_customer_master")]
         [HttpGet]
-        public IHttpActionResult add_to_customer_master(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string First_Name, string Last_Name, string WebUserName, string WebPassword, string CustomerAddress, string CustomerCity, string CustomerState, string CustomerZip_Code, string CustomerCountry, string CustomerEmail_Address, DateTime? RegisteredDate, string output = null)
+        public IHttpActionResult add_to_customer_master(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string First_Name = null, string Last_Name = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, DateTime? RegisteredDate = null, string output = null)
         {
             var data = _customerService.Add_To_Customer_Master(new Add_To_Customer_Master_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerCountry = CustomerCountry, CustomerEmail_Address = CustomerEmail_Address, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, First_Name = First_Name, Last_Name = Last_Name, WebPassword = WebPassword, WebUserName = WebUserName });
             return FN_Add_To_Customer_Master(data, output);
@@ -508,7 +508,7 @@ namespace ivrdating.Web.Controllers
         }
         [Route("api/webservices/add_to_payment_details")]
         [HttpGet]
-        public IHttpActionResult add_to_payment_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, DateTime? RegisteredDate, int Seconds_In_Package, string Approval_Code, string AVS_Result_Code, string CC_EXPDATE, string CVC, string FULL_CC_NUMBER, int Minutes_In_Package, DateTime? New_Expiry, DateTime? Old_Expiry, string Package_Description, string Payment_Type_Text, string Plan_Amount, int Plan_Id, int Plan_Validity, short Response_Code, string Response_Reason_Code, string Response_Reason_Text, string Transaction_Id, int Charged_Amount, string CallerId, string output = null)
+        public IHttpActionResult add_to_payment_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, DateTime? RegisteredDate, int Minutes_In_Package, DateTime? New_Expiry, DateTime? Old_Expiry, string Package_Description, string Plan_Amount, int Plan_Id, int Plan_Validity, int Charged_Amount, string CC_EXPDATE = null, string FULL_CC_NUMBER = null, string CVC = null, short Response_Code = 0, string Response_Reason_Code = null, string Response_Reason_Text = null, string Approval_Code = null, string AVS_Result_Code = null, string Transaction_Id = null, string Payment_Type_Text = null, string CallerId = null, string output = null)
         {
             var data = _accountService.Add_To_Payment_Details(new Add_To_Payment_Details_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Approval_Code = Approval_Code, AVS_Result_Code = AVS_Result_Code, CC_EXPDATE = CC_EXPDATE, CVC = CVC, FULL_CC_NUMBER = FULL_CC_NUMBER, Minutes_In_Package = Minutes_In_Package, New_Expiry = New_Expiry, Old_Expiry = Old_Expiry, Package_Description = Package_Description, Payment_Type_Text = Payment_Type_Text, Plan_Amount = Plan_Amount, Plan_Id = Plan_Id, Plan_Validity = Plan_Validity, Response_Code = Response_Code, Response_Reason_Code = Response_Reason_Code, Response_Reason_Text = Response_Reason_Text, Transaction_Id = Transaction_Id, Charged_Amount = Charged_Amount, CallerId = CallerId });
             return FN_Add_To_Payment_Details(data, output);
@@ -1223,7 +1223,6 @@ namespace ivrdating.Web.Controllers
         }
         #endregion set_misc
 
-
         #region 24 set_primary_apiserver 
 
         [Route("api/webservices/set_primary_apiserver")]
@@ -1275,5 +1274,158 @@ namespace ivrdating.Web.Controllers
             }
         }
         #endregion set_primary_apiserver
+
+        #region 25 check_geo_location 
+        [Route("api/webservices/check_geo_location")]
+        [HttpPost]
+        public IHttpActionResult check_geo_location(Check_Geo_Location_Request _request, string output = null)
+        {
+            Check_Geo_Location_Return data = _userService.check_geo_location(_request);
+            return FN_Check_Geo_Location(data, output);
+        }
+
+        [Route("api/webservices/check_geo_location")]
+        [HttpGet]
+        public IHttpActionResult check_geo_location(string AuthKey, string WS_UserName, string WS_Password, string Client_IP_Location, string output = null)
+        {
+            var data = _userService.check_geo_location(new Check_Geo_Location_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Client_IP_Location = Client_IP_Location });
+            return FN_Check_Geo_Location(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Check_Geo_Location(Check_Geo_Location_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Check_Geo_Location_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Check_Geo_Location_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion check_geo_location
+
+        #region 26 get_node3_accesspoint_ip 
+        [Route("api/webservices/get_node3_accesspoint_ip")]
+        [HttpPost]
+        public IHttpActionResult get_node3_accesspoint_ip(Get_Node3_Accesspoint_Ip_Request _request, string output = null)
+        {
+            Get_Node3_Accesspoint_Ip_Return data = _userService.get_node3_accesspoint_ip(_request);
+            return FN_Get_Node3_Accesspoint_Ip(data, output);
+        }
+
+        [Route("api/webservices/get_node3_accesspoint_ip")]
+        [HttpGet]
+        public IHttpActionResult get_node3_accesspoint_ip(string AuthKey, string WS_UserName, string WS_Password, string output = null)
+        {
+            var data = _userService.get_node3_accesspoint_ip(new Get_Node3_Accesspoint_Ip_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName });
+            return FN_Get_Node3_Accesspoint_Ip(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Get_Node3_Accesspoint_Ip(Get_Node3_Accesspoint_Ip_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Node3_Accesspoint_Ip_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Node3_Accesspoint_Ip_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion get_node3_accesspoint_ip
+
+        #region 27 update_customer_master Update_Customer_Master
+        [Route("api/webservices/update_customer_master")]
+        [HttpPost]
+        public IHttpActionResult update_customer_master(Add_To_Customer_Master_Request _request, string output = null)
+        {
+            Update_Customer_Master_Return data = (Update_Customer_Master_Return)_customerService.Add_To_Customer_Master(_request);
+            return FN_Update_Customer_Master(data, output);
+        }
+
+        [Route("api/webservices/update_customer_master")]
+        [HttpGet]
+        public IHttpActionResult update_customer_master(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string First_Name = null, string Last_Name = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, DateTime? RegisteredDate = null, string output = null)
+        {
+            var data = (Update_Customer_Master_Return)_customerService.Add_To_Customer_Master(new Add_To_Customer_Master_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerCountry = CustomerCountry, CustomerEmail_Address = CustomerEmail_Address, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, First_Name = First_Name, Last_Name = Last_Name, WebPassword = WebPassword, WebUserName = WebUserName });
+            return FN_Update_Customer_Master(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Update_Customer_Master(Update_Customer_Master_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Customer_Master_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Customer_Master_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+        #endregion update_customer_master
     }
 }

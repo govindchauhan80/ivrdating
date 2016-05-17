@@ -166,4 +166,24 @@ namespace ivrdating.Domain.VM
         [DataMember]
         public Set_Primary_Apiserver_Response WsResult { get; set; }
     }
+    [DataContract(Namespace = "")]
+    public class Check_Geo_Location_Return : ReturnBase
+    {
+        [DataMember]
+        public Check_Geo_Location_Response WsResult { get; set; }
+    }
+
+
+    [DataContract(Namespace = "")]
+    public class Get_Node3_Accesspoint_Ip_Return : ReturnBase
+    {
+        [DataMember]
+        public Get_Node3_Accesspoint_Ip_Response WsResult { get; set; }
+    }
+
+    [DataContract(Namespace = "")]
+    public class Update_Customer_Master_Return : Add_To_Customer_Master_Return
+    {
+
+    }
 }

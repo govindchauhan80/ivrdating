@@ -141,7 +141,7 @@ namespace ivrdating.Persistent.Repositories
 
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
             string FIRST_ONE_CC, LAST_FOUR_CC;
-            if (_request.FULL_CC_NUMBER.Length >= 1)
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 1)
             {
                 FIRST_ONE_CC = _request.FULL_CC_NUMBER.Substring(0, 1);
             }
@@ -149,7 +149,7 @@ namespace ivrdating.Persistent.Repositories
             {
                 FIRST_ONE_CC = "";
             }
-            if (_request.FULL_CC_NUMBER.Length >= 4)
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 4)
             {
                 LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 5, 4);
             }
@@ -169,7 +169,14 @@ namespace ivrdating.Persistent.Repositories
             if (_request.Charged_Amount > 0)
             {
                 //Get Tax_Perc FROM Market
-                market _market = _context.markets.Where(x => x.AreaCode == Convert.ToInt32(_request.CallerId.Substring(0, 3))).SingleOrDefault();
+                _request.CallerId = _request.CallerId.Length > 3 ? _request.CallerId.Substring(0, 3) : _request.CallerId;
+                int areadCode = 0;
+                if (ExtensionMethods.IsNumeric(_request.CallerId))
+                {
+                    areadCode = Convert.ToInt32(_request.CallerId);
+                }
+
+                market _market = _context.markets.Where(x => x.AreaCode == areadCode).SingleOrDefault();
                 if (_market != null)
                 {
                     Tax_Perc_Amount = _market.Tax_Perc * Convert.ToInt32(_request.Plan_Amount);
@@ -184,7 +191,7 @@ namespace ivrdating.Persistent.Repositories
                 }
 
             }
-
+            _context.Configuration.ValidateOnSaveEnabled = false;
             paymentdetail _paymentdetail = new paymentdetail();
             _paymentdetail.Acc_Number = _request.Acc_Number;
             _paymentdetail.Grp_Id = Grp_id;
@@ -196,8 +203,8 @@ namespace ivrdating.Persistent.Repositories
                  FIRST_ONE_CC;
             _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
             _paymentdetail.EXP_DATE = _request.CC_EXPDATE;
-            _paymentdetail.FULL_CC_NUMBER = ExtensionMethods.GetMd5Hash(_request.FULL_CC_NUMBER); // MD5
-            _paymentdetail.CVC = ExtensionMethods.GetMd5Hash(_request.CVC); //MD5
+            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : ExtensionMethods.GetMd5Hash(_request.FULL_CC_NUMBER); // MD5
+            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : ExtensionMethods.GetMd5Hash(_request.CVC); //MD5
             _paymentdetail.Amount = _request.Plan_Amount;
             _paymentdetail.Tax_Perc_Amount = Tax_Perc_Amount;
             _paymentdetail.AppFee_Static_Amount = AppFee_Static_Amount;
@@ -205,15 +212,17 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.packagevalidity = _request.Plan_Validity;
             _paymentdetail.MinInPackage = _request.Minutes_In_Package;
             _paymentdetail.Description = _request.Package_Description;
-            _paymentdetail.ResponseCode = _request.Response_Code;
-            _paymentdetail.ResponseReasonCode = _request.Response_Reason_Code;
-            _paymentdetail.ResponseText = _request.Response_Reason_Text;
-            _paymentdetail.ApprovalCode = _request.Approval_Code;
-            _paymentdetail.AVSResultCode = _request.AVS_Result_Code;
-            _paymentdetail.TransactionID = _request.Transaction_Id;
-            _paymentdetail.registeredby = _request.Payment_Type_Text;
+            _paymentdetail.ResponseCode = _request.Response_Code<=0 ? (short)0 : _request.Response_Code;
+            _paymentdetail.ResponseReasonCode = string.IsNullOrEmpty(_request.Response_Reason_Code) ? "0" : _request.Response_Reason_Code;
+            _paymentdetail.ResponseText = string.IsNullOrEmpty(_request.Response_Reason_Text) ? " " : _request.Response_Reason_Text;
+            _paymentdetail.ApprovalCode = string.IsNullOrEmpty(_request.Approval_Code) ? " " : _request.Approval_Code;
+            _paymentdetail.AVSResultCode = string.IsNullOrEmpty(_request.AVS_Result_Code) ? " " : _request.AVS_Result_Code;
+            _paymentdetail.TransactionID = string.IsNullOrEmpty(_request.Transaction_Id) ? " " : _request.Transaction_Id;
+            _paymentdetail.registeredby = string.IsNullOrEmpty(_request.Payment_Type_Text) ? " " : _request.Payment_Type_Text;
             _paymentdetail.Source_Description = "Web Transaction";
-
+            _paymentdetail.pd_callerid = "";
+            _paymentdetail.Dnis = "";
+            _paymentdetail.TollFree = "";
             _context.paymentdetails.Add(_paymentdetail);
             _context.SaveChanges();
 
@@ -489,7 +498,8 @@ namespace ivrdating.Persistent.Repositories
                     {
                         response = new Set_Primary_Apiserver_Response() { Status = "API Server already set as Primary." };
                     }
-                    else {
+                    else
+                    {
                         long curr_ip_priority = aps.ip_priority;
                         aps.ip_priority = aps.ip_priority - (curr_ip_priority - 1);
 
@@ -499,7 +509,7 @@ namespace ivrdating.Persistent.Repositories
                         }
                         _context.SaveChanges();
 
-                        response = new Set_Primary_Apiserver_Response() {Status= "API Server set as Primary" };
+                        response = new Set_Primary_Apiserver_Response() { Status = "API Server set as Primary" };
                     }
                 }
                 else
