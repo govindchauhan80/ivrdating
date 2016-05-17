@@ -85,6 +85,8 @@
     <Compile Include="Models\ws_agent.cs" />
     <Compile Include="VM\Activate_Acc_Number_Request.cs" />
     <Compile Include="VM\Activate_Acc_Number_Response.cs" />
+    <Compile Include="VM\Add_Complete_Paid_Account_Request.cs" />
+    <Compile Include="VM\Add_Complete_Paid_Account_Response.cs" />
     <Compile Include="VM\Add_New_Account_Request.cs" />
     <Compile Include="VM\Add_New_Account_Response.cs" />
     <Compile Include="VM\Add_To_Customer_Master_Request.cs" />

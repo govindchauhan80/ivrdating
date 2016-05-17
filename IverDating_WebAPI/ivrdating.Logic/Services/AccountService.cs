@@ -199,7 +199,7 @@ namespace ivrdating.Logic.Services
 
 
 
-                if (!string.IsNullOrEmpty(validRequest))
+            if (!string.IsNullOrEmpty(validRequest))
             {
                 return new Add_To_Payment_Details_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
@@ -575,6 +575,90 @@ namespace ivrdating.Logic.Services
             else
             {
                 return new Set_Primary_Apiserver_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+        }
+
+        public Add_Complete_Paid_Account_Return add_complete_paid_account(Add_Complete_Paid_Account_Request _request)
+        {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "0";
+            }
+            if (_request.Old_Expiry == null)
+            {
+                validRequest = "Old_Expiry Not defined ";
+            }
+            if (_request.New_Expiry == null)
+            {
+                validRequest = "New_Expiry Not defined ";
+            }
+            if (_request.Plan_Id <= 0)
+            {
+                validRequest = "Payment Plan_Id Not defined";
+            }
+            if (string.IsNullOrEmpty(_request.Plan_Amount.ToString()) || !ExtensionMethods.IsNumeric(_request.Plan_Amount.ToString()))
+            {
+                validRequest = "Invalid Payment Plan_Amount";
+            }
+            if (_request.Plan_Validity <= 0)
+            {
+                validRequest = "Invalid Payment Plan_Validity";
+            }
+            if (_request.Minutes_In_Package <= 0)
+            {
+                validRequest = "Invalid Payment Minutes_In_Package";
+            }
+            if (string.IsNullOrEmpty(_request.Package_Description))
+            {
+                validRequest = "Package_Description Not defined";
+            }
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "0";
+            }
+            if (_request.Acc_Number <= 0)
+            {
+                validRequest = "Invalid Acc_Number";
+            }
+            if (_request.RegisteredDate == null)
+            {
+                _request.RegisteredDate = DateTime.Now;
+            }
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "0";
+            }
+
+            if (string.IsNullOrEmpty(_request.Active0In1))
+            {
+                _request.Active0In1 = "0";
+            }
+
+            if (validRequest == "")
+            {
+                Add_Complete_Paid_Account_Response data = _accountRepository.add_complete_paid_account(_request);
+                if (data == null)
+                {
+                    return new Add_Complete_Paid_Account_Return() { Count = 0, ErrorMessage = "No record found" };
+                }
+                else
+                {
+                    return new Add_Complete_Paid_Account_Return()
+                    {
+                        Count = 1,
+                        WsResult = data
+                    };
+                }
+            }
+            else
+            {
+                return new Add_Complete_Paid_Account_Return() { Count = 0, ErrorMessage = validRequest };
             }
         }
     }

@@ -1237,7 +1237,7 @@ namespace ivrdating.Web.Controllers
         [HttpGet]
         public IHttpActionResult set_primary_apiserver(string AuthKey, string WS_UserName, string WS_Password, string ActiveServerIP, string output = null)
         {
-            var data = _accountService.set_primary_apiserver(new Set_Primary_Apiserver_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, ActiveServerIP=ActiveServerIP});
+            var data = _accountService.set_primary_apiserver(new Set_Primary_Apiserver_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, ActiveServerIP = ActiveServerIP });
             return FN_Set_Primary_Apiserver(data, output);
         }
 
@@ -1380,18 +1380,21 @@ namespace ivrdating.Web.Controllers
         #region 27 update_customer_master Update_Customer_Master
         [Route("api/webservices/update_customer_master")]
         [HttpPost]
-        public IHttpActionResult update_customer_master(Add_To_Customer_Master_Request _request, string output = null)
+        public IHttpActionResult update_customer_master(Update_Customer_Master_Request _request, string output = null)
         {
-            Update_Customer_Master_Return data = (Update_Customer_Master_Return)_customerService.Add_To_Customer_Master(_request);
-            return FN_Update_Customer_Master(data, output);
+            Add_To_Customer_Master_Return data = _customerService.Add_To_Customer_Master(_request);
+            Update_Customer_Master_Return rtn = new Update_Customer_Master_Return() { Count = data.Count, ErrorMessage = data.ErrorMessage, WsResult = data.WsResult };
+            return FN_Update_Customer_Master(rtn, output);
         }
 
         [Route("api/webservices/update_customer_master")]
         [HttpGet]
         public IHttpActionResult update_customer_master(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string First_Name = null, string Last_Name = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, DateTime? RegisteredDate = null, string output = null)
         {
-            var data = (Update_Customer_Master_Return)_customerService.Add_To_Customer_Master(new Add_To_Customer_Master_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerCountry = CustomerCountry, CustomerEmail_Address = CustomerEmail_Address, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, First_Name = First_Name, Last_Name = Last_Name, WebPassword = WebPassword, WebUserName = WebUserName });
-            return FN_Update_Customer_Master(data, output);
+            var data = _customerService.Add_To_Customer_Master(new Add_To_Customer_Master_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerCountry = CustomerCountry, CustomerEmail_Address = CustomerEmail_Address, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, First_Name = First_Name, Last_Name = Last_Name, WebPassword = WebPassword, WebUserName = WebUserName });
+
+            Update_Customer_Master_Return rtn = new Update_Customer_Master_Return() { Count = data.Count, ErrorMessage = data.ErrorMessage, WsResult = data.WsResult };
+            return FN_Update_Customer_Master(rtn, output);
         }
 
         [NonAction]
@@ -1427,5 +1430,58 @@ namespace ivrdating.Web.Controllers
             }
         }
         #endregion update_customer_master
+
+        #region 28 add_complete_paid_account
+
+        [Route("api/webservices/add_complete_paid_account")]
+        [HttpPost]
+        public IHttpActionResult add_complete_paid_account(Add_Complete_Paid_Account_Request _request, string output = null)
+        {
+            Add_Complete_Paid_Account_Return data = _accountService.add_complete_paid_account(_request);
+            return FN_Add_Complete_Paid_Account(data, output);
+        }
+
+        [Route("api/webservices/add_complete_paid_account")]
+        [HttpGet]
+        public IHttpActionResult add_complete_paid_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, DateTime? PlanExpiresOn, string AccountType, int Minutes_In_Package, DateTime? Old_Expiry, DateTime? New_Expiry, int Plan_Id, int Plan_Amount, int Plan_Validity, string Package_Description, int Service_Source, string Area_Code, int Charged_Amount = 0, string CallerId = null, string Active0In1 = null, string CustomerFirstName = null, string CustomerLastName = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, string FULL_CC_NUMBER = null, DateTime? CC_EXPDATE = null, string CVC = null, short Response_Code = 0, string Response_Reason_Code = null, string Response_Reason_Text = null, string Approval_Code = null, string AVS_Result_Code = null, int Transaction_Id = 0, string Payment_Type_Text = null, DateTime? RegisteredDate = null, string output = null)
+        {
+            var data = _accountService.add_complete_paid_account(new Add_Complete_Paid_Account_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Group_Prefix = Group_Prefix, AccountType = AccountType, Active0In1 = Active0In1, Approval_Code = Approval_Code, Area_Code = Area_Code, AVS_Result_Code = AVS_Result_Code, CallerId = CallerId, CC_EXPDATE = CC_EXPDATE, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerEmail_Address = CustomerEmail_Address, CustomerFirstName = CustomerFirstName, CustomerLastName = CustomerLastName, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, CustomerCountry = CustomerCountry, CVC = CVC, FULL_CC_NUMBER = FULL_CC_NUMBER, Minutes_In_Package = Minutes_In_Package, New_Expiry = New_Expiry, Old_Expiry = Old_Expiry, Package_Description = Package_Description, PassCode = PassCode, Payment_Type_Text = Payment_Type_Text, PlanExpiresOn = PlanExpiresOn, Plan_Amount = Plan_Amount, Plan_Id = Plan_Id, Plan_Validity = Plan_Validity, RegisteredDate = RegisteredDate, Response_Code = Response_Code, Response_Reason_Code = Response_Reason_Code, Response_Reason_Text = Response_Reason_Text, Service_Source = Service_Source, Transaction_Id = Transaction_Id, WebPassword = WebPassword, WebUserName = WebUserName, Acc_Number = Acc_Number, Charged_Amount = Charged_Amount });
+            return FN_Add_Complete_Paid_Account(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Add_Complete_Paid_Account(Add_Complete_Paid_Account_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                {
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_Complete_Paid_Account_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                }
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_Complete_Paid_Account_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+
+        #endregion add_complete_paid_account
     }
 }

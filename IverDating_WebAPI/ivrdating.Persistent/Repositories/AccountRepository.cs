@@ -212,7 +212,7 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.packagevalidity = _request.Plan_Validity;
             _paymentdetail.MinInPackage = _request.Minutes_In_Package;
             _paymentdetail.Description = _request.Package_Description;
-            _paymentdetail.ResponseCode = _request.Response_Code<=0 ? (short)0 : _request.Response_Code;
+            _paymentdetail.ResponseCode = _request.Response_Code <= 0 ? (short)0 : _request.Response_Code;
             _paymentdetail.ResponseReasonCode = string.IsNullOrEmpty(_request.Response_Reason_Code) ? "0" : _request.Response_Reason_Code;
             _paymentdetail.ResponseText = string.IsNullOrEmpty(_request.Response_Reason_Text) ? " " : _request.Response_Reason_Text;
             _paymentdetail.ApprovalCode = string.IsNullOrEmpty(_request.Approval_Code) ? " " : _request.Approval_Code;
@@ -534,6 +534,228 @@ namespace ivrdating.Persistent.Repositories
             }
 
             response = new Read_Misc_Response() { Setting = string.Join("|", str) };
+            return response;
+        }
+
+        public Add_Complete_Paid_Account_Response add_complete_paid_account(Add_Complete_Paid_Account_Request _request)
+        {
+            _context.Configuration.ValidateOnSaveEnabled = false;
+            Add_Complete_Paid_Account_Response response = null;
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+            string FIRST_ONE_CC, LAST_FOUR_CC;
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 1)
+            {
+                FIRST_ONE_CC = _request.FULL_CC_NUMBER.Substring(0, 1);
+            }
+            else
+            {
+                FIRST_ONE_CC = "";
+            }
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 4)
+            {
+                LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 5, 4);
+            }
+            else
+            {
+                LAST_FOUR_CC = "";
+            }
+
+            decimal Tax_Perc_Amount = 0;
+            decimal AppFee_Static_Amount = 0;
+            decimal AppFee_Perc_Amount = 0;
+
+
+            //CHECK IF ACCOUNT ALREADY EXISTS ( BASED ON CALLERID AND GROUP ACCOUNT MAY HAVE EXISTED )
+            int l_AId = 0;
+
+            account ac1 = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+            if (ac1 != null)
+            {
+                l_AId = ac1.Id;
+            }
+            if (l_AId == 0)
+            {
+                //Update accountids
+                accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
+
+
+                foreach (var property in db.GetType().GetProperties())
+                {
+                    if (property.Name == "Grp_Id" + Grp_id)
+                    {
+                        property.SetValue(db, "1", null);
+                    }
+                }
+
+                bool newEntry = false;
+                //Add to Account
+                account ac = new account();
+                ac.Acc_Number = _request.Acc_Number;
+                ac.PassCode = _request.PassCode;
+                ac.callerid = _request.CallerId;
+
+                ac.RegisteredOn = (DateTime)_request.RegisteredDate;
+                ac.ExpiryDate = (DateTime)_request.PlanExpiresOn;
+                ac.AccountType = _request.AccountType;
+                ac.Active0In1 = _request.Active0In1;
+                ac.PassCode = _request.PassCode;
+
+                ac.Grp_Id = Grp_id;
+
+                ac.Gender = "2";
+                ac.LookingFor = "2";
+                ac.ScreenStatus_0N2D1S3Ok = "0";
+                ac.AdminScreening_0Q1Ok = "0";
+                ac.ProfileExists1 = "0";
+                ac.Callout_Flag = "0";
+                ac.Callout_No = "0";
+                ac.Callout_Start = "00:00";
+                ac.Callout_End = "00:00";
+                ac.DeadAccount1 = "0";
+                _context.accounts.Add(ac);
+                _context.SaveChanges();
+                //Add to Customer Master
+
+                l_AId = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault().Id;
+
+                customer_master csAdd = new customer_master();
+                csAdd.Address = string.IsNullOrEmpty(_request.CustomerAddress) ? " " : _request.CustomerAddress;
+                csAdd.AId = l_AId;
+                csAdd.City = string.IsNullOrEmpty(_request.CustomerCity) ? " " : _request.CustomerCity;
+                csAdd.Country = string.IsNullOrEmpty(_request.CustomerCountry) ? " " : _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(20) : _request.CustomerCountry;
+                csAdd.Email_Address = string.IsNullOrEmpty(_request.CustomerEmail_Address) ? " " : _request.CustomerEmail_Address;
+                csAdd.First_Name = string.IsNullOrEmpty(_request.CustomerFirstName) ? " " : _request.CustomerFirstName;
+                csAdd.Last_Name = string.IsNullOrEmpty(_request.CustomerLastName) ? " " : _request.CustomerLastName;
+                csAdd.RegisteredOn = (DateTime)_request.RegisteredDate;
+                csAdd.State_Name = string.IsNullOrEmpty(_request.CustomerState) ? " " : _request.CustomerState;
+                csAdd.WebPassword = string.IsNullOrEmpty(_request.WebPassword) ? " " : _request.WebPassword;
+                csAdd.WebUserName = string.IsNullOrEmpty(_request.WebUserName) ? " " : _request.WebUserName;
+                csAdd.Zip_Code = string.IsNullOrEmpty(_request.CustomerZip_Code) ? " " : _request.CustomerZip_Code;
+
+                _context.customer_master.Add(csAdd);
+                _context.SaveChanges();
+
+
+                //Add to User Minute
+                user_minute um = null;
+                um = _context.user_minute.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+                if (um == null)
+                {
+                    newEntry = true;
+                    um = new user_minute();
+                }
+                um.Acc_Number = _request.Acc_Number;
+                um.R_Seconds = _request.Minutes_In_Package * 60;
+                um.Grp_Id = Grp_id;
+                um.CreateDateTimeStamp = _request.RegisteredDate;
+                um.LastDateTimeStamp = _request.RegisteredDate;
+
+                if (newEntry)
+                {
+                    _context.user_minute.Add(um);
+                }
+                _context.SaveChanges();
+
+
+
+                ///Add to Service Source
+                servicesource sc = new servicesource();
+
+                sc.Acc_Number = _request.Acc_Number;
+                sc.AreaCode = _request.Area_Code;
+                sc.Grp_Id = Grp_id;
+                sc.OnDate = (DateTime)_request.RegisteredDate;
+                sc.Source = _request.Service_Source;
+
+                _context.servicesources.Add(sc);
+                _context.SaveChanges();
+
+
+                //Remove from acc_number_web TABLE
+
+                acc_number_web acw = _context.acc_number_web.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+                if (acw != null)
+                {
+                    _context.acc_number_web.Remove(acw);
+                    _context.SaveChanges();
+                }
+            }
+            else
+            {
+                //UPDATE Account
+                ac1.AccountType = _request.AccountType;
+                ac1.ExpiryDate = (DateTime)_request.PlanExpiresOn;
+
+                //Update to User Minute
+                user_minute um = _context.user_minute.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+                um.R_Seconds = _request.Minutes_In_Package * 60;
+                _context.SaveChanges();
+
+            }
+
+            //If Charged_Amount is defined - calculate the Tax Component
+
+            if (_request.Charged_Amount > 0)
+            {
+                //Get Tax_Perc FROM Market
+                _request.CallerId = _request.CallerId.Length > 3 ? _request.CallerId.Substring(0, 3) : _request.CallerId;
+                int areadCode = 0;
+                if (ExtensionMethods.IsNumeric(_request.CallerId))
+                {
+                    areadCode = Convert.ToInt32(_request.CallerId);
+                }
+
+                market _market = _context.markets.Where(x => x.AreaCode == areadCode).SingleOrDefault();
+                if (_market != null)
+                {
+                    Tax_Perc_Amount = _market.Tax_Perc * Convert.ToInt32(_request.Plan_Amount);
+                }
+                //Get Other Records FROM Payment_Plan_List
+
+                payment_plan_list _payment_plan_list = _context.payment_plan_list.Where(x => x.Id == _request.Plan_Id).FirstOrDefault();
+                if (_payment_plan_list != null)
+                {
+                    AppFee_Perc_Amount = _payment_plan_list.ApplicableFee_Perc * Convert.ToInt32(_request.Plan_Amount);
+                    AppFee_Static_Amount = _payment_plan_list.ApplicableFee_Static * Convert.ToInt32(_request.Plan_Amount);
+                }
+            }
+
+            paymentdetail _paymentdetail = new paymentdetail();
+            _paymentdetail.Acc_Number = _request.Acc_Number;
+            _paymentdetail.Grp_Id = Grp_id;
+            _paymentdetail.RegistrationOn = (DateTime)_request.RegisteredDate;
+            _paymentdetail.LastExpiry = (DateTime)_request.Old_Expiry;
+            _paymentdetail.NewExpiry = (DateTime)_request.New_Expiry;
+            _paymentdetail.PlanTakenID = _request.Plan_Id;
+            _paymentdetail.FIRST_ONE_CC =
+                 FIRST_ONE_CC;
+            _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
+            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("yyyy-MM-dd");
+            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : ExtensionMethods.GetMd5Hash(_request.FULL_CC_NUMBER); // MD5
+            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : ExtensionMethods.GetMd5Hash(_request.CVC); //MD5
+            _paymentdetail.Amount = _request.Plan_Amount.ToString();
+            _paymentdetail.Tax_Perc_Amount = Tax_Perc_Amount;
+            _paymentdetail.AppFee_Static_Amount = AppFee_Static_Amount;
+            _paymentdetail.AppFee_Perc_Amount = AppFee_Perc_Amount;
+            _paymentdetail.packagevalidity = _request.Plan_Validity;
+            _paymentdetail.MinInPackage = _request.Minutes_In_Package;
+            _paymentdetail.Description = _request.Package_Description;
+            _paymentdetail.ResponseCode = _request.Response_Code <= 0 ? (short)0 : _request.Response_Code;
+            _paymentdetail.ResponseReasonCode = string.IsNullOrEmpty(_request.Response_Reason_Code) ? "0" : _request.Response_Reason_Code;
+            _paymentdetail.ResponseText = string.IsNullOrEmpty(_request.Response_Reason_Text) ? " " : _request.Response_Reason_Text;
+            _paymentdetail.ApprovalCode = string.IsNullOrEmpty(_request.Approval_Code) ? " " : _request.Approval_Code;
+            _paymentdetail.AVSResultCode = string.IsNullOrEmpty(_request.AVS_Result_Code) ? " " : _request.AVS_Result_Code;
+            _paymentdetail.TransactionID = string.IsNullOrEmpty(_request.Transaction_Id.ToString()) ? " " : _request.Transaction_Id.ToString();
+            _paymentdetail.registeredby = string.IsNullOrEmpty(_request.Payment_Type_Text) ? " " : _request.Payment_Type_Text;
+            _paymentdetail.Source_Description = "Web Transaction";
+            _paymentdetail.pd_callerid = "";
+            _paymentdetail.Dnis = "";
+            _paymentdetail.TollFree = "";
+            _context.paymentdetails.Add(_paymentdetail);
+            _context.SaveChanges();
+
+            response = new Add_Complete_Paid_Account_Response() { Acc_Number = _request.Acc_Number };
+
             return response;
         }
 
