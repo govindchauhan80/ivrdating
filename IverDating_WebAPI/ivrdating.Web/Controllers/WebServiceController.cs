@@ -50,7 +50,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/get_member_details")]
         [HttpGet]
-        public IHttpActionResult get_member_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CustomerEmail_Address, string PassCode, int Acc_Number, string CallerId, string output = null)
+        public IHttpActionResult get_member_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode= null, string CallerId = null, string output = null)
         {
             ReturnData vm = _memberService.GetMemberDetails(new GetMemberDetailsRequest() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return GetMemberDetail(output, vm);
@@ -100,7 +100,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/member_forgot_passcode")]
         [HttpGet]
-        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CustomerEmail_Address, string PassCode, int Acc_Number, string CallerId, string output = null)
+        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CustomerEmail_Address, int Acc_Number, string PassCode = null, string CallerId= null, string output = null)
         {
             Member_Forgot_Passcode_Return vm = _memberService.member_forgot_passcode(new Member_Forgot_Passcode_Request() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Member_Forgot_Passcode(vm, output);

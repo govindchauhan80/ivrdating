@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color: #89BF04;border-color: #89BF04;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,14 +16,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("IVR Dating", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("IVR Dating", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @style="color:#DCEDBD !important" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @*<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>*@
                     @*<li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
-                    <li><a href="~/swagger"  target="_blank">API</a></li>
-                    <li><a href="~/Logs/May-2016.text" download>Log</a></li>
+                    <li><a href="~/swagger"  target="_blank" style="color:#DCEDBD !important">API</a></li>
+                    <li><a href="~/Log/05-2016.text" download style="color:#DCEDBD !important">Log</a></li>
                     @*<li><a href="/Logs/vlcsnap-2014-10-27-21h03m22s248.png" download>Download Log</a></li>*@
                 </ul>
             </div>
