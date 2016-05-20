@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Log";
+}
+<div class="jumbotron" style="background-color: #E7F0F7;">
+    <h3>Download Logs</h3>
+
+    @foreach (var item in ViewBag.Files)
+    {
+        <a href="~/Log/@item" download="" class="btn btn-primary btn-lg btnHeight">Download > @item</a>
+    }
+
+</div>
+
+
+@*<div class="row">
+        <div class="col-md-3">
+
+
+        </div>
+    </div>*@
+
