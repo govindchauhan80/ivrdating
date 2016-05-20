@@ -68,7 +68,12 @@ namespace ivrdating.Web.Controllers
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
                 // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                //return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -100,7 +105,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/member_forgot_passcode")]
         [HttpGet]
-        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CustomerEmail_Address, int Acc_Number, string PassCode = null, string CallerId= null, string output = null)
+        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId= null, string output = null)
         {
             Member_Forgot_Passcode_Return vm = _memberService.member_forgot_passcode(new Member_Forgot_Passcode_Request() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Member_Forgot_Passcode(vm, output);
@@ -121,7 +126,12 @@ namespace ivrdating.Web.Controllers
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
                 // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if(vm.WsResult != null) 
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+
+               
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -167,13 +177,16 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if(vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_New_Acc_Number_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
                 return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_New_Acc_Number_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -209,6 +222,7 @@ namespace ivrdating.Web.Controllers
             return FN_Get_N_Activate_New_Acc_Number(data, output);
         }
 
+        [NonAction]
         private IHttpActionResult FN_Get_N_Activate_New_Acc_Number(Get_N_Activate_New_Acc_Number_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
@@ -219,7 +233,10 @@ namespace ivrdating.Web.Controllers
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
                 // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -256,11 +273,11 @@ namespace ivrdating.Web.Controllers
             return FN_Activate_Acc_Number(data, output);
         }
 
+        [NonAction]
         private IHttpActionResult FN_Activate_Acc_Number(Activate_Acc_Number_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Activate_Acc_Number_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -269,8 +286,10 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -309,11 +328,11 @@ namespace ivrdating.Web.Controllers
             return FN_Deactivate_Acc_Number(data, output);
         }
 
+        [NonAction]
         private IHttpActionResult FN_Deactivate_Acc_Number(Deactivate_Acc_Number_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Deactivate_Acc_Number_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -322,17 +341,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -360,11 +379,11 @@ namespace ivrdating.Web.Controllers
             return FN_Add_New_Account(data, output);
         }
 
+        [NonAction]
         private IHttpActionResult FN_Add_New_Account(Add_New_Account_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_New_Account_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -373,17 +392,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -416,7 +435,7 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+               
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_Customer_Master_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -425,17 +444,19 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
+               
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+               
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -462,12 +483,12 @@ namespace ivrdating.Web.Controllers
             var data = _userService.Add_To_User_Minute(new Add_To_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Seconds_In_Package = Seconds_In_Package });
             return FN_Add_To_User_Minute(data, output);
         }
-
+        [NonAction]
         private IHttpActionResult FN_Add_To_User_Minute(Add_To_User_Minute_Return vm, string output)
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+               
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_User_Minute_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -476,17 +497,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -518,7 +539,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_Payment_Details_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -527,17 +547,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -572,7 +592,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_Service_Source_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -581,17 +600,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -625,7 +644,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Account_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -634,12 +652,13 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
@@ -677,7 +696,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_User_Minute_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -686,12 +704,13 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
@@ -705,6 +724,7 @@ namespace ivrdating.Web.Controllers
             }
         }
         #endregion update_user_minute
+
         #region 14 validate
 
         [Route("api/webservices/validate")]
@@ -728,7 +748,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Validate_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -737,17 +756,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -781,7 +800,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Member_Minutes_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -790,17 +808,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -834,7 +852,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Process_Mobile_Charge_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -843,17 +860,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -886,7 +903,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Insert_Login_Log_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -895,17 +911,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -937,7 +953,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Login_Log_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -946,17 +961,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -988,7 +1003,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Admin_Web_Screening_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -997,17 +1011,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1039,7 +1053,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Getchargeamount_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1048,17 +1061,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1091,7 +1104,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Delete_Completeaccount_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1100,17 +1112,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1143,7 +1155,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Read_Misc_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1152,17 +1163,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1194,7 +1205,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Misc_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1203,17 +1213,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1246,7 +1256,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Set_Primary_Apiserver_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1255,17 +1264,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1297,7 +1306,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Check_Geo_Location_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1306,17 +1314,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -1348,7 +1356,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_Node3_Accesspoint_Ip_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1357,8 +1364,10 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -1402,7 +1411,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Update_Customer_Master_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1411,8 +1419,10 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -1454,7 +1464,6 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_Complete_Paid_Account_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -1463,17 +1472,17 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
-                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-                //return Json(vm);
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else

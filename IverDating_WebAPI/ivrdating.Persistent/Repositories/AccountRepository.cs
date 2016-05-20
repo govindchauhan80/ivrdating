@@ -896,17 +896,16 @@ namespace ivrdating.Persistent.Repositories
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
 
             accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
-
-
-            foreach (var property in db.GetType().GetProperties())
-            {
-                if (property.Name == "Grp_Id" + Grp_id)
-                {
-                    property.SetValue(db, "1", null);
-                }
-            }
+            
             if (db != null)
             {
+                foreach (var property in db.GetType().GetProperties())
+                {
+                    if (property.Name == "Grp_Id" + Grp_id)
+                    {
+                        property.SetValue(db, "1", null);
+                    }
+                }
                 _context.SaveChanges();
 
                 response = new Activate_Acc_Number_Response() { Acc_Number = _request.Acc_Number };

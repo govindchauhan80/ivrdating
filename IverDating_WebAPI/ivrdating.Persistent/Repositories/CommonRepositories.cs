@@ -19,7 +19,10 @@ namespace ivrdating.Persistent.Repositories
         public static string GetGroupID(string Group_Prefix)
         {
             var groupAssociation = (from ga in _context.group_association where ga.Grp_Prefix == Group_Prefix select ga).FirstOrDefault();
-            
+            if (groupAssociation == null)
+            {
+                return "0";
+            }
             return groupAssociation.Grp_Id;
         }
 
@@ -51,7 +54,8 @@ namespace ivrdating.Persistent.Repositories
             {
                 ip = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             }
-            return ip == "::1" ? "127.0.0.1" : ip;
+            return "127.0.0.1";
+            //return ip == "::1" ? "127.0.0.1" : ip;
         }
 
         public static string ValidateIp(string activeServerIP)
