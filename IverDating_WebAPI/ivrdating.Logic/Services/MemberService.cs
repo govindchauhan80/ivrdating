@@ -97,18 +97,22 @@ namespace ivrdating.Logic.Services
             else
             {
                 Get_Member_Minutes_Response data = _memberRepository.get_member_minutes(_request);
-                if (data != null)
+
+                if (data == null)
                 {
-                    return new Get_Member_Minutes_Return() { Count = 1, ErrorMessage = null, WsResult = data };
+                    return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "No record found" };
                 }
-                else if (data.Acc_GuestMinutes == -11 && data.Acc_RegisMinutes == -11)
+
+
+                if (data.Acc_GuestMinutes == -11 && data.Acc_RegisMinutes == -11)
                 {
                     return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "No entries under User_Minute" };
                 }
                 else
                 {
-                    return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "No record found" };
+                    return new Get_Member_Minutes_Return() { Count = 1, ErrorMessage = null, WsResult = data };
                 }
+
             }
         }
     }

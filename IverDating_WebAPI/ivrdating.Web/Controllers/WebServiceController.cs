@@ -685,7 +685,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_user_minute")]
         [HttpGet]
-        public IHttpActionResult update_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minutes_In_Package, DateTime? RegisteredDate=null, string output = null)
+        public IHttpActionResult update_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minutes_In_Package, DateTime? RegisteredDate = null, string output = null)
         {
             var data = _userService.update_user_minute(new Update_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, Minutes_In_Package = Minutes_In_Package, RegisteredDate = RegisteredDate });
             return FN_Update_User_Minute(data, output);
@@ -841,7 +841,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/process_mobile_charge")]
         [HttpGet]
-        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int PassCode, int SMS_Id, string TicketId, int CarrierId, double ChargeAmount, string output = null)
+        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int SMS_Id, string TicketId, int CarrierId, double ChargeAmount, int PassCode = 0, string output = null)
         {
             var data = _accountService.process_mobile_charge(new Process_Mobile_Charge_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CarrierId = CarrierId, ChargeAmount = ChargeAmount, PassCode = PassCode, SMS_Id = SMS_Id, SubscriberNo = SubscriberNo, TicketId = TicketId });
             return FN_Process_Mobile_Charge(data, output);
