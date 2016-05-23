@@ -50,7 +50,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/get_member_details")]
         [HttpGet]
-        public IHttpActionResult get_member_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode= null, string CallerId = null, string output = null)
+        public IHttpActionResult get_member_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId = null, string output = null)
         {
             ReturnData vm = _memberService.GetMemberDetails(new GetMemberDetailsRequest() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return GetMemberDetail(output, vm);
@@ -105,7 +105,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/member_forgot_passcode")]
         [HttpGet]
-        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId= null, string output = null)
+        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId = null, string output = null)
         {
             Member_Forgot_Passcode_Return vm = _memberService.member_forgot_passcode(new Member_Forgot_Passcode_Request() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Member_Forgot_Passcode(vm, output);
@@ -126,12 +126,12 @@ namespace ivrdating.Web.Controllers
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
             {
                 // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
-                if(vm.WsResult != null) 
+                if (vm.WsResult != null)
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
                 else
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
 
-               
+
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
@@ -165,7 +165,7 @@ namespace ivrdating.Web.Controllers
         }
         [Route("api/webservices/Get_New_Acc_Number")]
         [HttpGet]
-        public IHttpActionResult Get_New_Acc_Number(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CallerId=null, string output = null)
+        public IHttpActionResult Get_New_Acc_Number(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CallerId = null, string output = null)
         {
             var data = _accountService.Get_New_Acc_Number(new Get_New_Acc_Number_Request() { AuthKey = AuthKey, CallerId = CallerId, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Get_New_Acc_Number(data, output);
@@ -177,7 +177,7 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                if(vm.WsResult != null)
+                if (vm.WsResult != null)
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_New_Acc_Number_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
                 return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_New_Acc_Number_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
             }
@@ -373,7 +373,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_new_account")]
         [HttpGet]
-        public IHttpActionResult add_new_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, string CallerId, DateTime? RegisteredDate, DateTime? PlanExpiresOn, string AccountType, string Active0In1, string output = null)
+        public IHttpActionResult add_new_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, DateTime? RegisteredDate, DateTime? PlanExpiresOn, string AccountType, string Active0In1 = null, string CallerId = null, string output = null)
         {
             var data = _accountService.Add_New_Account(new Add_New_Account_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, AccountType = AccountType, Active0In1 = Active0In1, CallerId = CallerId, PassCode = PassCode, PlanExpiresOn = PlanExpiresOn, RegisteredDate = RegisteredDate });
             return FN_Add_New_Account(data, output);
@@ -435,7 +435,7 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-               
+
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_Customer_Master_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -451,12 +451,12 @@ namespace ivrdating.Web.Controllers
             }
             else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
             {
-               
+
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
             {
-               
+
                 return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
             }
             else
@@ -478,9 +478,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_user_minute")]
         [HttpGet]
-        public IHttpActionResult add_to_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, DateTime? RegisteredDate, int Seconds_In_Package, string output = null)
+        public IHttpActionResult add_to_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minute_In_Package, DateTime? RegisteredDate = null, string output = null)
         {
-            var data = _userService.Add_To_User_Minute(new Add_To_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Seconds_In_Package = Seconds_In_Package });
+            var data = _userService.Add_To_User_Minute(new Add_To_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Seconds_In_Package = Minute_In_Package });
             return FN_Add_To_User_Minute(data, output);
         }
         [NonAction]
@@ -488,7 +488,7 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-               
+
                 if (vm.WsResult != null)
                 {
                     return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Add_To_User_Minute_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
@@ -581,7 +581,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_service_source")]
         [HttpGet]
-        public IHttpActionResult add_to_service_source(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, DateTime? RegisteredDate, int Service_Source, string Area_Code, string output = null)
+        public IHttpActionResult add_to_service_source(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Service_Source, string Area_Code, DateTime? RegisteredDate = null, string output = null)
         {
             var data = _userService.Add_To_Service_Source(new Add_To_Service_Source_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Service_Source = Service_Source, Area_Code = Area_Code });
             return FN_Add_To_Service_Source(data, output);
@@ -633,7 +633,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_account")]
         [HttpGet]
-        public IHttpActionResult update_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string AccountType, string CallerID, string Active0In1, DateTime? New_Expiry, string output = null)
+        public IHttpActionResult update_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, DateTime? New_Expiry, string AccountType = null, string CallerID = null, string Active0In1 = null, string output = null)
         {
             var data = _accountService.update_account(new Update_Account_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, AccountType = AccountType, Active0In1 = Active0In1, New_Expiry = New_Expiry, CallerID = CallerID });
             return FN_Update_Account(data, output);
@@ -685,7 +685,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_user_minute")]
         [HttpGet]
-        public IHttpActionResult update_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minutes_In_Package, DateTime? RegisteredDate, string output = null)
+        public IHttpActionResult update_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minutes_In_Package, DateTime? RegisteredDate=null, string output = null)
         {
             var data = _userService.update_user_minute(new Update_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, Minutes_In_Package = Minutes_In_Package, RegisteredDate = RegisteredDate });
             return FN_Update_User_Minute(data, output);

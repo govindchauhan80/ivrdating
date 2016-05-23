@@ -102,7 +102,7 @@ namespace ivrdating.Logic.Services
         {
             if (_request.Acc_Number <= 0)
             {
-                _request.Acc_Number = 0;
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
             }
             if (_request.RegisteredDate == null)
             {
@@ -147,9 +147,9 @@ namespace ivrdating.Logic.Services
             {
                 return new Add_New_Account_Return() { Count = 1, ErrorMessage = string.Empty, WsResult = data };
             }
-
-
-            return null;
+            else {
+                return new Add_New_Account_Return() { Count = 0, ErrorMessage = "This Account Number allready exist"};
+            }
         }
 
         public Add_To_Payment_Details_Return Add_To_Payment_Details(Add_To_Payment_Details_Request _request)

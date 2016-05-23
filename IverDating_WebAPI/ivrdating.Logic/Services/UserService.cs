@@ -28,7 +28,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.Acc_Number <= 0)
             {
-                _request.Acc_Number = 0;
+                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
             }
             if (_request.Seconds_In_Package <= 0)
             {

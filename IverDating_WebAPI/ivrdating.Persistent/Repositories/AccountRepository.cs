@@ -761,8 +761,14 @@ namespace ivrdating.Persistent.Repositories
 
         public Add_New_Account_Response Add_New_Account(Add_New_Account_Request _request)
         {
+            _context.Configuration.ValidateOnSaveEnabled = false;
             Add_New_Account_Response response = null;
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+
+            if (_context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault() != null)
+            {
+                return response;
+            }
 
             account ac = new account();
             ac.Acc_Number = _request.Acc_Number;
@@ -791,9 +797,13 @@ namespace ivrdating.Persistent.Repositories
 
 
             _context.accounts.Add(ac);
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
 
-            response = new Add_New_Account_Response() { Acc_Number = ac.Acc_Number };
+                response = new Add_New_Account_Response() { Acc_Number = ac.Acc_Number };
+            }
+            catch { }
             return response;
         }
 
@@ -896,7 +906,7 @@ namespace ivrdating.Persistent.Repositories
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
 
             accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
-            
+
             if (db != null)
             {
                 foreach (var property in db.GetType().GetProperties())
