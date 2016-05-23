@@ -150,22 +150,22 @@ namespace ivrdating.Web.Controllers
         }
         #endregion member_forgot_passcode
 
-        #region 3 Get_New_Acc_Number
+        #region 3 get_new_acc_number
         /// <summary>
         /// Acc_Number	= "0"
         /// </summary>
         /// <returns></returns>
-        [Route("api/webservices/Get_New_Acc_Number")]
+        [Route("api/webservices/get_new_acc_number")]
         [HttpPost]
-        public IHttpActionResult Get_New_Acc_Number(Get_New_Acc_Number_Request _request, string output = null)
+        public IHttpActionResult get_new_acc_number(Get_New_Acc_Number_Request _request, string output = null)
         {
             var data = _accountService.Get_New_Acc_Number(_request);
             return FN_Get_New_Acc_Number(data, output);
 
         }
-        [Route("api/webservices/Get_New_Acc_Number")]
+        [Route("api/webservices/get_new_acc_number")]
         [HttpGet]
-        public IHttpActionResult Get_New_Acc_Number(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CallerId = null, string output = null)
+        public IHttpActionResult get_new_acc_number(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, string CallerId = null, string output = null)
         {
             var data = _accountService.Get_New_Acc_Number(new Get_New_Acc_Number_Request() { AuthKey = AuthKey, CallerId = CallerId, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Get_New_Acc_Number(data, output);

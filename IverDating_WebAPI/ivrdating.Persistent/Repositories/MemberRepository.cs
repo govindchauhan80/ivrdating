@@ -23,8 +23,34 @@ namespace ivrdating.Persistent.Repositories
             var groupAssociation = (from ga in _context.group_association where ga.Grp_Prefix == request.Group_Prefix select ga).FirstOrDefault();
 
             string id = CommonRepositories.GetGroupID(request.Group_Prefix);
+            IEnumerable<GetMemberDetailsResponse> query;
+            if (string.IsNullOrEmpty(request.CustomerEmail_Address))
+            {
+                query = (from ac in _context.accounts
+                         join cust in _context.customer_master on ac.Id equals cust.AId
+                         into a from n in a.DefaultIfEmpty()
+                         select new GetMemberDetailsResponse
+                         {
+                             Acc_Number = ac.Acc_Number,
+                             PassCode = ac.PassCode,
+                             CallerId = ac.callerid,
+                             AccountType = ac.AccountType,
+                             ExpiryDate = ac.ExpiryDate,
+                             Grp_Id = ac.Grp_Id,
+                             Email_Address = n.Email_Address,
+                             First_Name = n.First_Name,
+                             Last_Name = n.Last_Name,
+                             address = n.Address,
+                             City = n.City,
+                             State_Name = n.State_Name,
+                             zip_code = n.Zip_Code,
+                             Country = n.Country
 
-            var query = (from ac in _context.accounts
+                         });
+            }
+            else
+            {
+                query = (from ac in _context.accounts
                          join cust in _context.customer_master on ac.Id equals cust.AId
                          select new GetMemberDetailsResponse
                          {
@@ -44,7 +70,7 @@ namespace ivrdating.Persistent.Repositories
                              Country = cust.Country
 
                          });
-
+            }
             if (!string.IsNullOrEmpty(request.CustomerEmail_Address))
             {
 

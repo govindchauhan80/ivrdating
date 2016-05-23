@@ -236,8 +236,8 @@ namespace ivrdating.Persistent.Repositories
         public Validate_Response validate(Validate_Request _request)
         {
             Validate_Response response = null;
-
-            account ac = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.PassCode == _request.PassCode).FirstOrDefault();
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+            account ac = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.PassCode == _request.PassCode && x.Grp_Id == Grp_id).FirstOrDefault();
 
             if (ac != null)
             {

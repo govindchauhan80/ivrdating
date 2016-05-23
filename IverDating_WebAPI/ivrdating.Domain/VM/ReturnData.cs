@@ -102,6 +102,7 @@ namespace ivrdating.Domain.VM
     }
     public class Validate_Return : ReturnBase
     {
+        [DataMember]
         public Validate_Response WsResult { get; set; }
     }
     [DataContract(Namespace = "")]

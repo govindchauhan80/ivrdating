@@ -148,7 +148,7 @@ namespace ivrdating.Logic.Services
                 return new Add_New_Account_Return() { Count = 1, ErrorMessage = string.Empty, WsResult = data };
             }
             else {
-                return new Add_New_Account_Return() { Count = 0, ErrorMessage = "This Account Number allready exist"};
+                return new Add_New_Account_Return() { Count = 0, ErrorMessage = "This Account Number already exist"};
             }
         }
 
