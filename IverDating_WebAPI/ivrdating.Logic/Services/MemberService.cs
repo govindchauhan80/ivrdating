@@ -23,10 +23,7 @@ namespace ivrdating.Logic.Services
             {
                 return new ReturnData() { Count = 0, ErrorMessage = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA", WsResult = null };
             }
-            if (request.Acc_Number <= 0)
-            {
-                return new ReturnData() { Count = 0, ErrorMessage = "No incoming Search Parameter (Function Get_Member_Details)", WsResult = null };
-            }
+           
             string validRequest = CommonRepositories.ValidateRequest(request);
             if (!validRequest.Equals("OK"))
             {

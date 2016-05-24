@@ -71,18 +71,18 @@ namespace ivrdating.Persistent.Repositories
                     //Record not found, add it
 
                     customer_master csAdd = new customer_master();
-                    csAdd.Address = string.IsNullOrEmpty(_request.CustomerAddress) ? " " : _request.CustomerAddress;
+                    csAdd.Address = string.IsNullOrEmpty(_request.CustomerAddress) ? "" : _request.CustomerAddress;
                     csAdd.AId = l_AId;
-                    csAdd.City = string.IsNullOrEmpty(_request.CustomerCity) ? " " : _request.CustomerCity;
-                    csAdd.Country= string.IsNullOrEmpty(_request.CustomerCountry) ? " " : _request.CustomerCountry.Length>20?_request.CustomerCountry.Substring(20):_request.CustomerCountry;
-                    csAdd.Email_Address= string.IsNullOrEmpty(_request.CustomerEmail_Address) ? " " : _request.CustomerEmail_Address;
-                    csAdd.First_Name= string.IsNullOrEmpty(_request.First_Name) ? " " : _request.First_Name;
-                    csAdd.Last_Name= string.IsNullOrEmpty(_request.Last_Name) ? " " : _request.Last_Name;
+                    csAdd.City = string.IsNullOrEmpty(_request.CustomerCity) ? "" : _request.CustomerCity;
+                    csAdd.Country= string.IsNullOrEmpty(_request.CustomerCountry) ? "" : _request.CustomerCountry.Length>20?_request.CustomerCountry.Substring(20):_request.CustomerCountry;
+                    csAdd.Email_Address= string.IsNullOrEmpty(_request.CustomerEmail_Address) ? "" : _request.CustomerEmail_Address;
+                    csAdd.First_Name= string.IsNullOrEmpty(_request.First_Name) ? "" : _request.First_Name;
+                    csAdd.Last_Name= string.IsNullOrEmpty(_request.Last_Name) ? "" : _request.Last_Name;
                     csAdd.RegisteredOn = (DateTime)_request.RegisteredDate;
-                    csAdd.State_Name= string.IsNullOrEmpty(_request.CustomerState) ? " " : _request.CustomerState;
-                    csAdd.WebPassword= string.IsNullOrEmpty(_request.WebPassword) ? " " : _request.WebPassword;
-                    csAdd.WebUserName= string.IsNullOrEmpty(_request.WebUserName) ? " " : _request.WebUserName;
-                    csAdd.Zip_Code= string.IsNullOrEmpty(_request.CustomerZip_Code) ? " " : _request.CustomerZip_Code;
+                    csAdd.State_Name= string.IsNullOrEmpty(_request.CustomerState) ? "" : _request.CustomerState;
+                    csAdd.WebPassword= string.IsNullOrEmpty(_request.WebPassword) ? "" : _request.WebPassword;
+                    csAdd.WebUserName= string.IsNullOrEmpty(_request.WebUserName) ? "" : _request.WebUserName;
+                    csAdd.Zip_Code= string.IsNullOrEmpty(_request.CustomerZip_Code) ? "" : _request.CustomerZip_Code;
 
                     _context.customer_master.Add(csAdd);
                     _context.SaveChanges();

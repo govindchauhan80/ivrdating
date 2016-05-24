@@ -54,6 +54,13 @@ namespace ivrdating.Persistent.Repositories
                 {
                     return "Invalid Group_Prefix";
                 }
+                else
+                {
+                    if (GetGroupID(_request.Group_Prefix) == "0")
+                    {
+                        return "Invalid Group_Prefix";
+                    }
+                }
             }
             ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
             if (db != null)
