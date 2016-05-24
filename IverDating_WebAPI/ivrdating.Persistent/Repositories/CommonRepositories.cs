@@ -2,6 +2,7 @@
 using ivrdating.Domain.VM;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -18,6 +19,16 @@ namespace ivrdating.Persistent.Repositories
         }
         public static string GetGroupID(string Group_Prefix)
         {
+            StackTrace stackTrace = new StackTrace();
+
+            string Function = stackTrace.GetFrame(1).GetMethod().Name.ToLower();
+
+            if ((Function == "set_misc") || (Function == "read_misc") || (Function == "insert_login_log") || (Function == "update_login_log") || (Function == "getchargeamount") || (Function == "set_primary_apiserver") || (Function == "check_geo_location") || (Function == "get_node3_accesspoint_ip"))
+            {
+                return "0";
+            }
+
+
             var groupAssociation = (from ga in _context.group_association where ga.Grp_Prefix == Group_Prefix select ga).FirstOrDefault();
             if (groupAssociation == null)
             {
@@ -28,6 +39,22 @@ namespace ivrdating.Persistent.Repositories
 
         public static string ValidateRequest(RequestBase _request)
         {
+
+            StackTrace stackTrace = new StackTrace();
+
+            string Function = stackTrace.GetFrame(1).GetMethod().Name.ToLower();
+
+            if ((Function == "set_misc") || (Function == "read_misc") || (Function == "insert_login_log") || (Function == "update_login_log") || (Function == "getchargeamount") || (Function == "set_primary_apiserver") || (Function == "check_geo_location") || (Function == "get_node3_accesspoint_ip"))
+            {
+                // _request.Group_Id = "0";
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(_request.Group_Prefix))
+                {
+                    return "Invalid Group_Prefix";
+                }
+            }
             ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
             if (db != null)
             {

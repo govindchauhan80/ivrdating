@@ -44,7 +44,7 @@ namespace ivrdating.Web.Controllers
         [HttpPost]
         public IHttpActionResult get_member_details(GetMemberDetailsRequest _Request, string output = null)
         {
-            ReturnData vm = _memberService.GetMemberDetails(_Request);
+            ReturnData vm = _memberService.get_member_details(_Request);
             return GetMemberDetail(output, vm);
         }
 
@@ -52,7 +52,7 @@ namespace ivrdating.Web.Controllers
         [HttpGet]
         public IHttpActionResult get_member_details(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId = null, string output = null)
         {
-            ReturnData vm = _memberService.GetMemberDetails(new GetMemberDetailsRequest() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
+            ReturnData vm = _memberService.get_member_details(new GetMemberDetailsRequest() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return GetMemberDetail(output, vm);
         }
 

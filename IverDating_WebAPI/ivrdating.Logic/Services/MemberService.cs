@@ -17,7 +17,7 @@ namespace ivrdating.Logic.Services
             _memberRepository = new MemberRepository();
         }
 
-        public ReturnData GetMemberDetails(GetMemberDetailsRequest request)
+        public ReturnData get_member_details(GetMemberDetailsRequest request)
         {
             if (request.Acc_Number <= 0 && string.IsNullOrEmpty(request.CallerId) && string.IsNullOrEmpty(request.CustomerEmail_Address) && string.IsNullOrEmpty(request.PassCode))
             {
