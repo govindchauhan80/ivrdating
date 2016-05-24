@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -19,11 +20,14 @@ namespace ivrdating.Web.Controllers
         {
             ViewBag.Title = "Log";
             List<string> files = new List<string>();
-            DirectoryInfo dr = new DirectoryInfo(Server.MapPath("~/Log"));
+            DirectoryInfo dr = new DirectoryInfo(Server.MapPath(Convert.ToString(ConfigurationManager.AppSettings["Adminscreen"])));
 
-            foreach (FileInfo f in dr.GetFiles())
+            if (dr.Exists)
             {
-                files.Add(f.Name);
+                foreach (FileInfo f in dr.GetFiles())
+                {
+                    files.Add(f.Name);
+                }
             }
             
             ViewBag.Files = files;

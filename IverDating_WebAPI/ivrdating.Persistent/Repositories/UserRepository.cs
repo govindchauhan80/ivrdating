@@ -13,11 +13,11 @@ namespace ivrdating.Persistent.Repositories
     {
 
         ivrdating.Domain.ivrdating _context;
-        ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3;
+        //ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3;
         public UserRepository()
         {
             _context = new Domain.ivrdating();
-            _ivrdatingNode3 = new Domain.ivrdatingNode3();
+            //_ivrdatingNode3 = new Domain.ivrdatingNode3();
         }
         public Add_To_User_Minute_Response Add_To_User_Minute(Add_To_User_Minute_Request _request)
         {
@@ -87,12 +87,17 @@ namespace ivrdating.Persistent.Repositories
         public Check_Geo_Location_Response check_geo_location(Check_Geo_Location_Request _request, double inetAtom)
         {
             Check_Geo_Location_Response response = new Check_Geo_Location_Response() { geo_areacode = "0", geo_city = "0", geo_country = "0", geo_stateprov = "0" };
-            long ip_byte = (1 * Convert.ToInt32(_request.Client_IP_Location.Substring(0, _request.Client_IP_Location.IndexOf("."))));
+            
             double aton = inetAtom;
             if (!_request.Client_IP_Location.Contains(":"))
             {
+                long ip_byte = (1 * Convert.ToInt32(_request.Client_IP_Location.Substring(0, _request.Client_IP_Location.IndexOf("."))));
+                ip2location_db15_ipv4m iploc;
 
-                ip2location_db15_ipv4m iploc = _ivrdatingNode3.ip2location_db15_ipv4m.Where(x => x.ip_byte1 == ip_byte && x.ip_start > aton && x.ip_end < aton).FirstOrDefault();
+                ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3 = new ivrdatingNode3();
+
+                  iploc  = _ivrdatingNode3.ip2location_db15_ipv4m.Where(x => x.ip_byte1 == ip_byte && x.ip_start <= aton && x.ip_end >= aton).FirstOrDefault();
+               
 
                 if (iploc != null)
                 {
@@ -101,6 +106,8 @@ namespace ivrdating.Persistent.Repositories
             }
             else
             {
+                ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3 = new ivrdatingNode3();
+
                 ip2location_db15_ipv6m iploc = _ivrdatingNode3.ip2location_db15_ipv6m.SqlQuery("SELECT * FROM ip2location_db15_ipv6m WHERE INET6_ATON(@Client_IP_Location) BETWEEN ip_start AND ip_end LIMIT 1", new object[] {new ObjectParameter("Client_IP_Location", _request.Client_IP_Location) }).FirstOrDefault();
                 if (iploc != null)
                 {
