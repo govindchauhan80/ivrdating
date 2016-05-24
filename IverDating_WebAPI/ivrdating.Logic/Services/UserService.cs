@@ -131,12 +131,8 @@ namespace ivrdating.Logic.Services
             }
             else
             {
-                
-                if (IPAddress.TryParse(_request.Client_IP_Location, out adr))
-                {
 
-                }
-                else
+                if (!IPAddress.TryParse(_request.Client_IP_Location, out adr))
                 {
                     validRequest = "Invalid Client_IP_Location";
                 }

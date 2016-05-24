@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ivrdatingNode3.cs" />
     <Compile Include="Models\account.cs" />
     <Compile Include="Models\accountid.cs" />
     <Compile Include="Models\acc_number_web.cs" />

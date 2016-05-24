@@ -2,6 +2,7 @@ using System.Web.Http;
 using WebActivatorEx;
 using ivrdating.Web;
 using Swashbuckle.Application;
+using System.Collections.Generic;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -74,14 +75,14 @@ namespace ivrdating.Web
                         //    });
 
                         // Set this flag to omit descriptions for any actions decorated with the Obsolete attribute
-                        //c.IgnoreObsoleteActions();
+                       // c.IgnoreObsoleteActions();
 
                         // Each operation be assigned one or more tags which are then used by consumers for various reasons.
                         // For example, the swagger-ui groups operations according to the first tag of each operation.
                         // By default, this will be controller name but you can use the "GroupActionsBy" option to
                         // override with any value.
                         //
-                        //c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.ToString());
+                        c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.Method.ToString());
 
                         // You can also specify a custom sort order for groups (as defined by "GroupActionsBy") to dictate
                         // the order in which operations are listed. For example, if the default grouping is in place
@@ -89,8 +90,8 @@ namespace ivrdating.Web
                         // ProductsController will be listed before those from a CustomersController. This is typically
                         // used to customize the order of groupings in the swagger-ui.
                         //
-                        //c.OrderActionGroupsBy(new DescendingAlphabeticComparer());
-
+                        c.OrderActionGroupsBy(new DescendingAlphabeticComparer());
+                        
                         // If you annotate Controllers and API Types with
                         // Xml comments (http://msdn.microsoft.com/en-us/library/b2s063f7(v=vs.110).aspx), you can incorporate
                         // those comments into the generated docs and UI. You can enable this by providing the path to one or
@@ -224,6 +225,19 @@ namespace ivrdating.Web
                         //
                         //c.EnableOAuth2Support("test-client-id", "test-realm", "Swagger UI");
                     });
+        }
+    }
+
+
+    public class DescendingAlphabeticComparer : IComparer<string>
+    {
+
+        public int Compare(string x, string y)
+        {
+            // Write whatever comparer you'd like to here.
+            // Yours would likely involve parsing the strings and having
+            // more complex logic than this....
+            return -(string.Compare(x, y));
         }
     }
 }
