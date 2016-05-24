@@ -625,7 +625,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_account")]
         [HttpPost]
-        public IHttpActionResult add_to_service_source(Update_Account_Request _request, string output = null)
+        public IHttpActionResult update_account(Update_Account_Request _request, string output = null)
         {
             Update_Account_Return data = _accountService.update_account(_request);
             return FN_Update_Account(data, output);

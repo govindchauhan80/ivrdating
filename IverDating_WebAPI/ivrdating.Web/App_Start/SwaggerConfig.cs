@@ -17,6 +17,7 @@ namespace ivrdating.Web
             GlobalConfiguration.Configuration 
                 .EnableSwagger(c =>
                     {
+                       
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
                         // resolve correctly. You can workaround this by providing your own code to determine the root URL.
@@ -82,7 +83,7 @@ namespace ivrdating.Web
                         // By default, this will be controller name but you can use the "GroupActionsBy" option to
                         // override with any value.
                         //
-                        c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.Method.ToString());
+                        c.GroupActionsBy(apiDesc => apiDesc.ActionDescriptor.ActionName);
 
                         // You can also specify a custom sort order for groups (as defined by "GroupActionsBy") to dictate
                         // the order in which operations are listed. For example, if the default grouping is in place
@@ -224,6 +225,7 @@ namespace ivrdating.Web
                         // the Swagger 2.0 specification, you can enable UI support as shown below.
                         //
                         //c.EnableOAuth2Support("test-client-id", "test-realm", "Swagger UI");
+                       
                     });
         }
     }
@@ -237,7 +239,7 @@ namespace ivrdating.Web
             // Write whatever comparer you'd like to here.
             // Yours would likely involve parsing the strings and having
             // more complex logic than this....
-            return -(string.Compare(x, y));
+            return (string.Compare(x, y));
         }
     }
 }

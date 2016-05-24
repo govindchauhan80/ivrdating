@@ -294,7 +294,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.SubscriberNo) && validRequest == "")
             {
-                validRequest = "SubscriberNo not define";
+                validRequest = "Subscriber No not define";
             }
             if (_request.Acc_Number <= 0 && validRequest == "")
             {
@@ -312,7 +312,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.CarrierId <= 0 && validRequest == "")
             {
-                validRequest = "CarrierId ChargeAmount";
+                validRequest = "Invalid CarrierId";
             }
             if (string.IsNullOrEmpty(_request.TicketId) && validRequest == "")
             {
