@@ -227,7 +227,8 @@ namespace ivrdating.Web.Controllers
         {
             if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
             {
-                //return Ok(Helper.ExtensionMethods.SerializeToPlainText(typeof(MemberDetailVM).GetProperties().ToList(), vm.WsResult));
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_N_Activate_New_Acc_Number_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
                 return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Get_N_Activate_New_Acc_Number_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
             }
             else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
