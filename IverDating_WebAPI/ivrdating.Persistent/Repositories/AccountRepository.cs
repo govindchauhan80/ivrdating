@@ -889,7 +889,7 @@ namespace ivrdating.Persistent.Repositories
             else
             {
                 //ivrdating.Domain.ivrdating d = new Domain.ivrdating();
-                accountid acids = _context.accountids.Single(x => x.Acc_Number == data.Acc_Number);
+                accountid acids = _context.accountids.Where(x => x.Acc_Number == data.Acc_Number).FirstOrDefault();
 
                 switch (Grp_id)
                 {
