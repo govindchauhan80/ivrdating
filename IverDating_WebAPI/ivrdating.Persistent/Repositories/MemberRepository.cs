@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 using ivrdating.Domain.VM;
 using ivrdating.Domain;
 using ivrdating.Models;
+using ivrdating.Log;
 
 namespace ivrdating.Persistent.Repositories
 {
     public class MemberRepository
     {
         ivrdating.Domain.ivrdating _context;
+        LogRequestResponse _logRequestResponse;
+      
         public MemberRepository()
         {
             _context = new ivrdating.Domain.ivrdating();
+            _logRequestResponse = new LogRequestResponse();
+
+            if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
+                _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
 
         public GetMemberDetailsResponse GetMemberDetails(GetMemberDetailsRequest request)
@@ -47,6 +54,7 @@ namespace ivrdating.Persistent.Repositories
                              Country = n.Country
 
                          });
+               // _context.Database.Log = s => _logRequestResponse.LogData(s, "Info");
             }
             else
             {
@@ -70,23 +78,36 @@ namespace ivrdating.Persistent.Repositories
                              Country = cust.Country
 
                          });
+             //   _context.Database.Log = s => _logRequestResponse.LogData(s, "Info");
             }
             if (!string.IsNullOrEmpty(request.CustomerEmail_Address))
             {
 
-                return query.Where(a => a.Email_Address == request.CustomerEmail_Address && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                var output =  query.Where(a => a.Email_Address == request.CustomerEmail_Address && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+
+                _logRequestResponse.LogData(string.Format("query.Where(a => a.Email_Address == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.CustomerEmail_Address,id), "Info");
+
+                return output;
             }
             else
             {
                 if (request.Acc_Number > 0)
                 {
-                    return query.Where(a => a.Acc_Number == request.Acc_Number && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                    var output = query.Where(a => a.Acc_Number == request.Acc_Number && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                    //_logRequestResponse.LogData(output.ToString(), "Debug");
+                    _logRequestResponse.LogData(string.Format("query.Where(a => a.Acc_Number == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.Acc_Number, id), "Info");
+                    return output;
                 }
                 else
                 {
-                    return query.Where(a => a.CallerId == request.CallerId && a.PassCode == request.PassCode && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                    var output = query.Where(a => a.CallerId == request.CallerId && a.PassCode == request.PassCode && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                    _logRequestResponse.LogData(string.Format("query.Where(a => a.CallerId == request.CallerId && a.PassCode == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.PassCode, id), "Info");
+                    //_logRequestResponse.LogData(output.ToString(), "Debug");
+
+                    return output;
                 }
             }
+            
         }
 
         public Member_Forgot_Passcode_Response member_forgot_passcode(Member_Forgot_Passcode_Request request)

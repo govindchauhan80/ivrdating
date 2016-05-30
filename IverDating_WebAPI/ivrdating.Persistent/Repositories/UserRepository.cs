@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ivrdating.Domain.VM;
 using ivrdating.Domain;
 using System.Data.Entity.Core.Objects;
+using ivrdating.Log;
 
 namespace ivrdating.Persistent.Repositories
 {
@@ -13,11 +14,14 @@ namespace ivrdating.Persistent.Repositories
     {
 
         ivrdating.Domain.ivrdating _context;
-        //ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3;
+        LogRequestResponse _logRequestResponse;
         public UserRepository()
         {
             _context = new Domain.ivrdating();
-            //_ivrdatingNode3 = new Domain.ivrdatingNode3();
+
+            _logRequestResponse = new LogRequestResponse();
+            if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
+                _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
         public Add_To_User_Minute_Response Add_To_User_Minute(Add_To_User_Minute_Request _request)
         {

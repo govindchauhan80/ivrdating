@@ -1,21 +1,33 @@
 ﻿using ivrdating.Domain;
 using ivrdating.Domain.VM;
+using ivrdating.Log;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Configuration.Install;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ivrdating.Persistent.Repositories
 {
     public class CommonRepositories
     {
         static ivrdating.Domain.ivrdating _context;
+        static LogRequestResponse _logRequestResponse;
+        
+        public static readonly string debugMode =  System.Configuration.ConfigurationManager.AppSettings["Debug"];
         static CommonRepositories()
         {
             _context = new Domain.ivrdating();
+            
+            _logRequestResponse = new LogRequestResponse();
+            if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
+                _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
         public static string GetGroupID(string Group_Prefix)
         {
@@ -88,8 +100,8 @@ namespace ivrdating.Persistent.Repositories
             {
                 ip = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             }
-            return "127.0.0.1";
-            //return ip == "::1" ? "127.0.0.1" : ip;
+            //return "182.50.132.48";
+            return ip == "::1" ? "182.50.132.48" : ip;
         }
 
         public static string ValidateIp(string activeServerIP)
@@ -111,4 +123,42 @@ namespace ivrdating.Persistent.Repositories
         public int Id { get; set; }
         public string Grp_Id { get; set; }
     }
+    /*
+    public class MyDbConfiguration : DbConfiguration
+    {
+        public MyDbConfiguration()
+        {
+            SetDatabaseLogFormatter(
+                (context, writeAction) => new OneLineFormatter(context, writeAction));
+        }
+
+
+    }
+
+    public class OneLineFormatter : DatabaseLogFormatter
+    {
+        public OneLineFormatter(DbContext context, Action<string> writeAction)
+            : base(context, writeAction)
+        {
+        }
+
+        public override void LogCommand<TResult>(
+            DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
+        {
+            var data = string.Format(
+                "Context '{0}' is executing command '{1}'{2}",
+                Context.GetType().Name,
+                command.CommandText.Replace(Environment.NewLine, ""),
+                Environment.NewLine);
+            LogRequestResponse _logRequestResponse = new LogRequestResponse();
+            _logRequestResponse.LogData(data, "Warn");
+        }
+
+        public override void LogResult<TResult>(
+            DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
+        {
+        }
+    }
+
+    */
 }

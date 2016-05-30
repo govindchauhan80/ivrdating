@@ -1,5 +1,6 @@
 ﻿using ivrdating.Domain;
 using ivrdating.Domain.VM;
+using ivrdating.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,14 @@ namespace ivrdating.Persistent.Repositories
     public class CustomerRepository
     {
         ivrdating.Domain.ivrdating _context;
+        LogRequestResponse _logRequestResponse;
         public CustomerRepository()
         {
             _context = new ivrdating.Domain.ivrdating();
+
+            _logRequestResponse = new LogRequestResponse();
+            if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
+                _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
 
         public Add_To_Customer_Master_Response Add_To_Customer_Master(Add_To_Customer_Master_Request _request)

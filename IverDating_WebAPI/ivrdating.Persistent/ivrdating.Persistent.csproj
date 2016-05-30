@@ -44,6 +44,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -71,6 +73,10 @@
     <ProjectReference Include="..\ivrdating.Domain\ivrdating.Domain.csproj">
       <Project>{98ee1d5b-86d6-4fcf-9bd6-6cdcb4bbf362}</Project>
       <Name>ivrdating.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ivrdating.Log\ivrdating.Log.csproj">
+      <Project>{24999f30-1b91-4c3e-87b6-4a1d7be6739b}</Project>
+      <Name>ivrdating.Log</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

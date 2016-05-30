@@ -1,5 +1,6 @@
 ﻿using ivrdating.Domain;
 using ivrdating.Domain.VM;
+using ivrdating.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +14,17 @@ namespace ivrdating.Persistent.Repositories
     public class AccountRepository
     {
         ivrdating.Domain.ivrdating _context;
+        LogRequestResponse _logRequestResponse;
+       
         public AccountRepository()
         {
             _context = new ivrdating.Domain.ivrdating();
+
+            //SetDatabaseLogFormatter(
+            //   (_context, writeAction) => new OneLineFormatter(_context, writeAction));
+            _logRequestResponse = new LogRequestResponse();
+            if (CommonRepositories.debugMode.Equals("On",StringComparison.OrdinalIgnoreCase))
+                _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
 
         public IList<account> GetAll()
@@ -761,6 +770,8 @@ namespace ivrdating.Persistent.Repositories
 
         public Add_New_Account_Response Add_New_Account(Add_New_Account_Request _request)
         {
+
+
             _context.Configuration.ValidateOnSaveEnabled = false;
             Add_New_Account_Response response = null;
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
@@ -803,6 +814,7 @@ namespace ivrdating.Persistent.Repositories
 
                 response = new Add_New_Account_Response() { Acc_Number = ac.Acc_Number };
             }
+
             catch { }
             return response;
         }
@@ -876,8 +888,8 @@ namespace ivrdating.Persistent.Repositories
             }
             else
             {
-                ivrdating.Domain.ivrdating d = new Domain.ivrdating();
-                accountid acids = d.accountids.Single(x => x.Acc_Number == data.Acc_Number);
+                //ivrdating.Domain.ivrdating d = new Domain.ivrdating();
+                accountid acids = _context.accountids.Single(x => x.Acc_Number == data.Acc_Number);
 
                 switch (Grp_id)
                 {
@@ -892,7 +904,7 @@ namespace ivrdating.Persistent.Repositories
                     case "8": acids.Grp_Id8 = "1"; break;
                     case "9": acids.Grp_Id9 = "1"; break;
                 }
-                d.SaveChanges();
+                _context.SaveChanges();
 
 
                 return new Get_N_Activate_New_Acc_Number_Response() { Acc_Number = data.Acc_Number, PassCode = data.PassCode };
