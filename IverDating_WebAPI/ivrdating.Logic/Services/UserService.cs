@@ -30,7 +30,7 @@ namespace ivrdating.Logic.Services
             {
                 return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
             }
-            if (_request.Seconds_In_Package <= 0)
+            if (_request.Minutes_In_Package <= 0)
             {
                 return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Minutes_In_Package Not defined (Function Add_To_User_Minute)", WsResult = null };
             }
@@ -40,6 +40,10 @@ namespace ivrdating.Logic.Services
                 _request.RegisteredDate = DateTime.Now;
             }
             data = _userRepository.Add_To_User_Minute(_request);
+            if (data.Acc_Number == -1)
+            {
+                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Allready exit" };
+            }
             return new Add_To_User_Minute_Return() { Count = 1, ErrorMessage = null, WsResult = data };
         }
 

@@ -105,7 +105,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/member_forgot_passcode")]
         [HttpGet]
-        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string CustomerEmail_Address = null, string PassCode = null, string CallerId = null, string output = null)
+        public IHttpActionResult member_forgot_passcode(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number=0, string CustomerEmail_Address = null, string PassCode = null, string CallerId = null, string output = null)
         {
             Member_Forgot_Passcode_Return vm = _memberService.member_forgot_passcode(new Member_Forgot_Passcode_Request() { Acc_Number = Acc_Number, AuthKey = AuthKey, CallerId = CallerId, CustomerEmail_Address = CustomerEmail_Address, Group_Prefix = Group_Prefix, PassCode = PassCode, WS_Password = WS_Password, WS_UserName = WS_UserName });
             return FN_Member_Forgot_Passcode(vm, output);
@@ -481,7 +481,7 @@ namespace ivrdating.Web.Controllers
         [HttpGet]
         public IHttpActionResult add_to_user_minute(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int Minute_In_Package, DateTime? RegisteredDate = null, string output = null)
         {
-            var data = _userService.Add_To_User_Minute(new Add_To_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Seconds_In_Package = Minute_In_Package });
+            var data = _userService.Add_To_User_Minute(new Add_To_User_Minute_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, RegisteredDate = RegisteredDate, Minutes_In_Package = Minute_In_Package });
             return FN_Add_To_User_Minute(data, output);
         }
         [NonAction]

@@ -239,7 +239,7 @@ namespace ivrdating.Logic.Services
                 }
                 else
                 {
-                    return new Update_Account_Return() { Count = 0, ErrorMessage = null, WsResult = data };
+                    return new Update_Account_Return() { Count = 1, ErrorMessage = null, WsResult = data };
                 }
             }
             else

@@ -29,14 +29,21 @@ namespace ivrdating.Persistent.Repositories
             string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
             user_minute um = new user_minute();
             um.Acc_Number = _request.Acc_Number;
-            um.R_Seconds = _request.Seconds_In_Package * 60;
+            um.R_Seconds = _request.Minutes_In_Package * 60;
             um.Grp_Id = Grp_id;
             um.CreateDateTimeStamp = _request.RegisteredDate;
             um.LastDateTimeStamp = _request.RegisteredDate;
 
             _context.user_minute.Add(um);
-            _context.SaveChanges();
-            response = new Add_To_User_Minute_Response() { Acc_Number = _request.Acc_Number };
+            try
+            {
+                _context.SaveChanges();
+                response = new Add_To_User_Minute_Response() { Acc_Number = _request.Acc_Number };
+            }
+            catch {
+                response = new Add_To_User_Minute_Response() { Acc_Number =-1 };
+            }
+           
             return response;
         }
 
