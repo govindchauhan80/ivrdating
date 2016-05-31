@@ -21,12 +21,13 @@ namespace ivrdating.Logic.Services
             string validRequest = CommonRepositories.ValidateRequest(_request);
             if (!validRequest.Equals("OK"))
             {
+
                 return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
 
             if (_request.Acc_Number <= 0)
             {
-                _request.Acc_Number = 0;
+                return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Account_Number not define", WsResult = null };
             }
             if (_request.RegisteredDate == null)
             {

@@ -15,7 +15,7 @@ namespace ivrdating.Persistent.Repositories
     {
         ivrdating.Domain.ivrdating _context;
         LogRequestResponse _logRequestResponse;
-       
+
         public AccountRepository()
         {
             _context = new ivrdating.Domain.ivrdating();
@@ -23,7 +23,7 @@ namespace ivrdating.Persistent.Repositories
             //SetDatabaseLogFormatter(
             //   (_context, writeAction) => new OneLineFormatter(_context, writeAction));
             _logRequestResponse = new LogRequestResponse();
-            if (CommonRepositories.debugMode.Equals("On",StringComparison.OrdinalIgnoreCase))
+            if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
                 _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
         }
 
@@ -587,15 +587,16 @@ namespace ivrdating.Persistent.Repositories
                 //Update accountids
                 accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
 
-
-                foreach (var property in db.GetType().GetProperties())
+                if (db != null)
                 {
-                    if (property.Name == "Grp_Id" + Grp_id)
+                    foreach (var property in db.GetType().GetProperties())
                     {
-                        property.SetValue(db, "1", null);
+                        if (property.Name == "Grp_Id" + Grp_id)
+                        {
+                            property.SetValue(db, "1", null);
+                        }
                     }
                 }
-
                 bool newEntry = false;
                 //Add to Account
                 account ac = new account();
@@ -697,7 +698,10 @@ namespace ivrdating.Persistent.Repositories
 
                 //Update to User Minute
                 user_minute um = _context.user_minute.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
-                um.R_Seconds = _request.Minutes_In_Package * 60;
+                if (um != null)
+                {
+                    um.R_Seconds = _request.Minutes_In_Package * 60;
+                }
                 _context.SaveChanges();
 
             }
@@ -828,15 +832,16 @@ namespace ivrdating.Persistent.Repositories
             accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
 
 
-            foreach (var property in db.GetType().GetProperties())
-            {
-                if (property.Name == "Grp_Id" + Grp_id)
-                {
-                    property.SetValue(db, "0", null);
-                }
-            }
+           
             if (db != null)
             {
+                foreach (var property in db.GetType().GetProperties())
+                {
+                    if (property.Name == "Grp_Id" + Grp_id)
+                    {
+                        property.SetValue(db, "0", null);
+                    }
+                }
 
                 //Check whether link to an active account, do not deactivate if valid account exists
 
@@ -890,21 +895,23 @@ namespace ivrdating.Persistent.Repositories
             {
                 //ivrdating.Domain.ivrdating d = new Domain.ivrdating();
                 accountid acids = _context.accountids.Where(x => x.Acc_Number == data.Acc_Number).FirstOrDefault();
-
-                switch (Grp_id)
+                if (acids != null)
                 {
+                    switch (Grp_id)
+                    {
 
-                    case "1": acids.Grp_Id1 = "1"; break;
-                    case "2": acids.Grp_Id2 = "1"; break;
-                    case "3": acids.Grp_Id3 = "1"; break;
-                    case "4": acids.Grp_Id4 = "1"; break;
-                    case "5": acids.Grp_Id5 = "1"; break;
-                    case "6": acids.Grp_Id6 = "1"; break;
-                    case "7": acids.Grp_Id7 = "1"; break;
-                    case "8": acids.Grp_Id8 = "1"; break;
-                    case "9": acids.Grp_Id9 = "1"; break;
+                        case "1": acids.Grp_Id1 = "1"; break;
+                        case "2": acids.Grp_Id2 = "1"; break;
+                        case "3": acids.Grp_Id3 = "1"; break;
+                        case "4": acids.Grp_Id4 = "1"; break;
+                        case "5": acids.Grp_Id5 = "1"; break;
+                        case "6": acids.Grp_Id6 = "1"; break;
+                        case "7": acids.Grp_Id7 = "1"; break;
+                        case "8": acids.Grp_Id8 = "1"; break;
+                        case "9": acids.Grp_Id9 = "1"; break;
+                    }
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
 
 
                 return new Get_N_Activate_New_Acc_Number_Response() { Acc_Number = data.Acc_Number, PassCode = data.PassCode };

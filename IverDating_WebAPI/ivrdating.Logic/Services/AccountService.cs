@@ -147,8 +147,9 @@ namespace ivrdating.Logic.Services
             {
                 return new Add_New_Account_Return() { Count = 1, ErrorMessage = string.Empty, WsResult = data };
             }
-            else {
-                return new Add_New_Account_Return() { Count = 0, ErrorMessage = "This Account Number already exist"};
+            else
+            {
+                return new Add_New_Account_Return() { Count = 0, ErrorMessage = "This Account Number already exist" };
             }
         }
 
@@ -594,6 +595,10 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Old_Expiry Not defined ";
             }
+            if (_request.PlanExpiresOn == null)
+            {
+                validRequest = "PlanExpiresOn Not defined ";
+            }
             if (_request.New_Expiry == null)
             {
                 validRequest = "New_Expiry Not defined ";
@@ -602,7 +607,7 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Payment Plan_Id Not defined";
             }
-            if (string.IsNullOrEmpty(_request.Plan_Amount.ToString()) || !ExtensionMethods.IsNumeric(_request.Plan_Amount.ToString()))
+            if (_request.Plan_Amount <= 0)
             {
                 validRequest = "Invalid Payment Plan_Amount";
             }
@@ -618,6 +623,28 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Package_Description Not defined";
             }
+
+            if (string.IsNullOrEmpty(_request.PassCode))
+            {
+                validRequest = "PassCode Not defined";
+            }
+
+            if (string.IsNullOrEmpty(_request.AccountType))
+            {
+                validRequest = "AccountType Not defined";
+            }
+
+            if (string.IsNullOrEmpty(_request.Area_Code))
+            {
+                validRequest = "Area_Code Not defined";
+            }
+
+            if (_request.Service_Source <= 0)
+            {
+                validRequest = "Service_Source Not defined";
+            }
+
+
             if (string.IsNullOrEmpty(_request.CallerId))
             {
                 _request.CallerId = "0";
