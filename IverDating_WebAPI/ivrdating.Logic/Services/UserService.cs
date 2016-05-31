@@ -75,7 +75,7 @@ namespace ivrdating.Logic.Services
 
             if (!string.IsNullOrEmpty(validRequest))
             {
-                return new Add_To_Service_Source_Return() { Count = 1, ErrorMessage = validRequest, WsResult = null };
+                return new Add_To_Service_Source_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
             Add_To_Service_Source_Response data = _userRepository.Add_To_Service_Source(_request);
 
