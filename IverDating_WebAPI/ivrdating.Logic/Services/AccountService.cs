@@ -431,7 +431,7 @@ namespace ivrdating.Logic.Services
 
                 if (data == null)
                 {
-                    return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = "Account Not Find" };
+                    return new Admin_Web_Screening_Return() { Count = 0, ErrorMessage = "Acc_Number " + _request.Acc_Number + " not found" };
                 }
                 else
                 {

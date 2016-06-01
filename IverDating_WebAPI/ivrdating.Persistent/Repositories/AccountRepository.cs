@@ -438,6 +438,8 @@ namespace ivrdating.Persistent.Repositories
                 {
                     response.Amount = (decimal)p.Amount;
                 }
+
+                response.Amount = decimal.Round(response.Amount, 2);
             }
 
             return response;
