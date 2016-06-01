@@ -16,7 +16,7 @@ namespace ivrdating.Domain.VM
         public int Minutes_In_Package { get; set; }
         public string Package_Description { get; set; }
         public string FULL_CC_NUMBER { get; set; }
-        public string CC_EXPDATE { get; set; }
+        public DateTime? CC_EXPDATE { get; set; }
         public string CVC { get; set; }
         public short Response_Code { get; set; }
         public string Response_Reason_Code { get; set; }
@@ -27,7 +27,7 @@ namespace ivrdating.Domain.VM
         public string Payment_Type_Text { get; set; }
         public int Acc_Number { get; set; }
         public DateTime? RegisteredDate { get; set; }
-        public int Charged_Amount { get; set; }
+        public decimal Charged_Amount { get; set; }
         public string CallerId { get; set; }
     }
 }

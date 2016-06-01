@@ -177,10 +177,12 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Payment Plan_Id Not defined";
             }
-            if (string.IsNullOrEmpty(_request.Plan_Amount) || !ExtensionMethods.IsNumeric(_request.Plan_Amount))
+            decimal d;
+            if (string.IsNullOrEmpty(_request.Plan_Amount) || !decimal.TryParse(_request.Plan_Amount, out d))
             {
                 validRequest = "Invalid Payment Plan_Amount";
             }
+
             if (_request.Plan_Validity <= 0)
             {
                 validRequest = "Invalid Payment Plan_Validity";
@@ -669,6 +671,7 @@ namespace ivrdating.Logic.Services
 
             if (validRequest == "")
             {
+                _request.Plan_Amount = decimal.Round(_request.Plan_Amount, 2);
                 Add_Complete_Paid_Account_Response data = _accountRepository.add_complete_paid_account(_request);
                 if (data == null)
                 {

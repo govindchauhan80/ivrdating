@@ -101,7 +101,7 @@ namespace ivrdating.Persistent.Repositories
                 ip = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             }
             //return "182.50.132.48";
-            return ip == "::1" ? "182.50.132.48" : ip;
+            return ip == "::1" ? "127.0.0.1" : ip;
         }
 
         public static string ValidateIp(string activeServerIP)

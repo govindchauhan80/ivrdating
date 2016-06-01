@@ -16,7 +16,7 @@ namespace ivrdating.Domain.VM
         public DateTime? Old_Expiry { get; set; }
         public DateTime? New_Expiry { get; set; }
         public int Plan_Id { get; set; }
-        public int Plan_Amount { get; set; }
+        public decimal Plan_Amount { get; set; }
         public int Charged_Amount { get; set; }
         public int Plan_Validity { get; set; }
         public string Package_Description { get; set; }

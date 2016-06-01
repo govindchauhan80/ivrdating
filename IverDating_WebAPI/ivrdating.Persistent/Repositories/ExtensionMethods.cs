@@ -30,7 +30,8 @@ namespace ivrdating.Persistent.Repositories
             }
             return num;
         }
-        public static string GetMd5Hash(string input)
+        
+        public static string GetMd5Hash(string input,string type)
         {
             MD5 md5Hash = MD5.Create();
             // Convert the input string to a byte array and compute the hash.

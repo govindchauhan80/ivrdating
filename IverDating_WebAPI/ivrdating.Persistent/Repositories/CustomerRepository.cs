@@ -41,61 +41,82 @@ namespace ivrdating.Persistent.Repositories
                 customer_master csm = _context.customer_master.Where(x => x.AId == l_AId).FirstOrDefault();
                 if (csm != null)
                 {
+                    bool isOneRecUpdated = false;
                     //Record found, update it
                     if (!string.IsNullOrEmpty(_request.First_Name))
                     {
                         csm.First_Name = _request.First_Name;
+                        isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.Last_Name))
                     {
                         csm.Last_Name = _request.Last_Name;
+                        isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.CustomerAddress))
                     {
                         csm.Address = _request.CustomerAddress;
+                        isOneRecUpdated = true;
                     }
 
                     if (!string.IsNullOrEmpty(_request.CustomerCity))
                     {
                         csm.City = _request.CustomerCity;
+                        isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.CustomerState))
                     {
                         csm.State_Name = _request.CustomerState;
+                        isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.CustomerZip_Code))
                     {
                         csm.Zip_Code = _request.CustomerZip_Code;
+                        isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.CustomerCountry))
                     {
-                        csm.Country = _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(20) : _request.CustomerCountry;
+
+                        csm.Country = _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(0, 20) : _request.CustomerAddress;
+                        isOneRecUpdated = true;
+                    }
+                    if (!string.IsNullOrEmpty(_request.CustomerEmail_Address))
+                    {
+                        csm.Email_Address = _request.CustomerEmail_Address;
+                        isOneRecUpdated = true;
+                    }
+                    if (isOneRecUpdated)
+                    {
+                        csm.RegisteredOn = (DateTime)_request.RegisteredDate;
+                        csm.ModifiedOn = DateTime.Now;
                     }
                     _context.SaveChanges();
                 }
-                else {
+                else
+                {
                     //Record not found, add it
 
                     customer_master csAdd = new customer_master();
                     csAdd.Address = string.IsNullOrEmpty(_request.CustomerAddress) ? "" : _request.CustomerAddress;
                     csAdd.AId = l_AId;
                     csAdd.City = string.IsNullOrEmpty(_request.CustomerCity) ? "" : _request.CustomerCity;
-                    csAdd.Country= string.IsNullOrEmpty(_request.CustomerCountry) ? "" : _request.CustomerCountry.Length>20?_request.CustomerCountry.Substring(20):_request.CustomerCountry;
-                    csAdd.Email_Address= string.IsNullOrEmpty(_request.CustomerEmail_Address) ? "" : _request.CustomerEmail_Address;
-                    csAdd.First_Name= string.IsNullOrEmpty(_request.First_Name) ? "" : _request.First_Name;
-                    csAdd.Last_Name= string.IsNullOrEmpty(_request.Last_Name) ? "" : _request.Last_Name;
+                    csAdd.Country = string.IsNullOrEmpty(_request.CustomerCountry) ? "" : _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(20) : _request.CustomerCountry;
+                    csAdd.Email_Address = string.IsNullOrEmpty(_request.CustomerEmail_Address) ? "" : _request.CustomerEmail_Address;
+                    csAdd.First_Name = string.IsNullOrEmpty(_request.First_Name) ? "" : _request.First_Name;
+                    csAdd.Last_Name = string.IsNullOrEmpty(_request.Last_Name) ? "" : _request.Last_Name;
                     csAdd.RegisteredOn = (DateTime)_request.RegisteredDate;
-                    csAdd.State_Name= string.IsNullOrEmpty(_request.CustomerState) ? "" : _request.CustomerState;
-                    csAdd.WebPassword= string.IsNullOrEmpty(_request.WebPassword) ? "" : _request.WebPassword;
-                    csAdd.WebUserName= string.IsNullOrEmpty(_request.WebUserName) ? "" : _request.WebUserName;
-                    csAdd.Zip_Code= string.IsNullOrEmpty(_request.CustomerZip_Code) ? "" : _request.CustomerZip_Code;
+                    csAdd.State_Name = string.IsNullOrEmpty(_request.CustomerState) ? "" : _request.CustomerState;
+                    csAdd.WebPassword = string.IsNullOrEmpty(_request.WebPassword) ? "" : _request.WebPassword;
+                    csAdd.WebUserName = string.IsNullOrEmpty(_request.WebUserName) ? "" : _request.WebUserName;
+                    csAdd.Zip_Code = string.IsNullOrEmpty(_request.CustomerZip_Code) ? "" : _request.CustomerZip_Code;
 
                     _context.customer_master.Add(csAdd);
                     _context.SaveChanges();
                 }
 
             }
-            else {
+            else
+            {
                 throw new Exception("Account Number does not exist in account table");
             }
             response = new Add_To_Customer_Master_Response() { Acc_Number = _request.Acc_Number };

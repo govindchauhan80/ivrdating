@@ -3,6 +3,7 @@ using ivrdating.Domain.VM;
 using ivrdating.Log;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -160,7 +161,7 @@ namespace ivrdating.Persistent.Repositories
             }
             if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 4)
             {
-                LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 5, 4);
+                LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 4, 4);
             }
             else
             {
@@ -175,6 +176,23 @@ namespace ivrdating.Persistent.Repositories
             decimal AppFee_Static_Amount = 0;
             decimal AppFee_Perc_Amount = 0;
 
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) || !string.IsNullOrEmpty(_request.CVC))
+            {
+                using (var con = new ivrdating.Domain.ivrdating())
+                {
+                    if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER))
+                    {
+                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.FULL_CC_NUMBER) }).FirstOrDefault();
+                    }
+
+                    if (!string.IsNullOrEmpty(_request.CVC))
+                    {
+                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CVC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.CVC) }).FirstOrDefault();
+                    }
+                }
+            }
+
+
             if (_request.Charged_Amount > 0)
             {
                 //Get Tax_Perc FROM Market
@@ -188,15 +206,15 @@ namespace ivrdating.Persistent.Repositories
                 market _market = _context.markets.Where(x => x.AreaCode == areadCode).SingleOrDefault();
                 if (_market != null)
                 {
-                    Tax_Perc_Amount = _market.Tax_Perc * Convert.ToInt32(_request.Plan_Amount);
+                    Tax_Perc_Amount = _market.Tax_Perc * Convert.ToDecimal(_request.Plan_Amount);
                 }
                 //Get Other Records FROM Payment_Plan_List
 
                 payment_plan_list _payment_plan_list = _context.payment_plan_list.Where(x => x.Id == _request.Plan_Id).FirstOrDefault();
                 if (_payment_plan_list != null)
                 {
-                    AppFee_Perc_Amount = _payment_plan_list.ApplicableFee_Perc * Convert.ToInt32(_request.Plan_Amount);
-                    AppFee_Static_Amount = _payment_plan_list.ApplicableFee_Static * Convert.ToInt32(_request.Plan_Amount);
+                    AppFee_Perc_Amount = decimal.Round(_payment_plan_list.ApplicableFee_Perc, 2);
+                    AppFee_Static_Amount = decimal.Round(_payment_plan_list.ApplicableFee_Static, 2);
                 }
 
             }
@@ -211,9 +229,9 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.FIRST_ONE_CC =
                  FIRST_ONE_CC;
             _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
-            _paymentdetail.EXP_DATE = _request.CC_EXPDATE;
-            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : ExtensionMethods.GetMd5Hash(_request.FULL_CC_NUMBER); // MD5
-            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : ExtensionMethods.GetMd5Hash(_request.CVC); //MD5
+            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("yyMM");
+            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : _request.FULL_CC_NUMBER; // MD5
+            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : _request.CVC; //MD5
             _paymentdetail.Amount = _request.Plan_Amount;
             _paymentdetail.Tax_Perc_Amount = Tax_Perc_Amount;
             _paymentdetail.AppFee_Static_Amount = AppFee_Static_Amount;
@@ -545,7 +563,8 @@ namespace ivrdating.Persistent.Repositories
             response = new Read_Misc_Response() { Setting = string.Join("|", str) };
             return response;
         }
-
+        string CC_Encryption_SALT = "O7#sAlpwQk^$*~";
+        string CVC_Encryption_SALT = "*RcS!98/>nUp9";
         public Add_Complete_Paid_Account_Response add_complete_paid_account(Add_Complete_Paid_Account_Request _request)
         {
             _context.Configuration.ValidateOnSaveEnabled = false;
@@ -562,7 +581,7 @@ namespace ivrdating.Persistent.Repositories
             }
             if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) && _request.FULL_CC_NUMBER.Length >= 4)
             {
-                LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 5, 4);
+                LAST_FOUR_CC = _request.FULL_CC_NUMBER.Substring(_request.FULL_CC_NUMBER.Length - 4, 4);
             }
             else
             {
@@ -573,6 +592,22 @@ namespace ivrdating.Persistent.Repositories
             decimal AppFee_Static_Amount = 0;
             decimal AppFee_Perc_Amount = 0;
 
+
+            if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER) || !string.IsNullOrEmpty(_request.CVC))
+            {
+                using (var con = new ivrdating.Domain.ivrdating())
+                {
+                    if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER))
+                    {
+                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.FULL_CC_NUMBER) }).FirstOrDefault();
+                    }
+
+                    if (!string.IsNullOrEmpty(_request.CVC))
+                    {
+                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CVC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.CVC) }).FirstOrDefault();
+                    }
+                }
+            }
 
             //CHECK IF ACCOUNT ALREADY EXISTS ( BASED ON CALLERID AND GROUP ACCOUNT MAY HAVE EXISTED )
             int l_AId = 0;
@@ -611,8 +646,8 @@ namespace ivrdating.Persistent.Repositories
                 ac.PassCode = _request.PassCode;
 
                 ac.Grp_Id = Grp_id;
-
-                ac.Gender = "2";
+                ac.AccRegisteredOn = (DateTime)_request.RegisteredDate;
+                ac.Gender = "1";
                 ac.LookingFor = "2";
                 ac.ScreenStatus_0N2D1S3Ok = "0";
                 ac.AdminScreening_0Q1Ok = "0";
@@ -743,9 +778,9 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.FIRST_ONE_CC =
                  FIRST_ONE_CC;
             _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
-            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("yyyy-MM-dd");
-            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : ExtensionMethods.GetMd5Hash(_request.FULL_CC_NUMBER); // MD5
-            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : ExtensionMethods.GetMd5Hash(_request.CVC); //MD5
+            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("MMyy");
+            _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : _request.FULL_CC_NUMBER; // MD5
+            _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : _request.CVC; //MD5
             _paymentdetail.Amount = _request.Plan_Amount.ToString();
             _paymentdetail.Tax_Perc_Amount = Tax_Perc_Amount;
             _paymentdetail.AppFee_Static_Amount = AppFee_Static_Amount;
@@ -760,6 +795,7 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.AVSResultCode = string.IsNullOrEmpty(_request.AVS_Result_Code) ? " " : _request.AVS_Result_Code;
             _paymentdetail.TransactionID = string.IsNullOrEmpty(_request.Transaction_Id.ToString()) ? " " : _request.Transaction_Id.ToString();
             _paymentdetail.registeredby = string.IsNullOrEmpty(_request.Payment_Type_Text) ? " " : _request.Payment_Type_Text;
+            _paymentdetail.ZipCode = string.IsNullOrEmpty(_request.CustomerZip_Code) ? "" : _request.CustomerZip_Code;
             _paymentdetail.Source_Description = "Web Transaction";
             _paymentdetail.pd_callerid = "";
             _paymentdetail.Dnis = "";
@@ -789,7 +825,7 @@ namespace ivrdating.Persistent.Repositories
             ac.Acc_Number = _request.Acc_Number;
             ac.PassCode = _request.PassCode;
             ac.callerid = _request.CallerId;
-
+            ac.AccRegisteredOn = (DateTime)_request.RegisteredDate;
             ac.RegisteredOn = (DateTime)_request.RegisteredDate;
             ac.ExpiryDate = (DateTime)_request.PlanExpiresOn;
             ac.AccountType = _request.AccountType;
@@ -798,7 +834,7 @@ namespace ivrdating.Persistent.Repositories
 
             ac.Grp_Id = Grp_id;
 
-            ac.Gender = "2";
+            ac.Gender = "1";
             ac.LookingFor = "2";
             ac.ScreenStatus_0N2D1S3Ok = "0";
             ac.AdminScreening_0Q1Ok = "0";
@@ -809,9 +845,21 @@ namespace ivrdating.Persistent.Repositories
             ac.Callout_End = "00:00";
 
             ac.DeadAccount1 = "0";
-
+            //ac.LastGreetingRecordedOn = new DateTime(0, 0, 0, 0, 0, 0);
+            //ac.LastLogon = new DateTime(0, 0, 0, 0, 0, 0);
 
             _context.accounts.Add(ac);
+
+            mobile_carrier_account moac = new mobile_carrier_account();
+            moac.Acc_Number = _request.Acc_Number;
+            moac.PassCode = _request.PassCode;
+            moac.Ani = _request.CallerId;
+            moac.Grp_Id = Grp_id;
+            moac.RegisteredOn = (DateTime)_request.RegisteredDate;
+            moac.ExpiryDate = (DateTime)_request.PlanExpiresOn;
+            //moac.LastCalledOn = new DateTime(0, 0, 0, 0, 0, 0);
+
+            _context.mobile_carrier_account.Add(moac);
             try
             {
                 _context.SaveChanges();
@@ -832,7 +880,7 @@ namespace ivrdating.Persistent.Repositories
             accountid db = _context.accountids.Where(x => x.Acc_Number == _request.Acc_Number).FirstOrDefault();
 
 
-           
+
             if (db != null)
             {
                 foreach (var property in db.GetType().GetProperties())
