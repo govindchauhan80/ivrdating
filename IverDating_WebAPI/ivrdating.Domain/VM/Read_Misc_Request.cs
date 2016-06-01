@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ivrdating.Domain.VM
 {
-    public class Read_Misc_Request:RequestBase
+    public class Read_Misc_Request: RequestBaseWithOutGp
     {
     }
 }

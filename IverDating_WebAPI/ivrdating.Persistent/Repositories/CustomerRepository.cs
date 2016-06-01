@@ -85,6 +85,11 @@ namespace ivrdating.Persistent.Repositories
                         csm.Email_Address = _request.CustomerEmail_Address;
                         isOneRecUpdated = true;
                     }
+                    if (!string.IsNullOrEmpty(_request.WebPassword))
+                    {
+                        csm.WebPassword = _request.WebPassword;
+                        isOneRecUpdated = true;
+                    }
                     if (isOneRecUpdated)
                     {
                         csm.RegisteredOn = (DateTime)_request.RegisteredDate;

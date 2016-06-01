@@ -324,7 +324,7 @@ namespace ivrdating.Persistent.Repositories
             _sms_Queue_Active.Port = l_Port;
             _sms_Queue_Active.SubscriberNo = _request.SubscriberNo;
             _sms_Queue_Active.Ticket_Id = _request.TicketId;
-            _sms_Queue_Active.SMS_Id = _sms_Queue_Active.SMS_Id;
+            _sms_Queue_Active.SMS_Id = _request.SMS_Id;
             _sms_Queue_Active.ChargeType = 1;
             _sms_Queue_Active.Job_Time = DateTime.Now;
             _sms_Queue_Active.Queue_Time = DateTime.Now;
@@ -370,7 +370,10 @@ namespace ivrdating.Persistent.Repositories
             lg.DateIn = _request.DateIn == null ? "" : ((DateTime)_request.DateIn).ToString("yyyy-MM-dd");
             lg.LastTimeStamp = _request.LastTimeStamp;
             lg.SessionNo = _request.Session;
-            lg.TimeIn = _request.TimeIn;
+            if (_request.TimeIn != null)
+            {
+                lg.TimeIn = _request.TimeIn.Value.ToString();
+            }
             lg.Username = _request.CC_UserName;
 
             _context.login_log.Add(lg);

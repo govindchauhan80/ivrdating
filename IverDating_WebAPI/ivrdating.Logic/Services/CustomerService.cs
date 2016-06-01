@@ -24,7 +24,10 @@ namespace ivrdating.Logic.Services
 
                 return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
-
+            if (!string.IsNullOrEmpty(_request.CustomerEmail_Address) && !CommonRepositories.IsValidEmailAddress(_request.CustomerEmail_Address))
+            {
+                return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Invalid email address", WsResult = null };
+            }
             if (_request.Acc_Number <= 0)
             {
                 return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Account_Number not define", WsResult = null };
@@ -50,7 +53,7 @@ namespace ivrdating.Logic.Services
             }
             catch (Exception ex)
             {
-                if (ex.Message == "Account Number does not exist in account table"|| ex.Message.ToString().Contains("Validation failed for one or more entities"))
+                if (ex.Message == "Account Number does not exist in account table" || ex.Message.ToString().Contains("Validation failed for one or more entities"))
                 {
                     return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = ex.Message, WsResult = null };
                 }

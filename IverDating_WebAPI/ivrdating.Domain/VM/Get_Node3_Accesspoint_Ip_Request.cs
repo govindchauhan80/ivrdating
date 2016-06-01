@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ivrdating.Domain.VM
 {
-    public class Get_Node3_Accesspoint_Ip_Request : RequestBase
+    public class Get_Node3_Accesspoint_Ip_Request : RequestBaseWithOutGp
     {
     }
 }

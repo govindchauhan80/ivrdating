@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 namespace ivrdating.Persistent.Repositories
 {
@@ -19,12 +20,12 @@ namespace ivrdating.Persistent.Repositories
     {
         static ivrdating.Domain.ivrdating _context;
         static LogRequestResponse _logRequestResponse;
-        
-        public static readonly string debugMode =  System.Configuration.ConfigurationManager.AppSettings["Debug"];
+
+        public static readonly string debugMode = System.Configuration.ConfigurationManager.AppSettings["Debug"];
         static CommonRepositories()
         {
             _context = new Domain.ivrdating();
-            
+
             _logRequestResponse = new LogRequestResponse();
             if (CommonRepositories.debugMode.Equals("On", StringComparison.OrdinalIgnoreCase))
                 _context.Database.Log = s => _logRequestResponse.LogData(s, "Warn");
@@ -93,6 +94,28 @@ namespace ivrdating.Persistent.Repositories
             }
             return "OK";
         }
+
+        public static string ValidateRequest(RequestBaseWithOutGp _request)
+        {
+            ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
+            if (db != null)
+            {
+                if (db.AuthKey != _request.AuthKey)
+                {
+                    return "Invalid Auth Key";
+                }
+                if (db.IP_Address != GetIp())
+                {
+                    return "Invalid Remote IP Address";
+                }
+
+            }
+            else if (db == null)
+            {
+                return "WS_Agent credentials does not match";
+            }
+            return "OK";
+        }
         private static string GetIp()
         {
             string ip = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
@@ -115,6 +138,12 @@ namespace ivrdating.Persistent.Repositories
             {
                 return "Invalid Ip";
             }
+        }
+
+        public static bool IsValidEmailAddress(string s)
+        {
+            Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+            return regex.IsMatch(s);
         }
     }
 

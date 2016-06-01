@@ -29,6 +29,10 @@ namespace ivrdating.Logic.Services
             {
                 return new ReturnData() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
+            if (!string.IsNullOrEmpty(request.CustomerEmail_Address) && !CommonRepositories.IsValidEmailAddress(request.CustomerEmail_Address))
+            {
+                return new ReturnData() { Count = 0, ErrorMessage = "Invalid email address", WsResult = null };
+            }
             ReturnData _wsResponse = new ReturnData();
             var data = _memberRepository.GetMemberDetails(request);
 
@@ -59,6 +63,10 @@ namespace ivrdating.Logic.Services
             if (!validRequest.Equals("OK"))
             {
                 return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
+            if (!string.IsNullOrEmpty(request.CustomerEmail_Address) && !CommonRepositories.IsValidEmailAddress(request.CustomerEmail_Address))
+            {
+                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "Invalid email address", WsResult = null };
             }
             Member_Forgot_Passcode_Return _wsResponse = new Member_Forgot_Passcode_Return();
             Member_Forgot_Passcode_Response data = _memberRepository.member_forgot_passcode(request);

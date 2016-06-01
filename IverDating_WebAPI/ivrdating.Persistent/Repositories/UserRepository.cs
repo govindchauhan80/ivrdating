@@ -40,10 +40,11 @@ namespace ivrdating.Persistent.Repositories
                 _context.SaveChanges();
                 response = new Add_To_User_Minute_Response() { Acc_Number = _request.Acc_Number };
             }
-            catch {
-                response = new Add_To_User_Minute_Response() { Acc_Number =-1 };
+            catch
+            {
+                response = new Add_To_User_Minute_Response() { Acc_Number = -1 };
             }
-           
+
             return response;
         }
 
@@ -75,7 +76,7 @@ namespace ivrdating.Persistent.Repositories
             user_minute um = _context.user_minute.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
             if (um != null)
             {
-                um.R_Seconds = _request.Minutes_In_Package * 60;
+                um.R_Seconds = um.R_Seconds + _request.Minutes_In_Package * 60;
                 um.LastDateTimeStamp = (DateTime)_request.RegisteredDate;
             }
             else
@@ -98,7 +99,7 @@ namespace ivrdating.Persistent.Repositories
         public Check_Geo_Location_Response check_geo_location(Check_Geo_Location_Request _request, double inetAtom)
         {
             Check_Geo_Location_Response response = new Check_Geo_Location_Response() { geo_areacode = "0", geo_city = "0", geo_country = "0", geo_stateprov = "0" };
-            
+
             double aton = inetAtom;
             if (!_request.Client_IP_Location.Contains(":"))
             {
@@ -107,8 +108,8 @@ namespace ivrdating.Persistent.Repositories
 
                 ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3 = new ivrdatingNode3();
 
-                  iploc  = _ivrdatingNode3.ip2location_db15_ipv4m.Where(x => x.ip_byte1 == ip_byte && x.ip_start <= aton && x.ip_end >= aton).FirstOrDefault();
-               
+                iploc = _ivrdatingNode3.ip2location_db15_ipv4m.Where(x => x.ip_byte1 == ip_byte && x.ip_start <= aton && x.ip_end >= aton).FirstOrDefault();
+
 
                 if (iploc != null)
                 {
@@ -119,7 +120,7 @@ namespace ivrdating.Persistent.Repositories
             {
                 ivrdating.Domain.ivrdatingNode3 _ivrdatingNode3 = new ivrdatingNode3();
 
-                ip2location_db15_ipv6m iploc = _ivrdatingNode3.ip2location_db15_ipv6m.SqlQuery("SELECT * FROM ip2location_db15_ipv6m WHERE INET6_ATON(@Client_IP_Location) BETWEEN ip_start AND ip_end LIMIT 1", new object[] {new ObjectParameter("Client_IP_Location", _request.Client_IP_Location) }).FirstOrDefault();
+                ip2location_db15_ipv6m iploc = _ivrdatingNode3.ip2location_db15_ipv6m.SqlQuery("SELECT * FROM ip2location_db15_ipv6m WHERE INET6_ATON(@Client_IP_Location) BETWEEN ip_start AND ip_end LIMIT 1", new object[] { new ObjectParameter("Client_IP_Location", _request.Client_IP_Location) }).FirstOrDefault();
                 if (iploc != null)
                 {
                     response = new Check_Geo_Location_Response() { geo_areacode = iploc.AreaCode, geo_city = iploc.city, geo_country = iploc.country, geo_stateprov = iploc.stateprov };

@@ -24,6 +24,7 @@ namespace ivrdating.Logic.Services
 
         public Get_New_Acc_Number_Return Get_New_Acc_Number(Get_New_Acc_Number_Request _request)
         {
+
             string validRequest = CommonRepositories.ValidateRequest(_request);
             if (!validRequest.Equals("OK"))
             {
@@ -233,6 +234,10 @@ namespace ivrdating.Logic.Services
             {
                 _request.Active0In1 = "0";
             }
+            if (_request.Acc_Number <= 0 && validRequest == "")
+            {
+                validRequest = "Acc_Number Not defined";
+            }
             if (string.IsNullOrEmpty(validRequest))
             {
                 Update_Account_Response data = _accountRepository.update_account(_request);
@@ -306,7 +311,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.SMS_Id <= 0 && validRequest == "")
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid SMS_Id";
             }
             if (_request.ChargeAmount <= 0 && validRequest == "")
             {
@@ -349,16 +354,16 @@ namespace ivrdating.Logic.Services
                 validRequest = "";
             }
 
-            if (string.IsNullOrEmpty(_request.TimeIn) && validRequest == "")
-            {
-            }
-            else
-            {
-                if (!ExtensionMethods.IsNumeric(_request.TimeIn))
-                {
-                    validRequest = "Invalid TimeIn";
-                }
-            }
+            //if (string.IsNullOrEmpty(_request.TimeIn) && validRequest == "")
+            //{
+            //}
+            //else
+            //{
+            //    if (!ExtensionMethods.IsNumeric(_request.TimeIn))
+            //    {
+            //        validRequest = "Invalid TimeIn";
+            //    }
+            //}
 
             if (validRequest == "")
             {
