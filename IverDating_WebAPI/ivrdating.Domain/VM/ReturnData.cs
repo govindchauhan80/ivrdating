@@ -194,4 +194,11 @@ namespace ivrdating.Domain.VM
         [DataMember]
         public Add_Complete_Paid_Account_Response WsResult { get; set; }
     }
+
+    [DataContract(Namespace = "")]
+    public class Modify_Customer_Info_Return : ReturnBase
+    {
+        [DataMember]
+        public Modify_Customer_Info_Response WsResult { get; set; }
+    }
 }

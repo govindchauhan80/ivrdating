@@ -105,7 +105,7 @@ namespace ivrdating.Domain
         [StringLength(20)]
         public string TollFree { get; set; }
 
-        public DateTime TollFree_DateStamp { get; set; }
+        //public DateTime TollFree_DateStamp { get; set; }
 
         [Required]
         [StringLength(200)]

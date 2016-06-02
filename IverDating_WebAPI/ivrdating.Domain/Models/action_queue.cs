@@ -13,7 +13,8 @@ namespace ivrdating.Domain
 
         public DateTime QDateTimeStamp { get; set; }
 
-        public DateTime ProcessedAt { get; set; }
+        
+        //public DateTime ProcessedAt { get; set; }
 
         [Column(TypeName = "enum")]
         [Required]

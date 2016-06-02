@@ -1,6 +1,7 @@
 ﻿using ivrdating.Domain;
 using ivrdating.Domain.VM;
 using ivrdating.Log;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
@@ -450,6 +451,7 @@ namespace ivrdating.Persistent.Repositories
 
         public Delete_Completeaccount_Response delete_completeaccount(Delete_Completeaccount_Request _request)
         {
+            _context.Configuration.ValidateOnSaveEnabled = false;
             Delete_Completeaccount_Response response = null;
 
             int ct = 0;
@@ -483,7 +485,6 @@ namespace ivrdating.Persistent.Repositories
                 aq.Q0A1S2F3 = "0";
 
                 _context.action_queue.Add(aq);
-                _context.Configuration.ValidateOnSaveEnabled = false;
                 _context.SaveChanges();
                 response = new Delete_Completeaccount_Response() { Message = "Delete account request queued." };
             }
@@ -740,7 +741,7 @@ namespace ivrdating.Persistent.Repositories
                 user_minute um = _context.user_minute.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
                 if (um != null)
                 {
-                    um.R_Seconds = _request.Minutes_In_Package * 60;
+                    um.R_Seconds = um.R_Seconds + _request.Minutes_In_Package * 60;
                 }
                 _context.SaveChanges();
 
@@ -761,15 +762,15 @@ namespace ivrdating.Persistent.Repositories
                 market _market = _context.markets.Where(x => x.AreaCode == areadCode).SingleOrDefault();
                 if (_market != null)
                 {
-                    Tax_Perc_Amount = _market.Tax_Perc * Convert.ToInt32(_request.Plan_Amount);
+                    Tax_Perc_Amount = _market.Tax_Perc * _request.Plan_Amount;
                 }
                 //Get Other Records FROM Payment_Plan_List
 
                 payment_plan_list _payment_plan_list = _context.payment_plan_list.Where(x => x.Id == _request.Plan_Id).FirstOrDefault();
                 if (_payment_plan_list != null)
                 {
-                    AppFee_Perc_Amount = _payment_plan_list.ApplicableFee_Perc * Convert.ToInt32(_request.Plan_Amount);
-                    AppFee_Static_Amount = _payment_plan_list.ApplicableFee_Static * Convert.ToInt32(_request.Plan_Amount);
+                    AppFee_Perc_Amount = _payment_plan_list.ApplicableFee_Perc;
+                    AppFee_Static_Amount = _payment_plan_list.ApplicableFee_Static;
                 }
             }
 
@@ -811,6 +812,91 @@ namespace ivrdating.Persistent.Repositories
             response = new Add_Complete_Paid_Account_Response() { Acc_Number = _request.Acc_Number };
 
             return response;
+        }
+
+        public Modify_Customer_Info_Response modify_customer_info(Modify_Customer_Info_Request _request)
+        {
+            string Grp_id = CommonRepositories.GetGroupID(_request.Group_Prefix);
+            _context.Configuration.ValidateOnSaveEnabled = false;
+            if ((_request.PassCode == "-1") && (_request.CallerId == "-1"))
+            {
+                int l_AId = 0;
+                string l_Passcode = "";
+
+                account acc = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+
+                if (acc != null)
+                {
+                    l_AId = acc.Id;
+                    l_Passcode = acc.PassCode;
+
+                    customer_master cs = _context.customer_master.Where(x => x.AId == l_AId).FirstOrDefault();
+                    if (cs != null)
+                    {
+                        cs.WebPassword = l_Passcode;
+                        _context.SaveChanges();
+                        using (var con = new ivrdating.Domain.ivrdating())
+                        {
+                            int rs = con.Database.ExecuteSqlCommand("update customer_master set ModifiedOn = @mod where AId = @id", new object[] { new MySqlParameter("@mod", DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")), new MySqlParameter("@id", l_AId) });
+                        }
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            else if ((_request.PassCode == "-1") && (_request.WebPassword == "-1"))
+            {
+                account acc = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+
+                if (acc != null)
+                {
+                    acc.callerid = _request.CallerId;
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else if ((_request.CallerId == "-1") && (_request.WebPassword == "-1"))
+            {
+                int l_AId = 0;
+                string l_Passcode = "";
+
+                account acc = _context.accounts.Where(x => x.Acc_Number == _request.Acc_Number && x.Grp_Id == Grp_id).FirstOrDefault();
+
+                if (acc != null)
+                {
+                    bool saveChanges = false;
+                    l_AId = acc.Id;
+                    l_Passcode = acc.PassCode;
+                    acc.PassCode = _request.PassCode;
+                    customer_master cs = _context.customer_master.Where(x => x.AId == l_AId).FirstOrDefault();
+                    if (cs != null)
+                    {
+                        cs.WebPassword = l_Passcode;
+                        _context.SaveChanges();
+                        saveChanges = true;
+                        using (var con = new ivrdating.Domain.ivrdating())
+                        {
+                            int rs = con.Database.ExecuteSqlCommand("update customer_master set ModifiedOn = @mod where AId = @id", new object[] { new MySqlParameter("@mod", DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")), new MySqlParameter("@id", l_AId) });
+                        }
+                    }
+                    if (!saveChanges)
+                    {
+                        _context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return new Modify_Customer_Info_Response() { Acc_Number = _request.Acc_Number };
         }
 
         public Add_New_Account_Response Add_New_Account(Add_New_Account_Request _request)

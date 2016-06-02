@@ -92,9 +92,9 @@ namespace ivrdating.Domain
         [StringLength(10)]
         public string Callout_End { get; set; }
 
-        public DateTime LastLogon { get; set; }
+        //public DateTime LastLogon { get; set; }
 
-        public DateTime LastGreetingRecordedOn { get; set; }
+        //public DateTime LastGreetingRecordedOn { get; set; }
 
         [Column(TypeName = "enum")]
         [Required]

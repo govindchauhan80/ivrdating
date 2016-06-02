@@ -735,7 +735,17 @@ namespace ivrdating.Web.Controllers
             Validate_Return data = _accountService.validate(_request);
             return FN_Validate(data, output);
         }
-
+        /// <summary>
+        /// tstetetetete
+        /// </summary>
+        /// <param name="AuthKey">AuthKey</param>
+        /// <param name="WS_UserName">WS_UserName</param>
+        /// <param name="WS_Password">WS_Password</param>
+        /// <param name="Group_Prefix">Group_Prefix</param>
+        /// <param name="Acc_Number">Acc_Number</param>
+        /// <param name="PassCode">PassCode</param>
+        /// <param name="output">output</param>
+        /// <returns></returns>
         [Route("api/webservices/validate")]
         [HttpGet]
         public IHttpActionResult validate(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, string output = null)
@@ -1493,5 +1503,58 @@ namespace ivrdating.Web.Controllers
         }
 
         #endregion add_complete_paid_account
+
+        #region modify_customer_info 
+
+        [Route("api/webservices/modify_customer_info")]
+        [HttpPost]
+        public IHttpActionResult modify_customer_info(Modify_Customer_Info_Request _request, string output = null)
+        {
+            var data = _accountService.modify_customer_info(_request);
+            return FN_Modify_Customer_Info(data, output);
+        }
+
+        [Route("api/webservices/modify_customer_info")]
+        [HttpGet]
+        public IHttpActionResult modify_customer_info(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode = null, string CallerId = null, string WebPassword = null, string output = null)
+        {
+            var data = _accountService.modify_customer_info(new Modify_Customer_Info_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CallerId = CallerId, PassCode = PassCode, WebPassword = WebPassword });
+            return FN_Modify_Customer_Info(data, output);
+        }
+
+        [NonAction]
+        private IHttpActionResult FN_Modify_Customer_Info(Modify_Customer_Info_Return vm, string output)
+        {
+            if (string.Equals(output, "text", StringComparison.OrdinalIgnoreCase))
+            {
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Modify_Customer_Info_Response).GetProperties().ToList(), vm.WsResult), Configuration.Formatters.JsonFormatter);
+                return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToPlainText(typeof(Modify_Customer_Info_Return).GetProperties().ToList(), vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "csv", StringComparison.OrdinalIgnoreCase))
+            {
+                // return Ok(CsvSerializer.SerializeToCsv(new List<MemberDetailVM> { vm.WsResult }));
+                if (vm.WsResult != null)
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm.WsResult), Configuration.Formatters.JsonFormatter);
+                else
+                    return Content(HttpStatusCode.OK, ExtensionMethods.SerializeToCsv(vm), Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "json", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Json(vm);
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.JsonFormatter);
+            }
+            else if (string.Equals(output, "xml", StringComparison.OrdinalIgnoreCase))
+            {
+                //return Ok(XmlSerializer.SerializeToString(vm.WsResult));
+                return Content(HttpStatusCode.OK, vm, Configuration.Formatters.XmlFormatter);
+            }
+            else
+            {
+                return Ok(vm);
+            }
+        }
+
+        #endregion modify_customer_info
     }
 }

@@ -1,8 +1,10 @@
 ﻿using ivrdating.Domain;
 using ivrdating.Domain.VM;
 using ivrdating.Log;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 namespace ivrdating.Persistent.Repositories
@@ -90,12 +92,23 @@ namespace ivrdating.Persistent.Repositories
                         csm.WebPassword = _request.WebPassword;
                         isOneRecUpdated = true;
                     }
+
+                   // _context.SaveChanges();
                     if (isOneRecUpdated)
                     {
-                        csm.RegisteredOn = (DateTime)_request.RegisteredDate;
-                        csm.ModifiedOn = DateTime.Now;
+                        //csm.ModifiedOn = DateTime.Now.ToString("yyyy/mm/dd hh:mm:ss");
+                        csm.RegisteredOn = Convert.ToDateTime(((DateTime)_request.RegisteredDate).ToString("yyyy/MM/dd"));
+                        
                     }
+
                     _context.SaveChanges();
+                    if (isOneRecUpdated)
+                    {
+                        using (var con = new ivrdating.Domain.ivrdating())
+                        {
+                            int rs = con.Database.ExecuteSqlCommand("update customer_master set ModifiedOn = @mod where AId = @id", new object[] { new MySqlParameter("@mod", DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")), new MySqlParameter("@id", l_AId) });
+                        }
+                    }
                 }
                 else
                 {

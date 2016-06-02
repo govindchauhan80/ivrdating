@@ -92,13 +92,15 @@ namespace ivrdating.Web
                         // used to customize the order of groupings in the swagger-ui.
                         //
                         c.OrderActionGroupsBy(new DescendingAlphabeticComparer());
-                        
+
                         // If you annotate Controllers and API Types with
                         // Xml comments (http://msdn.microsoft.com/en-us/library/b2s063f7(v=vs.110).aspx), you can incorporate
                         // those comments into the generated docs and UI. You can enable this by providing the path to one or
                         // more Xml comment files.
                         //
-                        //c.IncludeXmlComments(GetXmlCommentsPath());
+                        c.IncludeXmlComments(string.Format(@"{0}\bin\ivrdating.Web.XML",
+                        System.AppDomain.CurrentDomain.BaseDirectory));
+                        c.DescribeAllEnumsAsStrings();
 
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.

@@ -55,6 +55,6 @@ namespace ivrdating.Domain
 
         public DateTime RegisteredOn { get; set; }
 
-        public DateTime ModifiedOn { get; set; }
+        //public DateTime ModifiedOn { get; set; }
     }
 }

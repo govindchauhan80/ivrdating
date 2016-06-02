@@ -696,5 +696,60 @@ namespace ivrdating.Logic.Services
                 return new Add_Complete_Paid_Account_Return() { Count = 0, ErrorMessage = validRequest };
             }
         }
+
+        public Modify_Customer_Info_Return modify_customer_info(Modify_Customer_Info_Request _request)
+        {
+            Modify_Customer_Info_Return data = new Modify_Customer_Info_Return();
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (validRequest.Equals("OK"))
+            {
+                validRequest = "";
+            }
+            int cnt = 0;
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                _request.CallerId = "-1";
+                cnt++;
+            }
+            if (string.IsNullOrEmpty(_request.PassCode))
+            {
+                _request.PassCode = "-1";
+                cnt++;
+            }
+            if (string.IsNullOrEmpty(_request.WebPassword))
+            {
+                _request.WebPassword = "-1";
+                cnt++;
+            }
+
+            if (_request.Acc_Number <= 0)
+            {
+                validRequest = "Acc_Number not define";
+            }
+
+            if (cnt == 3 && string.IsNullOrEmpty(validRequest))
+            {
+                validRequest = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA";
+            }
+            if (string.IsNullOrEmpty(validRequest))
+            {
+                Modify_Customer_Info_Response rs = _accountRepository.modify_customer_info(_request);
+
+                if (rs == null)
+                {
+                    data = new Modify_Customer_Info_Return() { Count = 0, ErrorMessage = "Acc_Number not found" };
+                }
+                else
+                {
+                    data = new Modify_Customer_Info_Return() { Count = 1, WsResult = rs };
+                }
+            }
+            else
+            {
+                data = new Modify_Customer_Info_Return() { Count = 0, ErrorMessage = validRequest };
+            }
+
+            return data;
+        }
     }
 }
