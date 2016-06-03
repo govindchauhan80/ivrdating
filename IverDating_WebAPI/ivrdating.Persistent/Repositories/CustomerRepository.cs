@@ -79,7 +79,7 @@ namespace ivrdating.Persistent.Repositories
                     if (!string.IsNullOrEmpty(_request.CustomerCountry))
                     {
 
-                        csm.Country = _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(0, 20) : _request.CustomerAddress;
+                        csm.Country = _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(0, 20) : _request.CustomerCountry;
                         isOneRecUpdated = true;
                     }
                     if (!string.IsNullOrEmpty(_request.CustomerEmail_Address))
@@ -118,7 +118,7 @@ namespace ivrdating.Persistent.Repositories
                     csAdd.Address = string.IsNullOrEmpty(_request.CustomerAddress) ? "" : _request.CustomerAddress;
                     csAdd.AId = l_AId;
                     csAdd.City = string.IsNullOrEmpty(_request.CustomerCity) ? "" : _request.CustomerCity;
-                    csAdd.Country = string.IsNullOrEmpty(_request.CustomerCountry) ? "" : _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(20) : _request.CustomerCountry;
+                    csAdd.Country = string.IsNullOrEmpty(_request.CustomerCountry) ? "" : _request.CustomerCountry.Length > 20 ? _request.CustomerCountry.Substring(0,20) : _request.CustomerCountry;
                     csAdd.Email_Address = string.IsNullOrEmpty(_request.CustomerEmail_Address) ? "" : _request.CustomerEmail_Address;
                     csAdd.First_Name = string.IsNullOrEmpty(_request.First_Name) ? "" : _request.First_Name;
                     csAdd.Last_Name = string.IsNullOrEmpty(_request.Last_Name) ? "" : _request.Last_Name;

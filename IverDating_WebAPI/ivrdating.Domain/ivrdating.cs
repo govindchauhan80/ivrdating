@@ -10,6 +10,7 @@ namespace ivrdating.Domain
         public ivrdating()
             : base("name=ivrdating")
         {
+            Database.SetInitializer<ivrdating>(null);
         }
 
         public virtual DbSet<acc_number_web> acc_number_web { get; set; }

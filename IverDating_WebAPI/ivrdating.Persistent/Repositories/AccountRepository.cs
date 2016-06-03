@@ -183,12 +183,12 @@ namespace ivrdating.Persistent.Repositories
                 {
                     if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER))
                     {
-                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.FULL_CC_NUMBER) }).FirstOrDefault();
+                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('" + _request.FULL_CC_NUMBER + "',  MD5('" + CC_Encryption_SALT + "'))").FirstOrDefault();
                     }
 
                     if (!string.IsNullOrEmpty(_request.CVC))
                     {
-                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CVC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.CVC) }).FirstOrDefault();
+                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('" + _request.CVC + "',  MD5('" + CVC_Encryption_SALT + "'))").FirstOrDefault();
                     }
                 }
             }
@@ -230,7 +230,7 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.FIRST_ONE_CC =
                  FIRST_ONE_CC;
             _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
-            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("yyMM");
+            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : _request.CC_EXPDATE;
             _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : _request.FULL_CC_NUMBER; // MD5
             _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : _request.CVC; //MD5
             _paymentdetail.Amount = _request.Plan_Amount;
@@ -520,26 +520,30 @@ namespace ivrdating.Persistent.Repositories
         {
             Set_Primary_Apiserver_Response response = null;
 
-            int ct = _context.api_servers.Count();
-            if (ct > 0)
+            int max_priority = _context.api_servers.Count();
+            if (max_priority > 0)
             {
                 api_servers aps = _context.api_servers.Where(x => x.ip_address == _request.ActiveServerIP).FirstOrDefault();
 
                 if (aps != null)
                 {
+                    long curr_ip_priority = aps.ip_priority;
                     if (aps.ip_priority == 1)
                     {
                         response = new Set_Primary_Apiserver_Response() { Status = "API Server already set as Primary." };
                     }
                     else
                     {
-                        long curr_ip_priority = aps.ip_priority;
-                        aps.ip_priority = aps.ip_priority - (curr_ip_priority - 1);
+                        //long curr_ip_priority = aps.ip_priority;
+                        //aps.ip_priority = aps.ip_priority - (curr_ip_priority - 1);
 
-                        if (aps.ip_priority <= 0)
-                        {
-                            aps.ip_priority = aps.ip_priority + ct;
-                        }
+                        //if (aps.ip_priority <= 0)
+                        //{
+                        //    aps.ip_priority = aps.ip_priority + ct;
+                        //}
+                        int rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority - " + (curr_ip_priority - 1));
+                        rs = 0;
+                        rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority + " + max_priority + " WHERE ip_priority <= 0");
                         _context.SaveChanges();
 
                         response = new Set_Primary_Apiserver_Response() { Status = "API Server set as Primary" };
@@ -605,12 +609,12 @@ namespace ivrdating.Persistent.Repositories
                 {
                     if (!string.IsNullOrEmpty(_request.FULL_CC_NUMBER))
                     {
-                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.FULL_CC_NUMBER) }).FirstOrDefault();
+                        _request.FULL_CC_NUMBER = con.Database.SqlQuery<string>("select AES_Encrypt('" + _request.FULL_CC_NUMBER + "',  MD5('" + CC_Encryption_SALT + "'))").FirstOrDefault();
                     }
 
                     if (!string.IsNullOrEmpty(_request.CVC))
                     {
-                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('@FCC',  MD5('" + CVC_Encryption_SALT + "'))", new object[] { new ObjectParameter("FCC", _request.CVC) }).FirstOrDefault();
+                        _request.CVC = con.Database.SqlQuery<string>("select AES_Encrypt('" + _request.CVC + "',  MD5('" + CVC_Encryption_SALT + "'))").FirstOrDefault();
                     }
                 }
             }
@@ -784,7 +788,7 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.FIRST_ONE_CC =
                  FIRST_ONE_CC;
             _paymentdetail.LAST_FOUR_CC = LAST_FOUR_CC;
-            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : ((DateTime)_request.CC_EXPDATE).ToString("MMyy");
+            _paymentdetail.EXP_DATE = _request.CC_EXPDATE == null ? null : _request.CC_EXPDATE;
             _paymentdetail.FULL_CC_NUMBER = string.IsNullOrEmpty(_request.FULL_CC_NUMBER) ? "" : _request.FULL_CC_NUMBER; // MD5
             _paymentdetail.CVC = string.IsNullOrEmpty(_request.CVC) ? "" : _request.CVC; //MD5
             _paymentdetail.Amount = _request.Plan_Amount.ToString();

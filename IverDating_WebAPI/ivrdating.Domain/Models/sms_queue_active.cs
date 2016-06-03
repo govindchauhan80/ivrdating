@@ -51,7 +51,7 @@ namespace ivrdating.Domain
 
         public DateTime MessageSendAt { get; set; }
 
-        public DateTime TicketConfirmedAt { get; set; }
+        //public DateTime TicketConfirmedAt { get; set; }
 
         public int RetryCounter { get; set; }
 

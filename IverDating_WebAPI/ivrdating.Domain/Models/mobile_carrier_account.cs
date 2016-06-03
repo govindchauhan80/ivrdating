@@ -28,7 +28,7 @@ namespace ivrdating.Domain
 
         public DateTime RegisteredOn { get; set; }
 
-        public DateTime LastCalledOn { get; set; }
+       // public DateTime LastCalledOn { get; set; }
 
         public DateTime ExpiryDate { get; set; }
     }

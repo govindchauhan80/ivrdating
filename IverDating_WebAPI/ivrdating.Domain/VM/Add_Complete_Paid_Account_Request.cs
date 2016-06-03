@@ -35,7 +35,7 @@ namespace ivrdating.Domain.VM
         public string CustomerCountry { get; set; }
         public string CustomerEmail_Address { get; set; }
         public string FULL_CC_NUMBER { get; set; }
-        public DateTime? CC_EXPDATE { get; set; }
+        public string CC_EXPDATE { get; set; }
         public string CVC { get; set; }
         public short Response_Code { get; set; }
         public string Response_Reason_Code { get; set; }
