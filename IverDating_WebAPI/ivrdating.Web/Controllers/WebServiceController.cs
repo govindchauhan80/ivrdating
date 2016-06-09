@@ -157,9 +157,9 @@ namespace ivrdating.Web.Controllers
         /// <returns></returns>
         [Route("api/webservices/get_new_acc_number")]
         [HttpPost]
-        public IHttpActionResult get_new_acc_number(Get_New_Acc_Number_Request _request, string output = null)
+        public IHttpActionResult get_new_acc_number(Get_New_Acc_Number_Request _Request, string output = null)
         {
-            var data = _accountService.Get_New_Acc_Number(_request);
+            var data = _accountService.Get_New_Acc_Number(_Request);
             return FN_Get_New_Acc_Number(data, output);
 
         }
@@ -208,9 +208,9 @@ namespace ivrdating.Web.Controllers
         #region 4 get_n_activate_new_acc_number
         [Route("api/webservices/get_n_activate_new_acc_number")]
         [HttpPost]
-        public IHttpActionResult get_n_activate_new_acc_number(Get_N_Activate_New_Acc_Number_Request _request, string output = null)
+        public IHttpActionResult get_n_activate_new_acc_number(Get_N_Activate_New_Acc_Number_Request _Request, string output = null)
         {
-            var data = _accountService.Get_N_Activate_New_Acc_Number(_request);
+            var data = _accountService.Get_N_Activate_New_Acc_Number(_Request);
             return FN_Get_N_Activate_New_Acc_Number(data, output);
         }
 
@@ -260,9 +260,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/activate_acc_number")]
         [HttpPost]
-        public IHttpActionResult activate_acc_number(Activate_Acc_Number_Request _request, string output = null)
+        public IHttpActionResult activate_acc_number(Activate_Acc_Number_Request _Request, string output = null)
         {
-            var data = _accountService.Activate_Acc_Numbe(_request);
+            var data = _accountService.Activate_Acc_Numbe(_Request);
             return FN_Activate_Acc_Number(data, output);
         }
 
@@ -315,9 +315,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/deactivate_acc_number")]
         [HttpPost]
-        public IHttpActionResult deactivate_acc_number(Deactivate_Acc_Number_Request _request, string output = null)
+        public IHttpActionResult deactivate_acc_number(Deactivate_Acc_Number_Request _Request, string output = null)
         {
-            var data = _accountService.Deactivate_Acc_Number(_request);
+            var data = _accountService.Deactivate_Acc_Number(_Request);
             return FN_Deactivate_Acc_Number(data, output);
         }
 
@@ -366,9 +366,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_new_account")]
         [HttpPost]
-        public IHttpActionResult add_new_account(Add_New_Account_Request _request, string output = null)
+        public IHttpActionResult add_new_account(Add_New_Account_Request _Request, string output = null)
         {
-            var data = _accountService.Add_New_Account(_request);
+            var data = _accountService.Add_New_Account(_Request);
             return FN_Add_New_Account(data, output);
         }
 
@@ -417,9 +417,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_customer_master")]
         [HttpPost]
-        public IHttpActionResult add_to_customer_master(Add_To_Customer_Master_Request _request, string output = null)
+        public IHttpActionResult add_to_customer_master(Add_To_Customer_Master_Request _Request, string output = null)
         {
-            var data = _customerService.Add_To_Customer_Master(_request);
+            var data = _customerService.Add_To_Customer_Master(_Request);
             return FN_Add_To_Customer_Master(data, output);
         }
 
@@ -471,9 +471,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_user_minute")]
         [HttpPost]
-        public IHttpActionResult add_to_user_minute(Add_To_User_Minute_Request _request, string output = null)
+        public IHttpActionResult add_to_user_minute(Add_To_User_Minute_Request _Request, string output = null)
         {
-            var data = _userService.Add_To_User_Minute(_request);
+            var data = _userService.Add_To_User_Minute(_Request);
             return FN_Add_To_User_Minute(data, output);
         }
 
@@ -523,9 +523,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_payment_details")]
         [HttpPost]
-        public IHttpActionResult add_to_payment_details(Add_To_Payment_Details_Request _request, string output = null)
+        public IHttpActionResult add_to_payment_details(Add_To_Payment_Details_Request _Request, string output = null)
         {
-            var data = _accountService.Add_To_Payment_Details(_request);
+            var data = _accountService.Add_To_Payment_Details(_Request);
             return FN_Add_To_Payment_Details(data, output);
         }
         [Route("api/webservices/add_to_payment_details")]
@@ -574,9 +574,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_to_service_source")]
         [HttpPost]
-        public IHttpActionResult add_to_service_source(Add_To_Service_Source_Request _request, string output = null)
+        public IHttpActionResult add_to_service_source(Add_To_Service_Source_Request _Request, string output = null)
         {
-            var data = _userService.Add_To_Service_Source(_request);
+            var data = _userService.Add_To_Service_Source(_Request);
             return FN_Add_To_Service_Source(data, output);
         }
 
@@ -626,9 +626,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_account")]
         [HttpPost]
-        public IHttpActionResult update_account(Update_Account_Request _request, string output = null)
+        public IHttpActionResult update_account(Update_Account_Request _Request, string output = null)
         {
-            Update_Account_Return data = _accountService.update_account(_request);
+            Update_Account_Return data = _accountService.update_account(_Request);
             return FN_Update_Account(data, output);
         }
 
@@ -678,9 +678,9 @@ namespace ivrdating.Web.Controllers
         #region 13 update_user_minute 
         [Route("api/webservices/update_user_minute")]
         [HttpPost]
-        public IHttpActionResult update_user_minute(Update_User_Minute_Request _request, string output = null)
+        public IHttpActionResult update_user_minute(Update_User_Minute_Request _Request, string output = null)
         {
-            Update_User_Minute_Return data = _userService.update_user_minute(_request);
+            Update_User_Minute_Return data = _userService.update_user_minute(_Request);
             return FN_Update_User_Minute(data, output);
         }
 
@@ -730,9 +730,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/validate")]
         [HttpPost]
-        public IHttpActionResult validate(Validate_Request _request, string output = null)
+        public IHttpActionResult validate(Validate_Request _Request, string output = null)
         {
-            Validate_Return data = _accountService.validate(_request);
+            Validate_Return data = _accountService.validate(_Request);
             return FN_Validate(data, output);
         }
         /// <summary>
@@ -792,9 +792,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/get_member_minutes")]
         [HttpPost]
-        public IHttpActionResult get_member_minutes(Get_Member_Minutes_Request _request, string output = null)
+        public IHttpActionResult get_member_minutes(Get_Member_Minutes_Request _Request, string output = null)
         {
-            Get_Member_Minutes_Return data = _memberService.get_member_minutes(_request);
+            Get_Member_Minutes_Return data = _memberService.get_member_minutes(_Request);
             return FN_Get_Member_Minutes(data, output);
         }
 
@@ -844,9 +844,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/process_mobile_charge")]
         [HttpPost]
-        public IHttpActionResult process_mobile_charge(Process_Mobile_Charge_Request _request, string output = null)
+        public IHttpActionResult process_mobile_charge(Process_Mobile_Charge_Request _Request, string output = null)
         {
-            Process_Mobile_Charge_Return data = _accountService.process_mobile_charge(_request);
+            Process_Mobile_Charge_Return data = _accountService.process_mobile_charge(_Request);
             return FN_Process_Mobile_Charge(data, output);
         }
 
@@ -895,15 +895,15 @@ namespace ivrdating.Web.Controllers
         #region 17 insert_login_log 
         [Route("api/webservices/insert_login_log")]
         [HttpPost]
-        public IHttpActionResult insert_login_log(Insert_Login_Log_Request _request, string output = null)
+        public IHttpActionResult insert_login_log(Insert_Login_Log_Request _Request, string output = null)
         {
-            Insert_Login_Log_Return data = _accountService.insert_login_log(_request);
+            Insert_Login_Log_Return data = _accountService.insert_login_log(_Request);
             return FN_Insert_Login_Log(data, output);
         }
 
         [Route("api/webservices/insert_login_log")]
         [HttpGet]
-        public IHttpActionResult insert_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string CC_UserName = null, string CC_IPAddress = null, DateTime? DateIn = null, TimeSpan? TimeIn = null, DateTime? LastTimeStamp = null, string output = null)
+        public IHttpActionResult insert_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string CC_UserName = null, string CC_IPAddress = null, string DateIn = null, string TimeIn = null, DateTime? LastTimeStamp = null, string output = null)
         {
             var data = _accountService.insert_login_log(new Insert_Login_Log_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, CC_IPAddress = CC_IPAddress, LastTimeStamp = LastTimeStamp, Session = Session, TimeIn = TimeIn, DateIn = DateIn, CC_UserName = CC_UserName });
             return FN_Insert_Login_Log(data, output);
@@ -945,15 +945,15 @@ namespace ivrdating.Web.Controllers
         #region 18 update_login_log 
         [Route("api/webservices/update_login_log")]
         [HttpPost]
-        public IHttpActionResult update_login_log(Update_Login_Log_Request _request, string output = null)
+        public IHttpActionResult update_login_log(Update_Login_Log_Request _Request, string output = null)
         {
-            Update_Login_Log_Return data = _accountService.update_login_log(_request);
+            Update_Login_Log_Return data = _accountService.update_login_log(_Request);
             return FN_Update_Login_Log(data, output);
         }
 
         [Route("api/webservices/update_login_log")]
         [HttpGet]
-        public IHttpActionResult update_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, DateTime? DateOut = null, string TimeOut = null, DateTime? LastTimeStamp = null, string output = null)
+        public IHttpActionResult update_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string DateOut = null, string TimeOut = null, string LastTimeStamp = null, string output = null)
         {
             var data = _accountService.update_login_log(new Update_Login_Log_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, LastTimeStamp = LastTimeStamp, Session = Session, DateOut = DateOut, TimeOut = TimeOut });
             return FN_Update_Login_Log(data, output);
@@ -995,9 +995,9 @@ namespace ivrdating.Web.Controllers
         #region 19 admin_web_screening
         [Route("api/webservices/admin_web_screening")]
         [HttpPost]
-        public IHttpActionResult admin_web_screening(Admin_Web_Screening_Request _request, string output = null)
+        public IHttpActionResult admin_web_screening(Admin_Web_Screening_Request _Request, string output = null)
         {
-            Admin_Web_Screening_Return data = _accountService.admin_web_screening(_request, System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["Adminscreen"].ToString()));
+            Admin_Web_Screening_Return data = _accountService.admin_web_screening(_Request, System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["Adminscreen"].ToString()));
             return FN_Admin_Web_Screening(data, output);
         }
 
@@ -1045,15 +1045,15 @@ namespace ivrdating.Web.Controllers
         #region 20 getchargeamount 
         [Route("api/webservices/getchargeamount")]
         [HttpPost]
-        public IHttpActionResult getchargeamount(Getchargeamount_Request _request, string output = null)
+        public IHttpActionResult getchargeamount(Getchargeamount_Request _Request, string output = null)
         {
-            Getchargeamount_Return data = _accountService.getchargeamount(_request);
+            Getchargeamount_Return data = _accountService.getchargeamount(_Request);
             return FN_Getchargeamount(data, output);
         }
 
         [Route("api/webservices/getchargeamount")]
         [HttpGet]
-        public IHttpActionResult getchargeamount(string AuthKey, string WS_UserName, string WS_Password, int Area_Code, int Plan_Id, string output = null)
+        public IHttpActionResult getchargeamount(string AuthKey, string WS_UserName, string WS_Password, string Area_Code, int Plan_Id, string output = null)
         {
             var data = _accountService.getchargeamount(new Getchargeamount_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Area_Code = Area_Code, Plan_Id = Plan_Id });
             return FN_Getchargeamount(data, output);
@@ -1096,9 +1096,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/delete_completeaccount")]
         [HttpPost]
-        public IHttpActionResult delete_completeaccount(Delete_Completeaccount_Request _request, string output = null)
+        public IHttpActionResult delete_completeaccount(Delete_Completeaccount_Request _Request, string output = null)
         {
-            Delete_Completeaccount_Return data = _accountService.delete_completeaccount(_request);
+            Delete_Completeaccount_Return data = _accountService.delete_completeaccount(_Request);
             return FN_Delete_Completeaccount(data, output);
         }
 
@@ -1147,9 +1147,9 @@ namespace ivrdating.Web.Controllers
         #region 22 read_misc
         [Route("api/webservices/read_misc")]
         [HttpPost]
-        public IHttpActionResult read_misc(Read_Misc_Request _request, string output = null)
+        public IHttpActionResult read_misc(Read_Misc_Request _Request, string output = null)
         {
-            Read_Misc_Return data = _accountService.read_misc(_request);
+            Read_Misc_Return data = _accountService.read_misc(_Request);
             return FN_Read_Misc(data, output);
         }
 
@@ -1197,9 +1197,9 @@ namespace ivrdating.Web.Controllers
         #region 23 set_misc 
         [Route("api/webservices/set_misc")]
         [HttpPost]
-        public IHttpActionResult set_misc(Set_Misc_Request _request, string output = null)
+        public IHttpActionResult set_misc(Set_Misc_Request _Request, string output = null)
         {
-            Set_Misc_Return data = _accountService.set_misc(_request);
+            Set_Misc_Return data = _accountService.set_misc(_Request);
             return FN_Set_Misc(data, output);
         }
 
@@ -1248,9 +1248,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/set_primary_apiserver")]
         [HttpPost]
-        public IHttpActionResult set_primary_apiserver(Set_Primary_Apiserver_Request _request, string output = null)
+        public IHttpActionResult set_primary_apiserver(Set_Primary_Apiserver_Request _Request, string output = null)
         {
-            Set_Primary_Apiserver_Return data = _accountService.set_primary_apiserver(_request);
+            Set_Primary_Apiserver_Return data = _accountService.set_primary_apiserver(_Request);
             return FN_Set_Primary_Apiserver(data, output);
         }
 
@@ -1298,9 +1298,9 @@ namespace ivrdating.Web.Controllers
         #region 25 check_geo_location 
         [Route("api/webservices/check_geo_location")]
         [HttpPost]
-        public IHttpActionResult check_geo_location(Check_Geo_Location_Request _request, string output = null)
+        public IHttpActionResult check_geo_location(Check_Geo_Location_Request _Request, string output = null)
         {
-            Check_Geo_Location_Return data = _userService.check_geo_location(_request);
+            Check_Geo_Location_Return data = _userService.check_geo_location(_Request);
             return FN_Check_Geo_Location(data, output);
         }
 
@@ -1348,9 +1348,9 @@ namespace ivrdating.Web.Controllers
         #region 26 get_node3_accesspoint_ip 
         [Route("api/webservices/get_node3_accesspoint_ip")]
         [HttpPost]
-        public IHttpActionResult get_node3_accesspoint_ip(Get_Node3_Accesspoint_Ip_Request _request, string output = null)
+        public IHttpActionResult get_node3_accesspoint_ip(Get_Node3_Accesspoint_Ip_Request _Request, string output = null)
         {
-            Get_Node3_Accesspoint_Ip_Return data = _userService.get_node3_accesspoint_ip(_request);
+            Get_Node3_Accesspoint_Ip_Return data = _userService.get_node3_accesspoint_ip(_Request);
             return FN_Get_Node3_Accesspoint_Ip(data, output);
         }
 
@@ -1400,9 +1400,9 @@ namespace ivrdating.Web.Controllers
         #region 27 update_customer_master Update_Customer_Master
         [Route("api/webservices/update_customer_master")]
         [HttpPost]
-        public IHttpActionResult update_customer_master(Update_Customer_Master_Request _request, string output = null)
+        public IHttpActionResult update_customer_master(Update_Customer_Master_Request _Request, string output = null)
         {
-            Add_To_Customer_Master_Return data = _customerService.Add_To_Customer_Master(_request);
+            Add_To_Customer_Master_Return data = _customerService.Add_To_Customer_Master(_Request);
             Update_Customer_Master_Return rtn = new Update_Customer_Master_Return() { Count = data.Count, ErrorMessage = data.ErrorMessage, WsResult = data.WsResult };
             return FN_Update_Customer_Master(rtn, output);
         }
@@ -1456,15 +1456,15 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/add_complete_paid_account")]
         [HttpPost]
-        public IHttpActionResult add_complete_paid_account(Add_Complete_Paid_Account_Request _request, string output = null)
+        public IHttpActionResult add_complete_paid_account(Add_Complete_Paid_Account_Request _Request, string output = null)
         {
-            Add_Complete_Paid_Account_Return data = _accountService.add_complete_paid_account(_request);
+            Add_Complete_Paid_Account_Return data = _accountService.add_complete_paid_account(_Request);
             return FN_Add_Complete_Paid_Account(data, output);
         }
 
         [Route("api/webservices/add_complete_paid_account")]
         [HttpGet]
-        public IHttpActionResult add_complete_paid_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, DateTime? PlanExpiresOn, string AccountType, int Minutes_In_Package, DateTime? Old_Expiry, DateTime? New_Expiry, int Plan_Id, decimal Plan_Amount, int Plan_Validity, string Package_Description, int Service_Source, string Area_Code, int Charged_Amount = 0, string CallerId = null, string Active0In1 = null, string CustomerFirstName = null, string CustomerLastName = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, string FULL_CC_NUMBER = null, string CC_EXPDATE = null, string CVC = null, short Response_Code = 0, string Response_Reason_Code = null, string Response_Reason_Text = null, string Approval_Code = null, string AVS_Result_Code = null, int Transaction_Id = 0, string Payment_Type_Text = null, DateTime? RegisteredDate = null, string output = null)
+        public IHttpActionResult add_complete_paid_account(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string PassCode, DateTime? PlanExpiresOn, string AccountType, int Minutes_In_Package, DateTime? Old_Expiry, DateTime? New_Expiry, int Plan_Id, decimal Plan_Amount, int Plan_Validity, string Package_Description, int Service_Source, string Area_Code, decimal Charged_Amount = 0, string CallerId = null, string Active0In1 = null, string CustomerFirstName = null, string CustomerLastName = null, string WebUserName = null, string WebPassword = null, string CustomerAddress = null, string CustomerCity = null, string CustomerState = null, string CustomerZip_Code = null, string CustomerCountry = null, string CustomerEmail_Address = null, string FULL_CC_NUMBER = null, string CC_EXPDATE = null, string CVC = null, short Response_Code = 0, string Response_Reason_Code = null, string Response_Reason_Text = null, string Approval_Code = null, string AVS_Result_Code = null, string Transaction_Id = null, string Payment_Type_Text = null, DateTime? RegisteredDate = null, string output = null)
         {
             var data = _accountService.add_complete_paid_account(new Add_Complete_Paid_Account_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Group_Prefix = Group_Prefix, AccountType = AccountType, Active0In1 = Active0In1, Approval_Code = Approval_Code, Area_Code = Area_Code, AVS_Result_Code = AVS_Result_Code, CallerId = CallerId, CC_EXPDATE = CC_EXPDATE, CustomerAddress = CustomerAddress, CustomerCity = CustomerCity, CustomerEmail_Address = CustomerEmail_Address, CustomerFirstName = CustomerFirstName, CustomerLastName = CustomerLastName, CustomerState = CustomerState, CustomerZip_Code = CustomerZip_Code, CustomerCountry = CustomerCountry, CVC = CVC, FULL_CC_NUMBER = FULL_CC_NUMBER, Minutes_In_Package = Minutes_In_Package, New_Expiry = New_Expiry, Old_Expiry = Old_Expiry, Package_Description = Package_Description, PassCode = PassCode, Payment_Type_Text = Payment_Type_Text, PlanExpiresOn = PlanExpiresOn, Plan_Amount = Plan_Amount, Plan_Id = Plan_Id, Plan_Validity = Plan_Validity, RegisteredDate = RegisteredDate, Response_Code = Response_Code, Response_Reason_Code = Response_Reason_Code, Response_Reason_Text = Response_Reason_Text, Service_Source = Service_Source, Transaction_Id = Transaction_Id, WebPassword = WebPassword, WebUserName = WebUserName, Acc_Number = Acc_Number, Charged_Amount = Charged_Amount });
             return FN_Add_Complete_Paid_Account(data, output);
@@ -1508,9 +1508,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/modify_customer_info")]
         [HttpPost]
-        public IHttpActionResult modify_customer_info(Modify_Customer_Info_Request _request, string output = null)
+        public IHttpActionResult modify_customer_info(Modify_Customer_Info_Request _Request, string output = null)
         {
-            var data = _accountService.modify_customer_info(_request);
+            var data = _accountService.modify_customer_info(_Request);
             return FN_Modify_Customer_Info(data, output);
         }
 

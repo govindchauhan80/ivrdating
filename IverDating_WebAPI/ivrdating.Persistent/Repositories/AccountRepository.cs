@@ -350,10 +350,13 @@ namespace ivrdating.Persistent.Repositories
 
             if (lg != null)
             {
-                lg.DateOut = _request.DateOut == null ? "" : ((DateTime)_request.DateOut).ToString("yyyy-MM-dd");
+                lg.DateOut = _request.DateOut == null ? "" : Convert.ToDateTime(_request.DateOut).ToString("yyyy-MM-dd");
                 lg.TimeOut = _request.TimeOut;
-                lg.LastTimeStamp = _request.LastTimeStamp;
-
+                lg.LastTimeStamp = null;
+                if (!string.IsNullOrEmpty(_request.LastTimeStamp))
+                {
+                    lg.LastTimeStamp = Convert.ToDateTime(_request.LastTimeStamp);
+                }
                 _context.SaveChanges();
 
                 return new Update_Login_Log_Response() { OK = "OK" };
@@ -368,12 +371,16 @@ namespace ivrdating.Persistent.Repositories
 
             login_log lg = new login_log();
             lg.IPAddress = _request.CC_IPAddress;
-            lg.DateIn = _request.DateIn == null ? "" : ((DateTime)_request.DateIn).ToString("yyyy-MM-dd");
-            lg.LastTimeStamp = _request.LastTimeStamp;
+            lg.DateIn = _request.DateIn == null ? "" : _request.DateIn;
+            lg.LastTimeStamp = null;
+            if (_request.LastTimeStamp != null)
+            {
+                _request.LastTimeStamp = _request.LastTimeStamp;
+            }
             lg.SessionNo = _request.Session;
             if (_request.TimeIn != null)
             {
-                lg.TimeIn = _request.TimeIn.Value.ToString();
+                lg.TimeIn = _request.TimeIn;
             }
             lg.Username = _request.CC_UserName;
 
@@ -423,8 +430,8 @@ namespace ivrdating.Persistent.Repositories
         {
             Getchargeamount_Response response = null;
             decimal Tax_Perc = 0;
-
-            market m = _context.markets.Where(x => x.AreaCode == _request.Area_Code).FirstOrDefault();
+            int arc = Convert.ToInt32(_request.Area_Code);
+            market m = _context.markets.Where(x => x.AreaCode == arc).FirstOrDefault();
             if (m != null)
             {
                 Tax_Perc = m.Tax_Perc;
@@ -541,9 +548,9 @@ namespace ivrdating.Persistent.Repositories
                         //{
                         //    aps.ip_priority = aps.ip_priority + ct;
                         //}
-                        int rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority - " + (curr_ip_priority - 1));
+                        int rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority - " + (curr_ip_priority - 1) + ";");
                         rs = 0;
-                        rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority + " + max_priority + " WHERE ip_priority <= 0");
+                        rs = _context.Database.ExecuteSqlCommand("UPDATE api_servers SET ip_priority = ip_priority + " + max_priority + " WHERE ip_priority <= 0;");
                         _context.SaveChanges();
 
                         response = new Set_Primary_Apiserver_Response() { Status = "API Server set as Primary" };

@@ -17,7 +17,7 @@ namespace ivrdating.Domain.VM
         public DateTime? New_Expiry { get; set; }
         public int Plan_Id { get; set; }
         public decimal Plan_Amount { get; set; }
-        public int Charged_Amount { get; set; }
+        public decimal Charged_Amount { get; set; }
         public int Plan_Validity { get; set; }
         public string Package_Description { get; set; }
         public int Service_Source { get; set; }
@@ -42,7 +42,7 @@ namespace ivrdating.Domain.VM
         public string Response_Reason_Text { get; set; }
         public string Approval_Code { get; set; }
         public string AVS_Result_Code { get; set; }
-        public int Transaction_Id { get; set; }
+        public string Transaction_Id { get; set; }
         public string Payment_Type_Text { get; set; }
         public DateTime? RegisteredDate { get; set; }
     }

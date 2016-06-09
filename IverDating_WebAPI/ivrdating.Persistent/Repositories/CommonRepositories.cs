@@ -52,69 +52,92 @@ namespace ivrdating.Persistent.Repositories
 
         public static string ValidateRequest(RequestBase _request)
         {
-
-            StackTrace stackTrace = new StackTrace();
-
-            string Function = stackTrace.GetFrame(1).GetMethod().Name.ToLower();
-
-            if ((Function == "set_misc") || (Function == "read_misc") || (Function == "insert_login_log") || (Function == "update_login_log") || (Function == "getchargeamount") || (Function == "set_primary_apiserver") || (Function == "check_geo_location") || (Function == "get_node3_accesspoint_ip"))
+            try
             {
-                // _request.Group_Id = "0";
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(_request.Group_Prefix))
+                if (_request.AuthKey.Contains("Model Validation faild"))
                 {
-                    return "Invalid Group_Prefix";
+                    return _request.AuthKey.Replace("Model Validation faild", "");
+                }
+
+                StackTrace stackTrace = new StackTrace();
+
+                string Function = stackTrace.GetFrame(1).GetMethod().Name.ToLower();
+
+                if ((Function == "set_misc") || (Function == "read_misc") || (Function == "insert_login_log") || (Function == "update_login_log") || (Function == "getchargeamount") || (Function == "set_primary_apiserver") || (Function == "check_geo_location") || (Function == "get_node3_accesspoint_ip"))
+                {
+                    // _request.Group_Id = "0";
                 }
                 else
                 {
-                    if (GetGroupID(_request.Group_Prefix) == "0")
+                    if (string.IsNullOrEmpty(_request.Group_Prefix))
                     {
                         return "Invalid Group_Prefix";
                     }
+                    else
+                    {
+                        if (GetGroupID(_request.Group_Prefix) == "0")
+                        {
+                            return "Invalid Group_Prefix";
+                        }
+                    }
                 }
-            }
-            ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
-            if (db != null)
-            {
-                if (db.AuthKey != _request.AuthKey)
+                ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
+                if (db != null)
                 {
-                    return "Invalid Auth Key";
-                }
-                if (db.IP_Address != GetIp())
-                {
-                    return "Invalid Remote IP Address";
-                }
+                    if (db.AuthKey != _request.AuthKey)
+                    {
+                        return "Invalid Auth Key";
+                    }
+                    if (db.IP_Address != GetIp())
+                    {
+                        return "Invalid Remote IP Address";
+                    }
 
+                }
+                else if (db == null)
+                {
+                    return "WS_Agent credentials does not match";
+                }
+                return "OK";
             }
-            else if (db == null)
+            catch
             {
-                return "WS_Agent credentials does not match";
+                return "Incomplete request mandatory parameters are missing";
             }
-            return "OK";
         }
 
         public static string ValidateRequest(RequestBaseWithOutGp _request)
         {
-            ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
-            if (db != null)
+            try
             {
-                if (db.AuthKey != _request.AuthKey)
+                if (_request.AuthKey.Contains("Model Validation faild"))
                 {
-                    return "Invalid Auth Key";
-                }
-                if (db.IP_Address != GetIp())
-                {
-                    return "Invalid Remote IP Address";
+                    return _request.AuthKey;
                 }
 
+                ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
+                if (db != null)
+                {
+                    if (db.AuthKey != _request.AuthKey)
+                    {
+                        return "Invalid Auth Key";
+                    }
+                    if (db.IP_Address != GetIp())
+                    {
+                        return "Invalid Remote IP Address";
+                    }
+
+                }
+                else if (db == null)
+                {
+                    return "WS_Agent credentials does not match";
+                }
+                return "OK";
             }
-            else if (db == null)
+            catch
             {
-                return "WS_Agent credentials does not match";
+                return "Incomplete request mandatory parameters are missing";
             }
-            return "OK";
         }
         private static string GetIp()
         {
@@ -133,21 +156,114 @@ namespace ivrdating.Persistent.Repositories
 
         public static string ValidateIp(string activeServerIP)
         {
-            IPAddress address;
-            if (IPAddress.TryParse(activeServerIP, out address))
+
+
+            Match match = Regex.Match(activeServerIP, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+
+            if (match.Success)
             {
+
                 return "";
             }
-            else
-            {
-                return "Invalid Ip";
-            }
+            return "Invalid Ip";
         }
 
         public static bool IsValidEmailAddress(string s)
         {
             Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
             return regex.IsMatch(s);
+        }
+
+        public static string ValidateDateString(string dateIn)
+        {
+
+            int val = 0;
+            if (dateIn.Length != 8)
+            {
+                val = -1;
+            }
+            if (string.IsNullOrEmpty(dateIn) || dateIn.Contains(" "))
+            {
+                val = -1;
+            }
+
+            try
+            {
+                string YY = dateIn.Substring(0, 4);
+                string MM = dateIn.Substring(4, 2);
+                string DD = dateIn.Substring(6, 2);
+                Convert.ToDateTime(YY + "/" + MM + "/" + DD);
+                val = 0;
+            }
+            catch
+            {
+
+                val = -1;
+            }
+
+            return val == -1 ? "Invalid DateIn it should be YYYYMMDD format" : "";
+        }
+
+        public static string ValidateTimeString(string timeIn)
+        {
+
+            int val = 0;
+            if (timeIn.Length != 6)
+            {
+                val = -1;
+            }
+            if (string.IsNullOrEmpty(timeIn) || timeIn.Contains(" "))
+            {
+                val = -1;
+            }
+
+            try
+            {
+
+                string HH = timeIn.Substring(0, 2);
+                string MM = timeIn.Substring(2, 2);
+                string SS = timeIn.Substring(4, 2);
+                if (val == 0 && int.TryParse(HH, out val))
+                {
+                    if (val >= 0 && val <= 23)
+                    {
+                        val = 0;
+                    }
+                    else
+                    {
+                        val = -1;
+                    }
+                }
+
+                if (val == 0 && int.TryParse(MM, out val))
+                {
+                    if (val >= 0 && val <= 59)
+                    {
+                        val = 0;
+                    }
+                    else
+                    {
+                        val = -1;
+                    }
+                }
+                if (val == 0 && int.TryParse(SS, out val))
+                {
+                    if (val >= 0 && val <= 59)
+                    {
+                        val = 0;
+                    }
+                    else
+                    {
+                        val = -1;
+                    }
+                }
+
+            }
+            catch
+            {
+                val = -1;
+            }
+            return val == -1 ? "Invalid time it should be HHMMSS format" : "";
         }
     }
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ivrdating.Domain.VM;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace ivrdating.Logic.Services
 {
@@ -28,7 +29,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.Acc_Number <= 0)
             {
-                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
+                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
             }
             if (_request.Minutes_In_Package <= 0)
             {
@@ -54,6 +55,10 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Add_To_Service_Source_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
             if (_request.Service_Source <= 0)
             {
                 validRequest = "Service_Source Not defined";
@@ -61,6 +66,23 @@ namespace ivrdating.Logic.Services
             if (string.IsNullOrEmpty(_request.Area_Code))
             {
                 validRequest = "Area_Code Not defined";
+            }
+            else if (validRequest == "")
+            {
+                int ps = 0;
+
+                if (int.TryParse(_request.Area_Code, out ps))
+                {
+                    if (ps <= 99 || ps > 999)
+                    {
+                        ps = 0;
+                    }
+                }
+
+                if (ps == 0)
+                {
+                    validRequest = "Invalid Area_Code it has 3 digit numeric only";
+                }
             }
 
             if (_request.Acc_Number <= 0)
@@ -89,9 +111,13 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Update_User_Minute_Return() { Count = 0, ErrorMessage = validRequest };
+            }
             if (validRequest == "" && _request.Acc_Number <= 0)
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (validRequest == "" && _request.Minutes_In_Package <= 0)
             {
@@ -136,10 +162,12 @@ namespace ivrdating.Logic.Services
             else
             {
 
-                if (!IPAddress.TryParse(_request.Client_IP_Location, out adr))
+                Match match = Regex.Match(_request.Client_IP_Location, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+                if (!IPAddress.TryParse(_request.Client_IP_Location, out adr) || !match.Success)
                 {
                     validRequest = "Invalid Client_IP_Location";
                 }
+
             }
 
 

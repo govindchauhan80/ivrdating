@@ -8,7 +8,7 @@ namespace ivrdating.Domain.VM
 {
     public class Getchargeamount_Request : RequestBaseWithOutGp
     {
-        public int Area_Code { get; set; }
+        public string Area_Code { get; set; }
         public int Plan_Id { get; set; }
     }
 }

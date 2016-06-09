@@ -30,6 +30,30 @@ namespace ivrdating.Logic.Services
             {
                 return new Get_New_Acc_Number_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
+
+
+
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                return new Get_New_Acc_Number_Return { Count = 0, ErrorMessage = "CallerId Not defined", WsResult = null };
+            }
+            else
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerId, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    return new Get_New_Acc_Number_Return { Count = 0, ErrorMessage = "Invalid CallerId it has 10 digit numeric only", WsResult = null };
+                }
+            }
+
             var data = _accountRepository.Get_New_Acc_Number(_request);
             if (data != null)
             {
@@ -68,6 +92,12 @@ namespace ivrdating.Logic.Services
             {
                 return new Activate_Acc_Number_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
+
+            if (_request.Acc_Number <= 0)
+            {
+                return new Activate_Acc_Number_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
+            }
+
             var data = _accountRepository.Activate_Acc_Numbe(_request);
 
             if (data != null)
@@ -87,6 +117,11 @@ namespace ivrdating.Logic.Services
             {
                 return new Deactivate_Acc_Number_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
+
+            if (_request.Acc_Number <= 0)
+            {
+                return new Deactivate_Acc_Number_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
+            }
             var data = _accountRepository.Deactivate_Acc_Number(_request);
 
             if (data != null)
@@ -101,32 +136,85 @@ namespace ivrdating.Logic.Services
 
         public Add_New_Account_Return Add_New_Account(Add_New_Account_Request _request)
         {
+            string validRequest = CommonRepositories.ValidateRequest(_request);
+            if (!validRequest.Equals("OK"))
+            {
+                return new Add_New_Account_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
             if (_request.Acc_Number <= 0)
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
             }
             if (_request.RegisteredDate == null)
             {
                 _request.RegisteredDate = DateTime.Now;
             }
-            if (string.IsNullOrEmpty(_request.CallerId))
-            {
-                _request.CallerId = "0";
-            }
+            //if (string.IsNullOrEmpty(_request.CallerId))
+            //{
+            //    _request.CallerId = "0";
+            //}
 
-            if (string.IsNullOrEmpty(_request.Active0In1))
-            {
-                _request.Active0In1 = "0";
-            }
+
 
             if (string.IsNullOrEmpty(_request.AccountType))
             {
                 return new Add_New_Account_Return { Count = 0, ErrorMessage = "Account Type Not defined (Function Add_New_Account)", WsResult = null };
             }
+            else if (_request.AccountType != "0" && _request.AccountType != "1")
+            {
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Account Type can be 0 OR 1 only", WsResult = null };
+            }
 
             if (string.IsNullOrEmpty(_request.PassCode))
             {
                 return new Add_New_Account_Return { Count = 0, ErrorMessage = "PassCode Not defined (Function Add_New_Account)", WsResult = null };
+            }
+            else
+            {
+                int ps = 0;
+
+                if (int.TryParse(_request.PassCode, out ps))
+                {
+                    if (ps <= 999 || ps > 9999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    return new Add_New_Account_Return { Count = 0, ErrorMessage = "invalid PassCode it has 4 digit numeric only", WsResult = null };
+                }
+            }
+
+            if (string.IsNullOrEmpty(_request.Active0In1))
+            {
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Active0In1 Type Not defined (Function Add_New_Account)", WsResult = null };
+            }
+            else if (_request.Active0In1 != "0" && _request.Active0In1 != "1")
+            {
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Active0In1e can be 0 OR 1 only", WsResult = null };
+            }
+
+
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "CallerId Not defined (Function Add_New_Account)", WsResult = null };
+            }
+            else
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerId, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid CallerId it has 10 digit numeric only", WsResult = null };
+                }
             }
 
             if (_request.PlanExpiresOn == null)
@@ -135,11 +223,7 @@ namespace ivrdating.Logic.Services
             }
 
 
-            string validRequest = CommonRepositories.ValidateRequest(_request);
-            if (!validRequest.Equals("OK"))
-            {
-                return new Add_New_Account_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
-            }
+            
 
 
             var data = _accountRepository.Add_New_Account(_request);
@@ -161,10 +245,35 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Add_To_Payment_Details_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
+            }
+
+            if (_request.Acc_Number <= 0)
+            {
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
+            }
 
             if (string.IsNullOrEmpty(_request.CallerId))
             {
-                _request.CallerId = "0";
+                validRequest = "Invalid CallerId it has 10 digit numeric only";
+            }
+            else
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerId, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid CallerId it has 10 digit numeric only";
+                }
             }
             if (_request.Old_Expiry == null)
             {
@@ -196,10 +305,7 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Package_Description Not defined";
             }
-            if (string.IsNullOrEmpty(_request.CallerId))
-            {
-                _request.CallerId = "0";
-            }
+
 
 
 
@@ -218,32 +324,51 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Update_Account_Return() { Count = 0, ErrorMessage = validRequest };
+            }
 
-            if (string.IsNullOrEmpty(_request.CallerID) && validRequest == "")
-            { _request.CallerID = "0"; }
+            if (validRequest == "")
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerID, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid CallerId it has 10 digit numeric only";
+                }
+            }
+           
 
             if (_request.New_Expiry == null && validRequest == "")
             {
                 validRequest = "New_Expiry Not defined";
             }
-            if (string.IsNullOrEmpty(_request.AccountType) && validRequest == "")
+            if (_request.AccountType != "0" && _request.AccountType != "1")
             {
-                _request.AccountType = "0";
+                validRequest = "Account Type can be 0 OR 1 only";
             }
-            if (string.IsNullOrEmpty(_request.Active0In1) && validRequest == "")
+             if (_request.Active0In1 != "0" && _request.Active0In1 != "1")
             {
-                _request.Active0In1 = "0";
+                validRequest = "Active0In1 can be 0 OR 1 only";
             }
             if (_request.Acc_Number <= 0 && validRequest == "")
             {
-                validRequest = "Acc_Number Not defined";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (string.IsNullOrEmpty(validRequest))
             {
                 Update_Account_Response data = _accountRepository.update_account(_request);
                 if (data == null)
                 {
-                    return new Update_Account_Return() { Count = 0, ErrorMessage = "No recorde updated" };
+                    return new Update_Account_Return() { Count = 0, ErrorMessage = "No records updated" };
                 }
                 else
                 {
@@ -265,14 +390,34 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Validate_Return() { Count = 0, ErrorMessage = validRequest };
+            }
 
             if (string.IsNullOrEmpty(_request.PassCode) && validRequest == "")
             {
                 validRequest = "PassCode not define";
             }
+            else
+            {
+                int ps = 0;
+
+                if (int.TryParse(_request.PassCode, out ps))
+                {
+                    if (ps <= 999 || ps > 9999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "invalid PassCode it has 4 digit numeric only";
+                }
+            }
             if (_request.Acc_Number <= 0 && validRequest == "")
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (string.IsNullOrEmpty(validRequest))
             {
@@ -299,14 +444,36 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Process_Mobile_Charge_Return() { Count = 0, ErrorMessage = validRequest };
+            }
 
             if (string.IsNullOrEmpty(_request.SubscriberNo) && validRequest == "")
             {
                 validRequest = "Subscriber No not define";
             }
+            else
+            {
+                double ps1 = 0;
+
+                if (double.TryParse(_request.SubscriberNo, out ps1))
+                {
+                    if (ps1 <= 999999999 || ps1 > 9999999999)
+                    {
+                        ps1 = 0;
+                    }
+                }
+                if (ps1 == 0)
+                {
+                    validRequest = "Invalid SubscriberNo it has 10 digit numeric only";
+                }
+            }
+
+
             if (_request.Acc_Number <= 0 && validRequest == "")
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
 
             if (_request.SMS_Id <= 0 && validRequest == "")
@@ -326,7 +493,28 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "TicketId not define";
             }
+            else
+            {
+                Guid g;
 
+                if (!Guid.TryParse(_request.TicketId, out g))
+                {
+                    validRequest = "TicketId should be a valid GUID";
+                }
+            }
+            int ps = 0;
+
+            if (int.TryParse(_request.PassCode.ToString(), out ps))
+            {
+                if (ps <= 999 || ps > 9999)
+                {
+                    ps = 0;
+                }
+            }
+            if (ps == 0)
+            {
+                validRequest = "Invalid PassCode it has 4 digit numeric only";
+            }
             if (string.IsNullOrEmpty(validRequest))
             {
                 Process_Mobile_Charge_Response data = _accountRepository.process_mobile_charge(_request);
@@ -353,6 +541,11 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                return new Insert_Login_Log_Return() { Count = 0, ErrorMessage = validRequest };
+
+            }
 
             //if (string.IsNullOrEmpty(_request.TimeIn) && validRequest == "")
             //{
@@ -364,6 +557,24 @@ namespace ivrdating.Logic.Services
             //        validRequest = "Invalid TimeIn";
             //    }
             //}
+
+            DateTime dt;
+            if (!string.IsNullOrEmpty(_request.DateIn))
+            {
+                validRequest = CommonRepositories.ValidateDateString(_request.DateIn);
+
+            }
+
+            if (!string.IsNullOrEmpty(_request.LastTimeStamp.ToString()) && !DateTime.TryParse(_request.LastTimeStamp.ToString(), out dt))
+            {
+                validRequest = "Invalid LastTimeStamp it should be YYYYMMDD format";
+            }
+
+
+            if (_request.TimeIn != null)
+            {
+                validRequest = CommonRepositories.ValidateTimeString(_request.TimeIn);
+            }
 
             if (validRequest == "")
             {
@@ -384,16 +595,28 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
-
-            if (string.IsNullOrEmpty(_request.TimeOut) && validRequest == "")
-            {
-            }
             else
             {
-                if (!ExtensionMethods.IsNumeric(_request.TimeOut))
-                {
-                    validRequest = "Invalid TimeOut";
-                }
+                return new Update_Login_Log_Return() { Count = 0, ErrorMessage = validRequest };
+
+            }
+
+            DateTime dt;
+            if (!string.IsNullOrEmpty(_request.DateOut))
+            {
+                validRequest = CommonRepositories.ValidateDateString(_request.DateOut);
+
+            }
+
+            if (!string.IsNullOrEmpty(_request.LastTimeStamp.ToString()) && !DateTime.TryParse(_request.LastTimeStamp.ToString(), out dt))
+            {
+                validRequest = "Invalid LastTimeStamp it should be YYYYMMDD format";
+            }
+
+
+            if (_request.TimeOut != null)
+            {
+                validRequest = CommonRepositories.ValidateTimeString(_request.TimeOut);
             }
 
             if (validRequest == "")
@@ -424,11 +647,15 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.Acc_Number <= 0)
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (validRequest == "" && _request.App1Del2 <= 0)
             {
                 validRequest = "Incomplete Request 'App1Del2 not define'";
+            }
+            else if (validRequest == "" && _request.App1Del2 > 2)
+            {
+                validRequest = "Incomplete Request 'App1Del2 can be 1 OR 2 only";
             }
             if (validRequest == "")
             {
@@ -460,9 +687,25 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Plan_Id not define";
             }
-            if (validRequest == "" && _request.Area_Code <= 0)
+            if (validRequest == "" && string.IsNullOrEmpty(_request.Area_Code))
             {
                 validRequest = "Area_Code not define";
+            }
+            else if (validRequest == "")
+            {
+                int ps = 0;
+                if (int.TryParse(_request.Area_Code, out ps))
+                {
+                    if (ps <= 99 || ps > 999)
+                    {
+                        ps = 0;
+                    }
+                }
+
+                if (ps == 0)
+                {
+                    validRequest = "Invalid Area_Code it has 3 digit numeric only";
+                }
             }
 
             if (validRequest == "")
@@ -494,7 +737,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.Acc_Number <= 0)
             {
-                validRequest = "Acc_Number not define";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (validRequest == "")
             {
@@ -593,11 +836,32 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
-
+            else
+            {
+                return new Add_Complete_Paid_Account_Return() { Count = 0, ErrorMessage = validRequest };
+            }
             if (string.IsNullOrEmpty(_request.CallerId))
             {
-                _request.CallerId = "0";
+                validRequest = "Invalid CallerId it has 10 digit numeric only";
             }
+            else
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerId, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid CallerId it has 10 digit numeric only";
+                }
+            }
+
+
             if (_request.Old_Expiry == null)
             {
                 validRequest = "Old_Expiry Not defined ";
@@ -635,39 +899,69 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "PassCode Not defined";
             }
-
+            else
+            {
+                int ps = 0;
+                if (int.TryParse(_request.PassCode, out ps))
+                {
+                    if (ps <= 999 || ps > 9999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid PassCode it has 4 digit numeric only";
+                }
+            }
             if (string.IsNullOrEmpty(_request.AccountType))
             {
                 validRequest = "AccountType Not defined";
+            }
+            else if (_request.AccountType != "0" && _request.AccountType != "1")
+            {
+                validRequest = "Account Type can be 0 OR 1 only";
             }
 
             if (string.IsNullOrEmpty(_request.Area_Code))
             {
                 validRequest = "Area_Code Not defined";
             }
-
+            else if (validRequest == "")
+            {
+                int ps = 0;
+                if (int.TryParse(_request.Area_Code, out ps))
+                {
+                    if (ps <= 99 || ps > 999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid Area_Code it has 3 digit numeric only";
+                }
+            }
             if (_request.Service_Source <= 0)
             {
                 validRequest = "Service_Source Not defined";
             }
-
-
-            if (string.IsNullOrEmpty(_request.CallerId))
-            {
-                _request.CallerId = "0";
-            }
+            //if (string.IsNullOrEmpty(_request.CallerId))
+            //{
+            //    _request.CallerId = "0";
+            //}
             if (_request.Acc_Number <= 0)
             {
-                validRequest = "Invalid Acc_Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
             if (_request.RegisteredDate == null)
             {
                 _request.RegisteredDate = DateTime.Now;
             }
-            if (string.IsNullOrEmpty(_request.CallerId))
-            {
-                _request.CallerId = "0";
-            }
+            //if (string.IsNullOrEmpty(_request.CallerId))
+            //{
+            //    _request.CallerId = "0";
+            //}
 
             if (string.IsNullOrEmpty(_request.Active0In1))
             {
@@ -705,6 +999,10 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "";
             }
+            else
+            {
+                data = new Modify_Customer_Info_Return() { Count = 0, ErrorMessage = validRequest };
+            }
             int cnt = 0;
             if (string.IsNullOrEmpty(_request.CallerId))
             {
@@ -724,8 +1022,52 @@ namespace ivrdating.Logic.Services
 
             if (_request.Acc_Number <= 0)
             {
-                validRequest = "Acc_Number not define";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
+
+            if (string.IsNullOrEmpty(_request.CallerId))
+            {
+                validRequest = "CallerId Not defined";
+            }
+            else
+            {
+                double ps = 0;
+
+                if (double.TryParse(_request.CallerId, out ps))
+                {
+                    if (ps <= 999999999 || ps > 9999999999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid CallerId it has 10 digit numeric only";
+                }
+            }
+
+
+            if (string.IsNullOrEmpty(_request.PassCode))
+            {
+                validRequest = "PassCode Not defined";
+            }
+            else
+            {
+                int ps = 0;
+
+                if (int.TryParse(_request.PassCode, out ps))
+                {
+                    if (ps <= 999 || ps > 9999)
+                    {
+                        ps = 0;
+                    }
+                }
+                if (ps == 0)
+                {
+                    validRequest = "Invalid PassCode it has 4 digit numeric only";
+                }
+            }
+
 
             if (cnt == 3 && string.IsNullOrEmpty(validRequest))
             {

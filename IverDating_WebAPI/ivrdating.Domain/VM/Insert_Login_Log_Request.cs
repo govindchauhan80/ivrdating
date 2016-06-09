@@ -12,8 +12,8 @@ namespace ivrdating.Domain.VM
         public string Session { get; set; }
         public string CC_UserName { get; set; }
         public string CC_IPAddress { get; set; }
-        public DateTime? DateIn { get; set; }
-        public TimeSpan? TimeIn { get; set; }
+        public string DateIn { get; set; }
+        public string TimeIn { get; set; }
         public DateTime? LastTimeStamp { get; set; }
     }
 }
