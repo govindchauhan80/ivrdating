@@ -167,7 +167,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.PassCode))
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "PassCode Not defined (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid Passcode, it can be 4 digit numeric only (Function Add_New_Account)", WsResult = null };
             }
             else
             {
@@ -223,7 +223,7 @@ namespace ivrdating.Logic.Services
             }
 
 
-            
+
 
 
             var data = _accountRepository.Add_New_Account(_request);
@@ -306,7 +306,10 @@ namespace ivrdating.Logic.Services
                 validRequest = "Package_Description Not defined";
             }
 
-
+            if (_request.RegisteredDate == null)
+            {
+                validRequest = "Invalid RegisteredDate it should be valid time stamp in YYYY-MM-DD HH:MM:SS format";
+            }
 
 
             if (!string.IsNullOrEmpty(validRequest))
@@ -345,7 +348,7 @@ namespace ivrdating.Logic.Services
                     validRequest = "Invalid CallerId it has 10 digit numeric only";
                 }
             }
-           
+
 
             if (_request.New_Expiry == null && validRequest == "")
             {
@@ -355,7 +358,7 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Account Type can be 0 OR 1 only";
             }
-             if (_request.Active0In1 != "0" && _request.Active0In1 != "1")
+            if (_request.Active0In1 != "0" && _request.Active0In1 != "1")
             {
                 validRequest = "Active0In1 can be 0 OR 1 only";
             }
@@ -397,7 +400,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.PassCode) && validRequest == "")
             {
-                validRequest = "PassCode not define";
+                validRequest = "Invalid Passcode, it can be 4 digit numeric only";
             }
             else
             {
@@ -480,9 +483,9 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = "Invalid SMS_Id";
             }
-            if (_request.ChargeAmount <= 0 && validRequest == "")
+            if (_request.Charged_Amount <= 0 && validRequest == "")
             {
-                validRequest = "Invalid ChargeAmount";
+                validRequest = "Invalid Charged_Amount";
             }
 
             if (_request.CarrierId <= 0 && validRequest == "")
@@ -559,21 +562,24 @@ namespace ivrdating.Logic.Services
             //}
 
             DateTime dt;
-            if (!string.IsNullOrEmpty(_request.DateIn))
+            if (string.IsNullOrEmpty(validRequest))
             {
-                validRequest = CommonRepositories.ValidateDateString(_request.DateIn);
+                validRequest = CommonRepositories.ValidateDateString(_request.DateIn, "DateIn");
 
             }
 
-            if (!string.IsNullOrEmpty(_request.LastTimeStamp.ToString()) && !DateTime.TryParse(_request.LastTimeStamp.ToString(), out dt))
+            if (_request.LastTimeStamp == null)
             {
-                validRequest = "Invalid LastTimeStamp it should be YYYYMMDD format";
+                if (string.IsNullOrEmpty(validRequest))
+                {
+                    validRequest = "LastTimeStamp should be valid time stamp in YYYY-MM-DD HH:MM:SS format.";
+                }
             }
 
 
-            if (_request.TimeIn != null)
+            if (validRequest == "")
             {
-                validRequest = CommonRepositories.ValidateTimeString(_request.TimeIn);
+                validRequest = CommonRepositories.ValidateTimeString(_request.TimeIn, "TimeIn");
             }
 
             if (validRequest == "")
@@ -602,21 +608,28 @@ namespace ivrdating.Logic.Services
             }
 
             DateTime dt;
-            if (!string.IsNullOrEmpty(_request.DateOut))
+            if (string.IsNullOrEmpty(validRequest))
             {
-                validRequest = CommonRepositories.ValidateDateString(_request.DateOut);
+                validRequest = CommonRepositories.ValidateDateString(_request.DateOut, "DateOut");
 
             }
 
-            if (!string.IsNullOrEmpty(_request.LastTimeStamp.ToString()) && !DateTime.TryParse(_request.LastTimeStamp.ToString(), out dt))
+            if (string.IsNullOrEmpty(validRequest))
             {
-                validRequest = "Invalid LastTimeStamp it should be YYYYMMDD format";
+                if (_request.LastTimeStamp == null)
+                {
+                    validRequest = "Invalid LastTimeStamp it should be YYYY-MM-DD HH:MM:SS format";
+                }
+                else
+                {
+
+                }
             }
 
 
-            if (_request.TimeOut != null)
+            if (validRequest == "")
             {
-                validRequest = CommonRepositories.ValidateTimeString(_request.TimeOut);
+                validRequest = CommonRepositories.ValidateTimeString(_request.TimeOut, "TimeOut");
             }
 
             if (validRequest == "")
@@ -651,11 +664,11 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.App1Del2 <= 0)
             {
-                validRequest = "Incomplete Request 'App1Del2 not define'";
+                validRequest = "Invalid App1Del2 it can be 1 OR 2 only'";
             }
             else if (validRequest == "" && _request.App1Del2 > 2)
             {
-                validRequest = "Incomplete Request 'App1Del2 can be 1 OR 2 only";
+                validRequest = "Invalid App1Del2 it can be 1 OR 2 only";
             }
             if (validRequest == "")
             {
@@ -897,7 +910,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.PassCode))
             {
-                validRequest = "PassCode Not defined";
+                validRequest = "Invalid Passcode, it can be 4 digit numeric only";
             }
             else
             {
@@ -1001,7 +1014,7 @@ namespace ivrdating.Logic.Services
             }
             else
             {
-                data = new Modify_Customer_Info_Return() { Count = 0, ErrorMessage = validRequest };
+                return new Modify_Customer_Info_Return() { Count = 0, ErrorMessage = validRequest };
             }
             int cnt = 0;
             if (string.IsNullOrEmpty(_request.CallerId))
@@ -1049,7 +1062,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.PassCode))
             {
-                validRequest = "PassCode Not defined";
+                validRequest = "Invalid Passcode, it can be 4 digit numeric only";
             }
             else
             {

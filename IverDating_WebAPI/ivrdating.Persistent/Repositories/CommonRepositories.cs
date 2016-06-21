@@ -54,9 +54,9 @@ namespace ivrdating.Persistent.Repositories
         {
             try
             {
-                if (_request.AuthKey.Contains("Model Validation faild"))
+                if (_request.AuthKey.Contains("Model Validation failed"))
                 {
-                    return _request.AuthKey.Replace("Model Validation faild", "");
+                    return _request.AuthKey.Replace("Model Validation failed", "");
                 }
 
                 StackTrace stackTrace = new StackTrace();
@@ -110,9 +110,9 @@ namespace ivrdating.Persistent.Repositories
         {
             try
             {
-                if (_request.AuthKey.Contains("Model Validation faild"))
+                if (_request.AuthKey.Contains("Model Validation failed"))
                 {
-                    return _request.AuthKey;
+                    return _request.AuthKey.Replace("Model Validation failed", "");
                 }
 
                 ws_agent db = (from ws in _context.ws_agent where ws.WS_Username == _request.WS_UserName && ws.WS_Password == _request.WS_Password select ws).FirstOrDefault();
@@ -174,26 +174,25 @@ namespace ivrdating.Persistent.Repositories
             return regex.IsMatch(s);
         }
 
-        public static string ValidateDateString(string dateIn)
+        public static string ValidateDateString(string dateIn, string param)
         {
 
             int val = 0;
-            if (dateIn.Length != 8)
-            {
-                val = -1;
-            }
-            if (string.IsNullOrEmpty(dateIn) || dateIn.Contains(" "))
+            if (string.IsNullOrEmpty(dateIn)||dateIn.Length != 8|| dateIn.Contains(" "))
             {
                 val = -1;
             }
 
             try
             {
-                string YY = dateIn.Substring(0, 4);
-                string MM = dateIn.Substring(4, 2);
-                string DD = dateIn.Substring(6, 2);
-                Convert.ToDateTime(YY + "/" + MM + "/" + DD);
-                val = 0;
+                if (val == 0)
+                {
+                    string YY = dateIn.Substring(0, 4);
+                    string MM = dateIn.Substring(4, 2);
+                    string DD = dateIn.Substring(6, 2);
+                    Convert.ToDateTime(YY + "/" + MM + "/" + DD);
+                    val = 0;
+                }
             }
             catch
             {
@@ -201,20 +200,20 @@ namespace ivrdating.Persistent.Repositories
                 val = -1;
             }
 
-            return val == -1 ? "Invalid DateIn it should be YYYYMMDD format" : "";
+            return val == -1 ? "Invalid " + param + " it should be YYYYMMDD format" : "";
         }
 
-        public static string ValidateTimeString(string timeIn)
+        public static string ValidateTimeString(string timeIn, string param)
         {
-
-            int val = 0;
-            if (timeIn.Length != 6)
+            bool isvalid = true;
+            int val = -1;
+            if (string.IsNullOrEmpty(timeIn) || timeIn.Length != 6)
             {
-                val = -1;
+                isvalid = false;
             }
             if (string.IsNullOrEmpty(timeIn) || timeIn.Contains(" "))
             {
-                val = -1;
+                isvalid = false;
             }
 
             try
@@ -223,7 +222,7 @@ namespace ivrdating.Persistent.Repositories
                 string HH = timeIn.Substring(0, 2);
                 string MM = timeIn.Substring(2, 2);
                 string SS = timeIn.Substring(4, 2);
-                if (val == 0 && int.TryParse(HH, out val))
+                if (int.TryParse(HH, out val))
                 {
                     if (val >= 0 && val <= 23)
                     {
@@ -231,11 +230,15 @@ namespace ivrdating.Persistent.Repositories
                     }
                     else
                     {
-                        val = -1;
+                        isvalid = false;
                     }
+                }
+                else
+                {
+                    isvalid = false;
                 }
 
-                if (val == 0 && int.TryParse(MM, out val))
+                if (int.TryParse(MM, out val))
                 {
                     if (val >= 0 && val <= 59)
                     {
@@ -243,10 +246,14 @@ namespace ivrdating.Persistent.Repositories
                     }
                     else
                     {
-                        val = -1;
+                        isvalid = false;
                     }
                 }
-                if (val == 0 && int.TryParse(SS, out val))
+                else
+                {
+                    isvalid = false;
+                }
+                if (int.TryParse(SS, out val))
                 {
                     if (val >= 0 && val <= 59)
                     {
@@ -254,16 +261,20 @@ namespace ivrdating.Persistent.Repositories
                     }
                     else
                     {
-                        val = -1;
+                        isvalid = false;
                     }
+                }
+                else
+                {
+                    isvalid = false;
                 }
 
             }
             catch
             {
-                val = -1;
+                isvalid = false;
             }
-            return val == -1 ? "Invalid time it should be HHMMSS format" : "";
+            return isvalid == false ? "Invalid "+param+" it should be HHMMSS format" : "";
         }
     }
 

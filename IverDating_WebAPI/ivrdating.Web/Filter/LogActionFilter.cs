@@ -56,7 +56,35 @@ namespace ivrdating.Web.Filter
                     }
                     try
                     {
+                        if (!string.IsNullOrEmpty(jsonResp)&& !postValidationDoneDontCheckForAccAndArea)
+                        {
+                            if (jsonResp.Contains("PlanExpiresOn"))
+                            {
+                                jsonResp = "Invalid PlanExpiresOn it should be YYYY-MM-DD format";
+                                postValidationDoneDontCheckForAccAndArea = true;
+                            }
+                            else if (jsonResp.Contains("RegisteredDate"))
+                            {
+                                jsonResp = "Invalid RegisteredDate it should be YYYY-MM-DD format";
+                                postValidationDoneDontCheckForAccAndArea = true;
+                            }
+                            else if (jsonResp.Contains("Old_Expiry"))
+                            {
+                                jsonResp = "Invalid RegisteredDate it should be YYYY-MM-DD format";
+                                postValidationDoneDontCheckForAccAndArea = true;
+                            }
+                            else if (jsonResp.Contains("New_Expiry"))
+                            {
+                                jsonResp = "Invalid New_Expiry it should be YYYY-MM-DD format";
+                                postValidationDoneDontCheckForAccAndArea = true;
+                            }
 
+                            else if (jsonResp.Contains("LastTimeStamp"))
+                            {
+                                jsonResp = "Invalid LastTimeStamp it should be YYYY-MM-DD HH:MM:SS format";
+                                postValidationDoneDontCheckForAccAndArea = true;
+                            }
+                        }
                         //actionContext.ActionArguments["_request"] = new  { AuthKey = "Model Validation faild " + jsonResp };
                         Type[] types = Assembly.Load(new AssemblyName("ivrdating.Domain")).GetTypes();
                         foreach (Type t in types)
@@ -66,7 +94,7 @@ namespace ivrdating.Web.Filter
                             if (nm == actionContext.ActionDescriptor.ActionName.Replace("_", "").ToUpper())
                             {
                                 dynamic dobj = t.GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
-                                dobj.AuthKey = "Model Validation faild" + jsonResp.Replace("[", "").Replace("{", "").Replace("{", "\"").Replace("]", "").Replace("}", "").Replace("\"", ""); ;
+                                dobj.AuthKey = "Model Validation failed" + jsonResp.Replace("[", "").Replace("{", "").Replace("{", "\"").Replace("]", "").Replace("}", "").Replace("\"", ""); ;
                                 actionContext.ActionArguments["_Request"] = dobj;
                                 break;
                             }
@@ -89,15 +117,41 @@ namespace ivrdating.Web.Filter
                             jsonResp = ExtensionMethods.SerializeToJson(ms.Errors);
 
                             //object newval = 0;
-                            KeyValuePair<string, object> o = actionContext.ActionArguments.ElementAt(cnt);
-                           
-                            actionContext.ActionArguments[o.Key] = 0;
+                            string key = actionContext.ModelState.Keys.ElementAt(cnt);
+
+                            KeyValuePair<string, object> o = new KeyValuePair<string, object>();
+                            foreach (KeyValuePair<string, object> k in actionContext.ActionArguments)
+                            {
+                                if (k.Key == key)
+                                {
+                                    o = k;
+                                    break;
+                                }
+                            }
+                            string dateValidationFialed = string.Empty;
+                            if ("PlanExpiresOn RegisteredDate Old_Expiry New_Expiry LastTimeStamp".Contains(o.Key.ToString()))
+                            {
+                                dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString()+ " it should be YYYY-MM-DD format";
+                                if (o.Key.ToString() == "LastTimeStamp")
+                                {
+                                    dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString() + " it should be YYYY-MM-DD HH:MM:SS format";
+                                }
+                                actionContext.ActionArguments[o.Key] = DateTime.Now;
+                            }
+                            else 
+                            {
+                                actionContext.ActionArguments[o.Key] = 0;
+                            }
                             foreach (KeyValuePair<string, object> args in actionContext.ActionArguments.ToList())
                             {
                                 if (args.Key.Contains("AuthKey"))
                                 {
                                     //object objectT = actionContext.ActionArguments["_request"];
-
+                                    if (!string.IsNullOrEmpty(dateValidationFialed))
+                                    {
+                                        actionContext.ActionArguments["AuthKey"] = dateValidationFialed;
+                                        break;
+                                    }
                                     try
                                     {
                                         foreach (PropertyInfo p in pf)
@@ -111,7 +165,7 @@ namespace ivrdating.Web.Filter
                                                 }
                                                 jsonResp = invalid.GetType().GetProperty(p.Name).GetValue(invalid, null).ToString();
                                                 postValidationDoneDontCheckForAccAndArea = true;
-                                                actionContext.ActionArguments["AuthKey"] = "Model Validation faild " + jsonResp.Replace("[", "").Replace("{", "").Replace("{", "\"").Replace("]", "").Replace("}", "").Replace("\"", "");
+                                                actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp.Replace("[", "").Replace("{", "").Replace("{", "\"").Replace("]", "").Replace("}", "").Replace("\"", "");
                                                 break;
 
                                             }
@@ -140,6 +194,7 @@ namespace ivrdating.Web.Filter
                         try
                         {
                             vall = args.Value.GetType().GetProperty("Acc_Number").GetValue(objectT);
+                            
                             if (vall == null || !int.TryParse(vall.ToString(), out rs))
                             {
                                 rs = -1;
@@ -147,6 +202,17 @@ namespace ivrdating.Web.Filter
                             if ((rs < 99999 || rs > 999999))
                             {
                                 args.Value.GetType().GetProperty("Acc_Number").SetValue(objectT, -1, null);
+                                if (actionContext.ActionDescriptor.ActionName == "get_member_details" || actionContext.ActionDescriptor.ActionName == "member_forgot_passcode")
+                                {
+                                    if (vall.ToString() == "0")
+                                    {
+                                        args.Value.GetType().GetProperty("Acc_Number").SetValue(objectT, 0, null);
+                                    }
+                                    else
+                                    {
+                                        args.Value.GetType().GetProperty("Acc_Number").SetValue(objectT, -2, null);
+                                    }
+                                }
                             }
                         }
                         catch { }
@@ -171,7 +237,18 @@ namespace ivrdating.Web.Filter
                     }
                     else if ((rs < 99999 || rs > 999999) && args.Key == "Acc_Number")
                     {
+
                         actionContext.ActionArguments["Acc_Number"] = -1;
+                        if (actionContext.ActionDescriptor.ActionName == "get_member_details" || actionContext.ActionDescriptor.ActionName == "member_forgot_passcode")
+                        {
+                            if (args.Value.ToString() == "0")
+                            {
+                                actionContext.ActionArguments["Acc_Number"] = 0;
+                            }
+                            else {
+                                actionContext.ActionArguments["Acc_Number"] = -2;
+                            }
+                        }
                     }
 
                     if (args.Key == "Area_Code" && (args.Value == null || !int.TryParse(args.Value.ToString(), out rs)))
@@ -232,7 +309,7 @@ namespace ivrdating.Web.Filter
     {
         public string Acc_Number { get { return "Invalid Acc_Number it can 6 digit numeric only"; } }
         public string CallerId { get { return "Invalid CallerId it has 10 digit numeric only"; } }
-        public string Plan_Id { get { return "Invalid Payment Plan_Id"; } }
+        public string Plan_Id { get { return "Invalid Plan_Id, it can be numeric only"; } }
         public string Plan_Validity { get { return "Invalid Payment Plan_Validity"; } }
         public string Minutes_In_Package { get { return "Invalid Payment Minutes_In_Package"; } }
         public string PassCode { get { return "Invalid PassCode it has 4 digit numeric only"; } }
@@ -240,7 +317,8 @@ namespace ivrdating.Web.Filter
         public string Plan_Amount { get { return "Invalid Plan_Amount"; } }
         public string SMS_Id { get { return "Invalid SMS_Id"; } }
         public string App1Del2 { get { return "Invalid App1Del2"; } }
-        public string Charged_Amount { get { return "Inavlid Charged_Amount"; } }
-        public string Response_Code { get { return "Inavlid Response_Code"; } }
+        public string Charged_Amount { get { return "Invalid Charged_Amount"; } }
+        public string Response_Code { get { return "Invalid Response_Code"; } }
+        public string CarrierId { get { return "Invalid CarrierId, it can be numeric only"; } }
     }
 }

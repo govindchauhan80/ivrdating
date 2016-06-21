@@ -12,6 +12,6 @@ namespace ivrdating.Domain.VM
         public string Session { get; set; }
         public string DateOut { get; set; }
         public string TimeOut { get; set; }
-        public string LastTimeStamp { get; set; }
+        public DateTime? LastTimeStamp { get; set; }
     }
 }

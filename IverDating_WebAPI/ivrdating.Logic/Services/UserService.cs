@@ -87,7 +87,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.Acc_Number <= 0)
             {
-                validRequest = "Invalid Account Number";
+                validRequest = "Invalid Acc_Number it can 6 digit numeric only";
             }
 
             if (_request.RegisteredDate == null)

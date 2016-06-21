@@ -27,6 +27,10 @@ namespace ivrdating.Logic.Services
                 return new ReturnData() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
 
+            if (request.Acc_Number == -2)
+            {
+                return new ReturnData() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
+            }
             if (request.Acc_Number <= 0 && string.IsNullOrEmpty(request.CallerId) && string.IsNullOrEmpty(request.CustomerEmail_Address) && string.IsNullOrEmpty(request.PassCode))
             {
                 return new ReturnData() { Count = 0, ErrorMessage = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA", WsResult = null };
@@ -77,6 +81,10 @@ namespace ivrdating.Logic.Services
             {
                 return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = validRequest, WsResult = null };
             }
+            if (request.Acc_Number == -2)
+            {
+                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
+            }
             if (request.Acc_Number == 0 && string.IsNullOrEmpty(request.CallerId) && string.IsNullOrEmpty(request.CustomerEmail_Address) && string.IsNullOrEmpty(request.PassCode))
             {
                 return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "CAN NOT SEARCH CUSTOMER DETAILS, INCOMPLETE SEARCH CRITERIA", WsResult = null };
@@ -85,10 +93,10 @@ namespace ivrdating.Logic.Services
            
 
 
-            if (request.Acc_Number < 0)
-            {
-                return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
-            }
+            //if (request.Acc_Number < 0)
+            //{
+            //    return new Member_Forgot_Passcode_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
+            //}
 
             if (!string.IsNullOrEmpty(request.CallerId))
             {
@@ -136,7 +144,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.Acc_Number <= 0)
             {
-                return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number", WsResult = null };
+                return new Get_Member_Minutes_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
             }
             if (validRequest != "")
             {

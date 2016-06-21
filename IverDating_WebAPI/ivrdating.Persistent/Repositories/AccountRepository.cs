@@ -319,7 +319,7 @@ namespace ivrdating.Persistent.Repositories
 
             _sms_Queue_Active.Acc_Number = _request.Acc_Number;
             _sms_Queue_Active.CarrierId = _request.CarrierId;
-            _sms_Queue_Active.ChargeAmount = _request.ChargeAmount;
+            _sms_Queue_Active.ChargeAmount = _request.Charged_Amount;
             _sms_Queue_Active.Grp_Id = Grp_id;
             _sms_Queue_Active.PassCode = _request.PassCode;
             _sms_Queue_Active.Port = l_Port;
@@ -350,12 +350,12 @@ namespace ivrdating.Persistent.Repositories
 
             if (lg != null)
             {
-                lg.DateOut = _request.DateOut == null ? "" : Convert.ToDateTime(_request.DateOut).ToString("yyyy-MM-dd");
+                lg.DateOut = _request.DateOut;
                 lg.TimeOut = _request.TimeOut;
                 lg.LastTimeStamp = null;
-                if (!string.IsNullOrEmpty(_request.LastTimeStamp))
+                if (_request.LastTimeStamp != null)
                 {
-                    lg.LastTimeStamp = Convert.ToDateTime(_request.LastTimeStamp);
+                    lg.LastTimeStamp = _request.LastTimeStamp;
                 }
                 _context.SaveChanges();
 
@@ -810,7 +810,7 @@ namespace ivrdating.Persistent.Repositories
             _paymentdetail.ResponseText = string.IsNullOrEmpty(_request.Response_Reason_Text) ? " " : _request.Response_Reason_Text;
             _paymentdetail.ApprovalCode = string.IsNullOrEmpty(_request.Approval_Code) ? " " : _request.Approval_Code;
             _paymentdetail.AVSResultCode = string.IsNullOrEmpty(_request.AVS_Result_Code) ? " " : _request.AVS_Result_Code;
-            _paymentdetail.TransactionID = string.IsNullOrEmpty(_request.Transaction_Id.ToString()) ? " " : _request.Transaction_Id.ToString();
+            _paymentdetail.TransactionID = string.IsNullOrEmpty(_request.Transaction_Id) ? " " : _request.Transaction_Id;
             _paymentdetail.registeredby = string.IsNullOrEmpty(_request.Payment_Type_Text) ? " " : _request.Payment_Type_Text;
             _paymentdetail.ZipCode = string.IsNullOrEmpty(_request.CustomerZip_Code) ? "" : _request.CustomerZip_Code;
             _paymentdetail.Source_Description = "Web Transaction";

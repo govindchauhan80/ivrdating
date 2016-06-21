@@ -30,7 +30,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.Acc_Number <= 0)
             {
-                return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Account_Number not define", WsResult = null };
+                return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Invalid Acc_Number it can 6 digit numeric only", WsResult = null };
             }
             if (_request.RegisteredDate == null)
             {

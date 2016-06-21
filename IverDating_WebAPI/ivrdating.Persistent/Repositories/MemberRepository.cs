@@ -83,9 +83,9 @@ namespace ivrdating.Persistent.Repositories
             if (!string.IsNullOrEmpty(request.CustomerEmail_Address))
             {
 
-                var output =  query.Where(a => a.Email_Address == request.CustomerEmail_Address && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                var output =  query.Where(a => a.Email_Address == request.CustomerEmail_Address && a.Grp_Id == id).FirstOrDefault<GetMemberDetailsResponse>();
 
-                _logRequestResponse.LogData(string.Format("query.Where(a => a.Email_Address == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.CustomerEmail_Address,id), "Info");
+                _logRequestResponse.LogData(string.Format("query.Where(a => a.Email_Address == {0} && a.Grp_Id == {1}).FirstOrDefault<GetMemberDetailsResponse>()", request.CustomerEmail_Address,id), "Info");
 
                 return output;
             }
@@ -93,15 +93,15 @@ namespace ivrdating.Persistent.Repositories
             {
                 if (request.Acc_Number > 0)
                 {
-                    var output = query.Where(a => a.Acc_Number == request.Acc_Number && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
+                    var output = query.Where(a => a.Acc_Number == request.Acc_Number && a.Grp_Id == id).FirstOrDefault<GetMemberDetailsResponse>();
                     //_logRequestResponse.LogData(output.ToString(), "Debug");
-                    _logRequestResponse.LogData(string.Format("query.Where(a => a.Acc_Number == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.Acc_Number, id), "Info");
+                    _logRequestResponse.LogData(string.Format("query.Where(a => a.Acc_Number == {0} && a.Grp_Id == {1}).FirstOrDefault<GetMemberDetailsResponse>()", request.Acc_Number, id), "Info");
                     return output;
                 }
                 else
                 {
-                    var output = query.Where(a => a.CallerId == request.CallerId && a.PassCode == request.PassCode && a.Grp_Id == id).SingleOrDefault<GetMemberDetailsResponse>();
-                    _logRequestResponse.LogData(string.Format("query.Where(a => a.CallerId == request.CallerId && a.PassCode == {0} && a.Grp_Id == {1}).SingleOrDefault<GetMemberDetailsResponse>()", request.PassCode, id), "Info");
+                    var output = query.Where(a => a.CallerId == request.CallerId  && a.Grp_Id == id).FirstOrDefault<GetMemberDetailsResponse>();
+                    _logRequestResponse.LogData(string.Format("query.Where(a => a.CallerId == {0} && a.Grp_Id == {1}).FirstOrDefault<GetMemberDetailsResponse>()", request.CallerId, id), "Info");
                     //_logRequestResponse.LogData(output.ToString(), "Debug");
 
                     return output;

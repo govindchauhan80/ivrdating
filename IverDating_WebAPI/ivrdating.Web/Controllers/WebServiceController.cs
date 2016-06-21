@@ -736,7 +736,7 @@ namespace ivrdating.Web.Controllers
             return FN_Validate(data, output);
         }
         /// <summary>
-        /// tstetetetete
+        /// Description
         /// </summary>
         /// <param name="AuthKey">AuthKey</param>
         /// <param name="WS_UserName">WS_UserName</param>
@@ -852,9 +852,9 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/process_mobile_charge")]
         [HttpGet]
-        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int SMS_Id, string TicketId, int CarrierId, double ChargeAmount, int PassCode = 0, string output = null)
+        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int SMS_Id, string TicketId, int CarrierId, double Charged_Amount, int PassCode = 0, string output = null)
         {
-            var data = _accountService.process_mobile_charge(new Process_Mobile_Charge_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CarrierId = CarrierId, ChargeAmount = ChargeAmount, PassCode = PassCode, SMS_Id = SMS_Id, SubscriberNo = SubscriberNo, TicketId = TicketId });
+            var data = _accountService.process_mobile_charge(new Process_Mobile_Charge_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CarrierId = CarrierId, Charged_Amount = Charged_Amount, PassCode = PassCode, SMS_Id = SMS_Id, SubscriberNo = SubscriberNo, TicketId = TicketId });
             return FN_Process_Mobile_Charge(data, output);
         }
 
@@ -953,7 +953,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/update_login_log")]
         [HttpGet]
-        public IHttpActionResult update_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string DateOut = null, string TimeOut = null, string LastTimeStamp = null, string output = null)
+        public IHttpActionResult update_login_log(string AuthKey, string WS_UserName, string WS_Password, string Session, string DateOut = null, string TimeOut = null, DateTime? LastTimeStamp = null, string output = null)
         {
             var data = _accountService.update_login_log(new Update_Login_Log_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, LastTimeStamp = LastTimeStamp, Session = Session, DateOut = DateOut, TimeOut = TimeOut });
             return FN_Update_Login_Log(data, output);
