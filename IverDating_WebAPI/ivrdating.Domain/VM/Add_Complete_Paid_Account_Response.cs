@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ivrdating.Domain.VM
 {
-    [DataContract]
+    [DataContract(Namespace = "")]
     public class Add_Complete_Paid_Account_Response
     {
         [DataMember]
