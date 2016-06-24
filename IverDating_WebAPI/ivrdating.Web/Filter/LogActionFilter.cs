@@ -204,7 +204,10 @@ namespace ivrdating.Web.Filter
                                 }
                                 else
                                 {
-                                    actionContext.ActionArguments[o.Key] = 0;
+                                    if (!o.Key.Contains("Amount"))
+                                    {
+                                        actionContext.ActionArguments[o.Key] = 0;
+                                    }
                                 }
                             }
                             foreach (KeyValuePair<string, object> args in actionContext.ActionArguments.ToList())

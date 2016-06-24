@@ -319,7 +319,7 @@ namespace ivrdating.Persistent.Repositories
 
             _sms_Queue_Active.Acc_Number = _request.Acc_Number;
             _sms_Queue_Active.CarrierId = _request.CarrierId;
-            _sms_Queue_Active.ChargeAmount = _request.Charged_Amount;
+            _sms_Queue_Active.ChargeAmount = (double)_request.Charged_Amount;
             _sms_Queue_Active.Grp_Id = Grp_id;
             _sms_Queue_Active.PassCode = _request.PassCode;
             _sms_Queue_Active.Port = l_Port;

@@ -124,7 +124,10 @@ namespace ivrdating.Logic.Services
                 validRequest = "Minutes_In_Package Not defined";
             }
 
-            _request.RegisteredDate = _request.RegisteredDate == null ? DateTime.Now : _request.RegisteredDate;
+            if (_request.RegisteredDate == null)
+            {
+                validRequest = "Invalid RegisteredDate it should be YYYY-MM-DD format";
+            }
 
             if (validRequest == "")
             {

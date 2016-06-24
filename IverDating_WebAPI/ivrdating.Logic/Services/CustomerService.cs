@@ -34,7 +34,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.RegisteredDate == null)
             {
-                _request.RegisteredDate = DateTime.Now;
+                return new Add_To_Customer_Master_Return() { Count = 0, ErrorMessage = "Invalid RegisteredDate it should be YYYY-MM-DD format", WsResult = null };
             }
 
             try

@@ -15,6 +15,6 @@ namespace ivrdating.Domain.VM
         public int SMS_Id { get; set; }
         public string TicketId { get; set; }
         public int CarrierId { get; set; }
-        public double Charged_Amount { get; set; }
+        public decimal Charged_Amount { get; set; }
     }
 }

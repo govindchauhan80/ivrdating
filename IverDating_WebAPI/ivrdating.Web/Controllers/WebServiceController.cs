@@ -852,7 +852,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/process_mobile_charge")]
         [HttpGet]
-        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int SMS_Id, string TicketId, int CarrierId, double Charged_Amount, int PassCode = 0, string output = null)
+        public IHttpActionResult process_mobile_charge(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, string SubscriberNo, int SMS_Id, string TicketId, int CarrierId, decimal Charged_Amount, int PassCode = 0, string output = null)
         {
             var data = _accountService.process_mobile_charge(new Process_Mobile_Charge_Request() { AuthKey = AuthKey, Group_Prefix = Group_Prefix, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, CarrierId = CarrierId, Charged_Amount = Charged_Amount, PassCode = PassCode, SMS_Id = SMS_Id, SubscriberNo = SubscriberNo, TicketId = TicketId });
             return FN_Process_Mobile_Charge(data, output);
