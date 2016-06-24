@@ -12,6 +12,7 @@ using System.Net;
 using System.Reflection;
 using System.Web.Http.ModelBinding;
 using ivrdating.Domain.VM;
+using System.IO;
 
 namespace ivrdating.Web.Filter
 {
@@ -28,11 +29,67 @@ namespace ivrdating.Web.Filter
         {
             bool postValidationDoneDontCheckForAccAndArea = false;
 
+            string jsonResp = "";
+
+
+            string rawRequest = string.Empty;
+            var request = HttpContext.Current.Request;
+            string[] dateField = null;
+            bool isDateValide = true;
+            if (request.HttpMethod == "POST")
+            {
+                var inputStream = request.InputStream;
+                inputStream.Position = 0;
+                using (var reader = new StreamReader(inputStream))
+                {
+                    string headers = request.Headers.ToString();
+                    string body = reader.ReadToEnd();
+                    rawRequest = body;
+
+                    foreach (string str in rawRequest.Split(new char[] { ',' }))
+                    {
+                        if (str.Contains("PlanExpiresOn") || str.Contains("RegisteredDate") || str.Contains("Old_Expiry") || str.Contains("New_Expiry") || str.Contains("LastTimeStamp"))
+                        {
+
+                            dateField = str.Split(new char[] { ':' });
+                            if (dateField == null || dateField.Length < 2 || dateField[1].Split(new char[] { '-' }).Length < 3)
+                            {
+                                isDateValide = false;
+                                jsonResp = "Invalid " + dateField[0] + " it should be YYYY-MM-DD format";
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (request.HttpMethod == "GET")
+            {
+                rawRequest = request.QueryString.ToString();
+
+                foreach (string str in rawRequest.Split(new char[] { '&' }))
+                {
+                    if (str.Contains("PlanExpiresOn") || str.Contains("RegisteredDate") || str.Contains("Old_Expiry") || str.Contains("New_Expiry") || str.Contains("LastTimeStamp"))
+                    {
+
+                        dateField = str.Split(new char[] { '=' });
+                        if (dateField == null || dateField.Length < 2 || dateField[1].Split(new char[] { '-' }).Length < 3)
+                        {
+                            isDateValide = false;
+                            jsonResp = "Invalid " + dateField[0] + " it should be YYYY-MM-DD format";
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+
             InvalidDataAttemp invalid = new InvalidDataAttemp();
             PropertyInfo[] pf = invalid.GetType().GetProperties();
-            if (!actionContext.ModelState.IsValid)
+            if (!actionContext.ModelState.IsValid || !isDateValide)
             {
-                string jsonResp = "";
                 if (actionContext.Request.Method.Method == "POST")
                 {
                     // jsonResp = ExtensionMethods.SerializeToPlainText(actionContext.ModelState.Values.GetType().GetProperties(), actionContext.ModelState.Values);
@@ -56,7 +113,7 @@ namespace ivrdating.Web.Filter
                     }
                     try
                     {
-                        if (!string.IsNullOrEmpty(jsonResp)&& !postValidationDoneDontCheckForAccAndArea)
+                        if (!string.IsNullOrEmpty(jsonResp) && !postValidationDoneDontCheckForAccAndArea)
                         {
                             if (jsonResp.Contains("PlanExpiresOn"))
                             {
@@ -70,7 +127,7 @@ namespace ivrdating.Web.Filter
                             }
                             else if (jsonResp.Contains("Old_Expiry"))
                             {
-                                jsonResp = "Invalid RegisteredDate it should be YYYY-MM-DD format";
+                                jsonResp = "Invalid Old_Expiry it should be YYYY-MM-DD format";
                                 postValidationDoneDontCheckForAccAndArea = true;
                             }
                             else if (jsonResp.Contains("New_Expiry"))
@@ -111,6 +168,11 @@ namespace ivrdating.Web.Filter
                     int cnt = -1;
                     foreach (ModelState ms in actionContext.ModelState.Values)
                     {
+                        if (!isDateValide)
+                        {
+                            actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp;
+                            break;
+                        }
                         cnt++;
                         if (ms.Errors.Count > 0)
                         {
@@ -129,18 +191,21 @@ namespace ivrdating.Web.Filter
                                 }
                             }
                             string dateValidationFialed = string.Empty;
-                            if ("PlanExpiresOn RegisteredDate Old_Expiry New_Expiry LastTimeStamp".Contains(o.Key.ToString()))
+                            if (o.Key != null)
                             {
-                                dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString()+ " it should be YYYY-MM-DD format";
-                                if (o.Key.ToString() == "LastTimeStamp")
+                                if ("PlanExpiresOn RegisteredDate Old_Expiry New_Expiry LastTimeStamp".Contains(o.Key.ToString()))
                                 {
-                                    dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString() + " it should be YYYY-MM-DD HH:MM:SS format";
+                                    dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString() + " it should be YYYY-MM-DD format";
+                                    if (o.Key.ToString() == "LastTimeStamp")
+                                    {
+                                        dateValidationFialed = "Model Validation failedInvalid " + o.Key.ToString() + " it should be YYYY-MM-DD HH:MM:SS format";
+                                    }
+                                    actionContext.ActionArguments[o.Key] = DateTime.Now;
                                 }
-                                actionContext.ActionArguments[o.Key] = DateTime.Now;
-                            }
-                            else 
-                            {
-                                actionContext.ActionArguments[o.Key] = 0;
+                                else
+                                {
+                                    actionContext.ActionArguments[o.Key] = 0;
+                                }
                             }
                             foreach (KeyValuePair<string, object> args in actionContext.ActionArguments.ToList())
                             {
@@ -194,7 +259,7 @@ namespace ivrdating.Web.Filter
                         try
                         {
                             vall = args.Value.GetType().GetProperty("Acc_Number").GetValue(objectT);
-                            
+
                             if (vall == null || !int.TryParse(vall.ToString(), out rs))
                             {
                                 rs = -1;
@@ -245,7 +310,8 @@ namespace ivrdating.Web.Filter
                             {
                                 actionContext.ActionArguments["Acc_Number"] = 0;
                             }
-                            else {
+                            else
+                            {
                                 actionContext.ActionArguments["Acc_Number"] = -2;
                             }
                         }
@@ -316,7 +382,7 @@ namespace ivrdating.Web.Filter
         public string Service_Source { get { return "Invalid Service_Source"; } }
         public string Plan_Amount { get { return "Invalid Plan_Amount"; } }
         public string SMS_Id { get { return "Invalid SMS_Id"; } }
-        public string App1Del2 { get { return "Invalid App1Del2"; } }
+        public string App1Del2 { get { return "Invalid App1Del2 it can be 1 OR 2 only"; } }
         public string Charged_Amount { get { return "Invalid Charged_Amount"; } }
         public string Response_Code { get { return "Invalid Response_Code"; } }
         public string CarrierId { get { return "Invalid CarrierId, it can be numeric only"; } }

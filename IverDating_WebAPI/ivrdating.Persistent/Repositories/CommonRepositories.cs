@@ -157,7 +157,10 @@ namespace ivrdating.Persistent.Repositories
         public static string ValidateIp(string activeServerIP)
         {
 
-
+            if (string.IsNullOrEmpty(activeServerIP))
+            {
+                return "Invalid Ip it should be in XXX.XXX.XXX.XXX format";
+            }
             Match match = Regex.Match(activeServerIP, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
 
             if (match.Success)
@@ -165,7 +168,7 @@ namespace ivrdating.Persistent.Repositories
 
                 return "";
             }
-            return "Invalid Ip";
+            return "Invalid Ip it should be in XXX.XXX.XXX.XXX format";
         }
 
         public static bool IsValidEmailAddress(string s)

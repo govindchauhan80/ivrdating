@@ -1003,7 +1003,7 @@ namespace ivrdating.Web.Controllers
 
         [Route("api/webservices/admin_web_screening")]
         [HttpGet]
-        public IHttpActionResult admin_web_screening(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int App1Del2, string output = null)
+        public IHttpActionResult admin_web_screening(string AuthKey, string WS_UserName, string WS_Password, string Group_Prefix, int Acc_Number, int App1Del2 = 0, string output = null)
         {
             var data = _accountService.admin_web_screening(new Admin_Web_Screening_Request() { AuthKey = AuthKey, WS_Password = WS_Password, WS_UserName = WS_UserName, Acc_Number = Acc_Number, Group_Prefix = Group_Prefix, App1Del2 = App1Del2 }, System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["Adminscreen"].ToString()));
             return FN_Admin_Web_Screening(data, output);

@@ -158,7 +158,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.AccountType))
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Account Type Not defined (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Account Type can be 0 OR 1 only", WsResult = null };
             }
             else if (_request.AccountType != "0" && _request.AccountType != "1")
             {
@@ -167,7 +167,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.PassCode))
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid Passcode, it can be 4 digit numeric only (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid PassCode it has 4 digit numeric only", WsResult = null };
             }
             else
             {
@@ -198,7 +198,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.CallerId))
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "CallerId Not defined (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid CallerId it has 10 digit numeric only", WsResult = null };
             }
             else
             {
@@ -219,7 +219,7 @@ namespace ivrdating.Logic.Services
 
             if (_request.PlanExpiresOn == null)
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Plan Expires On Not defined (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Invalid PlanExpiresOn it should be YYYY-MM-DD format", WsResult = null };
             }
 
 
@@ -581,8 +581,11 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = CommonRepositories.ValidateTimeString(_request.TimeIn, "TimeIn");
             }
-
             if (validRequest == "")
+            {
+                validRequest = CommonRepositories.ValidateIp(_request.CC_IPAddress);
+            }
+                if (validRequest == "")
             {
                 Insert_Login_Log_Response data = _accountRepository.insert_login_log(_request);
                 return new Insert_Login_Log_Return() { Count = 1, ErrorMessage = null, WsResult = data };
@@ -631,7 +634,7 @@ namespace ivrdating.Logic.Services
             {
                 validRequest = CommonRepositories.ValidateTimeString(_request.TimeOut, "TimeOut");
             }
-
+           
             if (validRequest == "")
             {
                 Update_Login_Log_Response data = _accountRepository.update_login_log(_request);
