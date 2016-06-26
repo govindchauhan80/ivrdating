@@ -35,7 +35,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.CallerId))
             {
-                return new Get_New_Acc_Number_Return { Count = 0, ErrorMessage = "CallerId Not defined", WsResult = null };
+                return new Get_New_Acc_Number_Return { Count = 0, ErrorMessage = "Invalid CallerId it has 10 digit numeric only", WsResult = null };
             }
             else
             {
@@ -188,7 +188,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.Active0In1))
             {
-                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Active0In1 Type Not defined (Function Add_New_Account)", WsResult = null };
+                return new Add_New_Account_Return { Count = 0, ErrorMessage = "Active0In1e can be 0 OR 1 only)", WsResult = null };
             }
             else if (_request.Active0In1 != "0" && _request.Active0In1 != "1")
             {
@@ -285,7 +285,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.Plan_Id <= 0)
             {
-                validRequest = "Payment Plan_Id Not defined";
+                validRequest = "Invalid Plan_Id, it can be numeric only";
             }
             decimal d;
             if (string.IsNullOrEmpty(_request.Plan_Amount) || !decimal.TryParse(_request.Plan_Amount, out d))
@@ -454,7 +454,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.SubscriberNo) && validRequest == "")
             {
-                validRequest = "Subscriber No not define";
+                validRequest = "Invalid SubscriberNo it has 10 digit numeric only";
             }
             else
             {
@@ -494,7 +494,7 @@ namespace ivrdating.Logic.Services
             }
             if (string.IsNullOrEmpty(_request.TicketId) && validRequest == "")
             {
-                validRequest = "TicketId not define";
+                validRequest = "TicketId should be a valid GUID";
             }
             else
             {
@@ -583,7 +583,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "")
             {
-                validRequest = CommonRepositories.ValidateIp(_request.CC_IPAddress);
+                validRequest = CommonRepositories.ValidateIp(_request.CC_IPAddress, "CC_IPAddress");
             }
                 if (validRequest == "")
             {
@@ -701,11 +701,11 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.Plan_Id <= 0)
             {
-                validRequest = "Plan_Id not define";
+                validRequest = "Invalid Plan_Id, it can be numeric only";
             }
             if (validRequest == "" && string.IsNullOrEmpty(_request.Area_Code))
             {
-                validRequest = "Area_Code not define";
+                validRequest = "Invalid Area_Code it has 3 digit numeric only";
             }
             else if (validRequest == "")
             {
@@ -825,7 +825,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "")
             {
-                validRequest = CommonRepositories.ValidateIp(_request.ActiveServerIP);
+                validRequest = CommonRepositories.ValidateIp(_request.ActiveServerIP, "ActiveServerIP");
             }
             if (validRequest == "")
             {
@@ -892,7 +892,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.Plan_Id <= 0)
             {
-                validRequest = "Payment Plan_Id Not defined";
+                validRequest = "Invalid Plan_Id, it can be numeric only";
             }
             if (_request.Plan_Amount <= 0)
             {
@@ -932,7 +932,7 @@ namespace ivrdating.Logic.Services
             }
             if (string.IsNullOrEmpty(_request.AccountType))
             {
-                validRequest = "AccountType Not defined";
+                validRequest = "Account Type can be 0 OR 1 only";
             }
             else if (_request.AccountType != "0" && _request.AccountType != "1")
             {
@@ -941,7 +941,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.Area_Code))
             {
-                validRequest = "Area_Code Not defined";
+                validRequest = "Invalid Area_Code it has 3 digit numeric onlyd";
             }
             else if (validRequest == "")
             {
@@ -1043,7 +1043,7 @@ namespace ivrdating.Logic.Services
 
             if (string.IsNullOrEmpty(_request.CallerId))
             {
-                validRequest = "CallerId Not defined";
+                validRequest = "Invalid CallerId it has 10 digit numeric only";
             }
             else
             {

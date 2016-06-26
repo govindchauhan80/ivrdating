@@ -33,7 +33,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.Minutes_In_Package <= 0)
             {
-                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Minutes_In_Package Not defined (Function Add_To_User_Minute)", WsResult = null };
+                return new Add_To_User_Minute_Return() { Count = 0, ErrorMessage = "Invalid Minutes_In_Package", WsResult = null };
             }
 
             if (_request.RegisteredDate == null)
@@ -65,7 +65,7 @@ namespace ivrdating.Logic.Services
             }
             if (string.IsNullOrEmpty(_request.Area_Code))
             {
-                validRequest = "Area_Code Not defined";
+                validRequest = "Invalid Area_Code it has 3 digit numeric onlyd";
             }
             else if (validRequest == "")
             {
@@ -121,7 +121,7 @@ namespace ivrdating.Logic.Services
             }
             if (validRequest == "" && _request.Minutes_In_Package <= 0)
             {
-                validRequest = "Minutes_In_Package Not defined";
+                validRequest = "Invalid Minutes_In_Package";
             }
 
             if (_request.RegisteredDate == null)
@@ -160,7 +160,7 @@ namespace ivrdating.Logic.Services
 
             if (validRequest == "" && string.IsNullOrEmpty(_request.Client_IP_Location))
             {
-                validRequest = "Client_IP_Location not define";
+                validRequest = "Invalid Client_IP_Location";
             }
             else
             {

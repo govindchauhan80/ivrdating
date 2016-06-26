@@ -154,21 +154,19 @@ namespace ivrdating.Persistent.Repositories
             return ip == "::1" ? "127.0.0.1" : ip;
         }
 
-        public static string ValidateIp(string activeServerIP)
+        public static string ValidateIp(string activeServerIP, string param)
         {
 
             if (string.IsNullOrEmpty(activeServerIP))
             {
-                return "Invalid Ip it should be in XXX.XXX.XXX.XXX format";
+                return "Invalid " + param;
             }
-            Match match = Regex.Match(activeServerIP, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-
-            if (match.Success)
+            IPAddress ip;
+            if (IPAddress.TryParse(activeServerIP, out ip))
             {
-
                 return "";
             }
-            return "Invalid Ip it should be in XXX.XXX.XXX.XXX format";
+            return "Invalid " + param;
         }
 
         public static bool IsValidEmailAddress(string s)
@@ -181,7 +179,7 @@ namespace ivrdating.Persistent.Repositories
         {
 
             int val = 0;
-            if (string.IsNullOrEmpty(dateIn)||dateIn.Length != 8|| dateIn.Contains(" "))
+            if (string.IsNullOrEmpty(dateIn) || dateIn.Length != 8 || dateIn.Contains(" "))
             {
                 val = -1;
             }
@@ -277,7 +275,7 @@ namespace ivrdating.Persistent.Repositories
             {
                 isvalid = false;
             }
-            return isvalid == false ? "Invalid "+param+" it should be HHMMSS format" : "";
+            return isvalid == false ? "Invalid " + param + " it should be HHMMSS format" : "";
         }
     }
 

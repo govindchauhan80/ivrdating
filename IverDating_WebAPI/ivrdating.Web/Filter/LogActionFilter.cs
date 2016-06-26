@@ -38,30 +38,34 @@ namespace ivrdating.Web.Filter
             bool isDateValide = true;
             if (request.HttpMethod == "POST")
             {
-                var inputStream = request.InputStream;
-                inputStream.Position = 0;
-                using (var reader = new StreamReader(inputStream))
+                try
                 {
-                    string headers = request.Headers.ToString();
-                    string body = reader.ReadToEnd();
-                    rawRequest = body;
-
-                    foreach (string str in rawRequest.Split(new char[] { ',' }))
+                    var inputStream = request.InputStream;
+                    inputStream.Position = 0;
+                    using (var reader = new StreamReader(inputStream))
                     {
-                        if (str.Contains("PlanExpiresOn") || str.Contains("RegisteredDate") || str.Contains("Old_Expiry") || str.Contains("New_Expiry") || str.Contains("LastTimeStamp"))
+                        string headers = request.Headers.ToString();
+                        string body = reader.ReadToEnd();
+                        rawRequest = body;
+
+                        foreach (string str in rawRequest.Split(new char[] { ',' }))
                         {
-
-                            dateField = str.Split(new char[] { ':' });
-                            if (dateField == null || dateField.Length < 2 || dateField[1].Split(new char[] { '-' }).Length < 3)
+                            if (str.Contains("PlanExpiresOn") || str.Contains("RegisteredDate") || str.Contains("Old_Expiry") || str.Contains("New_Expiry") || str.Contains("LastTimeStamp"))
                             {
-                                isDateValide = false;
-                                jsonResp = "Invalid " + dateField[0] + " it should be YYYY-MM-DD format";
 
-                                break;
+                                dateField = str.Split(new char[] { ':' });
+                                if (dateField == null || dateField.Length < 2 || dateField[1].Split(new char[] { '-' }).Length < 3)
+                                {
+                                    isDateValide = false;
+                                    jsonResp = "Invalid " + dateField[0] + " it should be YYYY-MM-DD format";
+
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                catch { }
             }
             else if (request.HttpMethod == "GET")
             {
@@ -170,8 +174,11 @@ namespace ivrdating.Web.Filter
                     {
                         if (!isDateValide)
                         {
-                            actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp;
-                            break;
+                            if (!actionContext.ActionArguments["AuthKey"].ToString().Contains("Model Validation"))
+                            {
+                                actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp;
+                            }
+                           // break;
                         }
                         cnt++;
                         if (ms.Errors.Count > 0)
@@ -218,7 +225,7 @@ namespace ivrdating.Web.Filter
                                     if (!string.IsNullOrEmpty(dateValidationFialed))
                                     {
                                         actionContext.ActionArguments["AuthKey"] = dateValidationFialed;
-                                        break;
+                                        //break;
                                     }
                                     try
                                     {
@@ -234,7 +241,7 @@ namespace ivrdating.Web.Filter
                                                 jsonResp = invalid.GetType().GetProperty(p.Name).GetValue(invalid, null).ToString();
                                                 postValidationDoneDontCheckForAccAndArea = true;
                                                 actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp.Replace("[", "").Replace("{", "").Replace("{", "\"").Replace("]", "").Replace("}", "").Replace("\"", "");
-                                                break;
+                                                //break;
 
                                             }
                                         }
