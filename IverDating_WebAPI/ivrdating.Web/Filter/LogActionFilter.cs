@@ -178,7 +178,7 @@ namespace ivrdating.Web.Filter
                             {
                                 actionContext.ActionArguments["AuthKey"] = "Model Validation failed " + jsonResp;
                             }
-                           // break;
+                            // break;
                         }
                         cnt++;
                         if (ms.Errors.Count > 0)
@@ -191,7 +191,7 @@ namespace ivrdating.Web.Filter
                             KeyValuePair<string, object> o = new KeyValuePair<string, object>();
                             foreach (KeyValuePair<string, object> k in actionContext.ActionArguments)
                             {
-                                if (k.Key == key)
+                                if (k.Key == key || key.Contains(k.Key + ".Int32") || key.Contains(k.Key + ".Decimal"))
                                 {
                                     o = k;
                                     break;
