@@ -61,7 +61,7 @@ namespace ivrdating.Logic.Services
             }
             if (_request.Service_Source <= 0)
             {
-                validRequest = "Service_Source Not defined";
+                validRequest = "Invalid Service_Source";
             }
             if (string.IsNullOrEmpty(_request.Area_Code))
             {
